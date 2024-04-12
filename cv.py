@@ -45,34 +45,34 @@ def main():
     position = st.text_area("The poistion copied details:")
 
     #st.text_area("The prompt",value=
-prompt = """
-Task Description:
-You are tasked with optimizing a user's CV based on a given position description without revealing that the CV has been optimized or inventing information not present in the original CV.
+    prompt = """
+    Task Description:
+    You are tasked with optimizing a user's CV based on a given position description without revealing that the CV has been optimized or inventing information not present in the original CV.
 
-User CV:
-{cv_text}
-                          
-Position Description:
-{position}
-                          
-Instructions:
+    User CV:
+    {cv_text}
+                            
+    Position Description:
+    {position}
+                            
+    Instructions:
 
-- Review the user's CV carefully.
-- Analyze the position description to understand the specific requirements and preferences of the role.
-- Enhance the user's CV by rephrasing, restructuring, or emphasizing existing information to better match the position description.
-- Ensure that any modifications made are subtle and do not give away the fact that the CV has been optimized.
-- Avoid inventing new information or embellishing existing details beyond what is provided in the original CV.
+    - Review the user's CV carefully.
+    - Analyze the position description to understand the specific requirements and preferences of the role.
+    - Enhance the user's CV by rephrasing, restructuring, or emphasizing existing information to better match the position description.
+    - Ensure that any modifications made are subtle and do not give away the fact that the CV has been optimized.
+    - Avoid inventing new information or embellishing existing details beyond what is provided in the original CV.
 
-Additional Guidance:
+    Additional Guidance:
 
-- Focus on highlighting relevant experiences, skills, and achievements that directly correlate with the position requirements.
-- Use language that mirrors the tone and terminology used in the position description.
-- Maintain the overall format and style of the original CV to avoid suspicion of tampering.
+    - Focus on highlighting relevant experiences, skills, and achievements that directly correlate with the position requirements.
+    - Use language that mirrors the tone and terminology used in the position description.
+    - Maintain the overall format and style of the original CV to avoid suspicion of tampering.
 
-Outcome:
- - Your final output should be an optimized version of the user's CV that appears natural and cohesive while effectively addressing the expectations outlined in the position description.
- - Provide the response in markdown.
-    """)
+    Outcome:
+    - Your final output should be an optimized version of the user's CV that appears natural and cohesive while effectively addressing the expectations outlined in the position description.
+    - Provide the response in markdown.
+        """
 
     if st.button("Optimize my CV!"):
         cv_text = extract_text_from_pdf(uploaded_file)

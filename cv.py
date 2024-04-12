@@ -44,7 +44,8 @@ def main():
 
     position = st.text_area("The poistion copied details:")
 
-    prompt = st.text_area("The prompt",value="""
+    #st.text_area("The prompt",value=
+prompt = """
 Task Description:
 You are tasked with optimizing a user's CV based on a given position description without revealing that the CV has been optimized or inventing information not present in the original CV.
 

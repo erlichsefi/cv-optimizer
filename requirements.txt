@@ -2,4 +2,4 @@ PyPDF2
 streamlit
 python-dotenv
 openai
-autogen
+pyautogen

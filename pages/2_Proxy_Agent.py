@@ -74,7 +74,7 @@ with st.container():
         if (
             "position" not in st.session_state
             or st.session_state["position"] is None
-            and len(st.session_state["position"]) > 10
+            or len(st.session_state["position"]) < 10
         ):
             st.warning("Please fill position details")
             st.stop()

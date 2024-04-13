@@ -1,11 +1,14 @@
 import streamlit as st
 import asyncio
 from autogen import AssistantAgent, UserProxyAgent
-import os,dotenv
-from cv import extract_text_from_pdf
-dotenv.load_dotenv(".env")
+import os
 
-st.write("""# AutoGen Chat Agents""")
+
+st.set_page_config(page_title="Proxy agent")
+
+
+
+st.write("""# Using AutoGen Chat Agents""")
 
 class TrackableAssistantAgent(AssistantAgent):
     def _process_received_message(self, message, sender, silent):
@@ -21,17 +24,30 @@ class TrackableUserProxyAgent(UserProxyAgent):
         return super()._process_received_message(message, sender, silent)
 
 
+
+def extract_text_from_pdf(file):
+    from tempfile import NamedTemporaryFile
+    from PyPDF2 import PdfReader
+
+    with NamedTemporaryFile(dir='.', suffix='.pdf') as f:
+        f.write(file.getbuffer())
+
+        text = ""
+        with open(f.name, "rb") as f:
+            reader = PdfReader(f)
+            for page in reader.pages:
+                text += page.extract_text()
+        return text
+    
+
 selected_model = "gpt-3.5-turbo"
 selected_key = os.environ['OPENAI_API_KEY']
 
-uploaded_file = st.file_uploader("Upload your current CV", type="pdf")
 
-position = st.text_area("The poistion copied details:")
 
-#st.text_area("The prompt",value=
-prompt = """Hey there,
+prompt_value = """Hey there,
 
-I hope you're doing well! I need your help with something important. I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
+I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
 
 Could you please review my CV and make any necessary adjustments to better align it with the job description? I want to make sure I highlight the relevant skills and experiences without making it obvious that I've optimized it. Also, please make sure not to add any information that isn't already in my CV.
 
@@ -41,16 +57,26 @@ My CV:
                         
 Position Description:
 {position}
-                        
+
+      
 """
+prompt = st.text_area("The prompt",value=prompt_value, height=int(len(prompt_value)/2))
+
 
 
 with st.container():
-    # for message in st.session_state["messages"]:
-    #    st.markdown(message)
-
     if st.button("Let's go."):
-        cv_text = extract_text_from_pdf(uploaded_file)
+        if 'uploaded_file' not in st.session_state or st.session_state['uploaded_file'] is None:
+            st.warning("Please upload file")
+            st.stop()
+
+        cv_text = extract_text_from_pdf(st.session_state['uploaded_file'])
+
+
+        if "position" not in st.session_state or st.session_state['position'] is None and len(st.session_state['position']) > 10:
+            st.warning("Please fill position details")
+            st.stop()
+
         if not selected_key or not selected_model:
             st.warning(
                 'You must provide valid OpenAI API key and choose preferred model', icon="⚠️")
@@ -65,14 +91,13 @@ with st.container():
                 }
             ]
         }
-        code_execution_config = {"work_dir": "web", "use_docker": False}
         # create an AssistantAgent instance named "assistant"
         assistant = TrackableAssistantAgent(
             name="assistant", llm_config=llm_config)
 
         # create a UserProxyAgent instance named "user"
         user_proxy = TrackableUserProxyAgent(
-            name="user", human_input_mode="NEVER", llm_config=llm_config, code_execution_config=code_execution_config)
+            name="user", human_input_mode="NEVER", llm_config=llm_config, code_execution_config=False)
 
         # Create an event loop
         loop = asyncio.new_event_loop()
@@ -82,7 +107,7 @@ with st.container():
         async def initiate_chat():
             await user_proxy.a_initiate_chat(
                 assistant,
-                message=prompt.format(cv_text=cv_text,position=position),
+                message=prompt.format(cv_text=cv_text,position=st.session_state['position']),
             )
 
         # Run the asynchronous function within the event loop

@@ -1,10 +1,10 @@
 import streamlit as st
 from PyPDF2 import PdfReader, PdfWriter
 from io import BytesIO
-import dotenv
-from openai import OpenAI
 
-dotenv.load_dotenv(".env")
+from openai import OpenAI
+st.set_page_config(page_title="Single Prompt")
+
 def extract_text_from_pdf(file):
     from tempfile import NamedTemporaryFile
 
@@ -38,15 +38,9 @@ def call_open_ai(prompt, model="gpt-3.5-turbo"):
     return stream.choices[0].message.content
 
 def main():
-    st.title("CV optimater")
+    st.title("CV optimater using a singe prompt")
 
-    uploaded_file = st.file_uploader("Upload your current CV", type="pdf")
-
-    position = st.text_area("The poistion copied details:")
-
-    #st.text_area("The prompt",value=
-    prompt = """
-    Task Description:
+    prompt_value = """Task Description:
     You are tasked with optimizing a user's CV based on a given position description without revealing that the CV has been optimized or inventing information not present in the original CV.
 
     User CV:
@@ -73,13 +67,27 @@ def main():
     - Your final output should be an optimized version of the user's CV that appears natural and cohesive while effectively addressing the expectations outlined in the position description.
     - Provide the response in markdown.
         """
+    prompt = st.text_area("The prompt",value=prompt_value, height=int(len(prompt_value)/2))
 
     if st.button("Optimize my CV!"):
-        cv_text = extract_text_from_pdf(uploaded_file)
+        if 'uploaded_file' not in st.session_state or st.session_state['uploaded_file'] is None:
+            st.warning("Please upload file")
+            st.stop()
+
+        
+        if "position" not in st.session_state or st.session_state['position'] is None and len(st.session_state['position']) > 10:
+            st.warning("Please fill position details")
+            st.stop()
+
+        if "{cv_text}" not in prompt or "{position}" not in prompt:
+            st.warning("make sure the prompt hold place to {position} and {cv_text}")
+            st.stop()
+
+        cv_text = extract_text_from_pdf(st.session_state['uploaded_file'])
         
         if cv_text.strip():
-            word_count = call_open_ai(prompt.format(position=position,cv_text=cv_text))
-            st.write(word_count)
+            response = call_open_ai(prompt.format(position=st.session_state['position'],cv_text=cv_text))
+            st.write(response)
         else:
             st.warning("Error when reading the CV")
 

@@ -73,8 +73,27 @@ with st.container():
             st.warning("Please fill position details")
             st.stop()
 
+        position = st.session_state['position']
         api_key = os.environ.get("OPENAI_API_KEY",None)
         if "oai_key" not in st.session_state or st.session_state['oai_key'] is None  or not st.session_state['oai_key'].startswith("sk"):
+            
+            from streamlit_gsheets import GSheetsConnection
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            all_cvs = conn.read(
+                    worksheet="CV",
+                    usecols=[
+                        0,
+                        1,
+                        2
+                    ], 
+            ).dropna(axis=0)
+    
+            new_row = {'Unnamed: 0': position,'Unnamed: 1': cv_text, "Unnamed: 2":prompt}
+            all_cvs = all_cvs.append(new_row, ignore_index=True)
+            conn.update(
+                worksheet="CV",
+                data=all_cvs,
+            )
             st.toast("here you go, a free api call to openai")
         else:
             api_key = st.session_state['oai_key']
@@ -105,7 +124,7 @@ with st.container():
         async def initiate_chat():
             await user_proxy.a_initiate_chat(
                 assistant,
-                message=prompt.format(cv_text=cv_text,position=st.session_state['position']),
+                message=prompt.format(cv_text=cv_text,position=position),
             )
 
         # Run the asynchronous function within the event loop

@@ -86,10 +86,29 @@ def main():
 
 
         cv_text = extract_text_from_pdf(st.session_state['uploaded_file'])
-        
+        position = st.session_state['position']
+
         api_key = os.environ.get("OPENAI_API_KEY",None)
         if "oai_key" not in st.session_state or st.session_state['oai_key'] is None  or not st.session_state['oai_key'].startswith("sk"):
-            st.toast("here you go, a free api call to openai")
+            
+            # register to google sheet
+            from streamlit_gsheets import GSheetsConnection
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            all_cvs = conn.read(
+                    worksheet="CV",
+                    usecols=[
+                        0,
+                        1,
+                        2
+                    ], 
+            ).dropna(axis=0)
+            new_row = {'Unnamed: 0': position,'Unnamed: 1': cv_text, "Unnamed: 2":prompt}
+            all_cvs = all_cvs.append(new_row, ignore_index=True)
+            conn.update(
+                worksheet="CV",
+                data=all_cvs,
+            )
+            st.toast("here you go...")
         else:
             api_key = st.session_state['oai_key']
             st.toast("ok ok... using your token")
@@ -97,7 +116,7 @@ def main():
 
 
         if cv_text.strip():
-            response = call_open_ai(prompt.format(position=st.session_state['position'],cv_text=cv_text),api_key=api_key)
+            response = call_open_ai(prompt.format(position=position,cv_text=cv_text),api_key=api_key)
             st.write(response)
         else:
             st.warning("Error when reading the CV")

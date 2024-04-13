@@ -1,14 +1,17 @@
 import streamlit as st
 from PyPDF2 import PdfReader, PdfWriter
 from io import BytesIO
+import os
 
 from openai import OpenAI
+
 st.set_page_config(page_title="Single Prompt")
+
 
 def extract_text_from_pdf(file):
     from tempfile import NamedTemporaryFile
 
-    with NamedTemporaryFile(dir='.', suffix='.pdf') as f:
+    with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
         f.write(file.getbuffer())
 
         text = ""
@@ -18,6 +21,7 @@ def extract_text_from_pdf(file):
                 text += page.extract_text()
         return text
 
+
 def create_pdf_from_text(text):
     writer = PdfWriter()
     writer.add_page()
@@ -26,9 +30,10 @@ def create_pdf_from_text(text):
     writer.write(output_pdf)
     return output_pdf.getvalue()
 
-def call_open_ai(prompt, model="gpt-3.5-turbo"):
 
-    client = OpenAI()
+def call_open_ai(prompt, api_key, model="gpt-3.5-turbo"):
+
+    client = OpenAI(api_key=api_key)
 
     stream = client.chat.completions.create(
         model=model,
@@ -36,6 +41,7 @@ def call_open_ai(prompt, model="gpt-3.5-turbo"):
         stream=False,
     )
     return stream.choices[0].message.content
+
 
 def main():
     st.title("CV optimater using a singe prompt")
@@ -67,29 +73,78 @@ def main():
     - Your final output should be an optimized version of the user's CV that appears natural and cohesive while effectively addressing the expectations outlined in the position description.
     - Provide the response in markdown.
         """
-    prompt = st.text_area("The prompt",value=prompt_value, height=int(len(prompt_value)/2))
+    prompt = st.text_area(
+        "The prompt", value=prompt_value, height=int(len(prompt_value) / 2)
+    )
 
     if st.button("Optimize my CV!"):
-        if 'uploaded_file' not in st.session_state or st.session_state['uploaded_file'] is None:
-            st.warning("Please upload file")
+        # check if the CV was uploaded
+        if (
+            "uploaded_file" not in st.session_state
+            or st.session_state["uploaded_file"] is None
+        ):
+            st.warning("Please upload your CV. (in the sidebar)")
             st.stop()
 
-        
-        if "position" not in st.session_state or st.session_state['position'] is None and len(st.session_state['position']) > 10:
-            st.warning("Please fill position details")
+        # check if the position details was uploaded 
+        if (
+            "position" not in st.session_state
+            or st.session_state["position"] is None
+            and len(st.session_state["position"]) > 10
+        ):
+            st.warning("Please fill position details before moving on. (in the sidebar")
             st.stop()
 
+        # check the prompt contains the placeholders
         if "{cv_text}" not in prompt or "{position}" not in prompt:
-            st.warning("make sure the prompt hold place to {position} and {cv_text}")
+            st.warning(
+                "Make sure the keep the holdplacers {position} and {cv_text} in your prompt."
+            )
             st.stop()
 
-        cv_text = extract_text_from_pdf(st.session_state['uploaded_file'])
-        
+        # extract user input
+        cv_text = extract_text_from_pdf(st.session_state["uploaded_file"])
+        position = st.session_state["position"]
+
+        # get the api_key
+        api_key = os.environ.get("OPENAI_API_KEY", None)
+        if (
+            "oai_key" not in st.session_state
+            or st.session_state["oai_key"] is None
+            or not st.session_state["oai_key"].startswith("sk")
+        ):
+
+            # register to google sheet if we keep the key myown 
+            from streamlit_gsheets import GSheetsConnection
+
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            all_cvs = conn.read(
+                worksheet="CV",
+                usecols=[0, 1, 2],
+            ).dropna(axis=0)
+            new_row = {
+                "Unnamed: 0": position,
+                "Unnamed: 1": cv_text,
+                "Unnamed: 2": prompt,
+            }
+            all_cvs = all_cvs.append(new_row, ignore_index=True)
+            conn.update(
+                worksheet="CV",
+                data=all_cvs,
+            )
+            st.toast("Calling OpenAI.")
+        else:
+            api_key = st.session_state["oai_key"]
+            st.toast("Ok Ok... using your token")
+
         if cv_text.strip():
-            response = call_open_ai(prompt.format(position=st.session_state['position'],cv_text=cv_text))
+            response = call_open_ai(
+                prompt.format(position=position, cv_text=cv_text), api_key=api_key
+            )
             st.write(response)
         else:
             st.warning("Error when reading the CV")
+
 
 if __name__ == "__main__":
     main()

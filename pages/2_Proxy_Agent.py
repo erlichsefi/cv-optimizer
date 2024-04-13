@@ -62,6 +62,7 @@ prompt = st.text_area(
 with st.container():
     if st.button("Let's go."):
 
+        # check the cv was uplaoded
         if (
             "uploaded_file" not in st.session_state
             or st.session_state["uploaded_file"] is None
@@ -69,8 +70,7 @@ with st.container():
             st.warning("Please upload file")
             st.stop()
 
-        cv_text = extract_text_from_pdf(st.session_state["uploaded_file"])
-
+        # check the position details 
         if (
             "position" not in st.session_state
             or st.session_state["position"] is None
@@ -79,7 +79,11 @@ with st.container():
             st.warning("Please fill position details")
             st.stop()
 
+        # extract details
+        cv_text = extract_text_from_pdf(st.session_state["uploaded_file"])
         position = st.session_state["position"]
+
+        # selecting open.ai keys
         api_key = os.environ.get("OPENAI_API_KEY", None)
         if (
             "oai_key" not in st.session_state

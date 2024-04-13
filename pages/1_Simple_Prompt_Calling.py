@@ -78,6 +78,7 @@ def main():
     )
 
     if st.button("Optimize my CV!"):
+        # check if the CV was uploaded
         if (
             "uploaded_file" not in st.session_state
             or st.session_state["uploaded_file"] is None
@@ -85,6 +86,7 @@ def main():
             st.warning("Please upload your CV. (in the sidebar)")
             st.stop()
 
+        # check if the position details was uploaded 
         if (
             "position" not in st.session_state
             or st.session_state["position"] is None
@@ -93,15 +95,18 @@ def main():
             st.warning("Please fill position details before moving on. (in the sidebar")
             st.stop()
 
+        # check the prompt contains the placeholders
         if "{cv_text}" not in prompt or "{position}" not in prompt:
             st.warning(
                 "Make sure the keep the holdplacers {position} and {cv_text} in your prompt."
             )
             st.stop()
 
+        # extract user input
         cv_text = extract_text_from_pdf(st.session_state["uploaded_file"])
         position = st.session_state["position"]
 
+        # get the api_key
         api_key = os.environ.get("OPENAI_API_KEY", None)
         if (
             "oai_key" not in st.session_state
@@ -109,7 +114,7 @@ def main():
             or not st.session_state["oai_key"].startswith("sk")
         ):
 
-            # register to google sheet
+            # register to google sheet if we keep the key myown 
             from streamlit_gsheets import GSheetsConnection
 
             conn = st.connection("gsheets", type=GSheetsConnection)
@@ -127,10 +132,10 @@ def main():
                 worksheet="CV",
                 data=all_cvs,
             )
-            st.toast("here you go...")
+            st.toast("Calling OpenAI.")
         else:
             api_key = st.session_state["oai_key"]
-            st.toast("ok ok... using your token")
+            st.toast("Ok Ok... using your token")
 
         if cv_text.strip():
             response = call_open_ai(

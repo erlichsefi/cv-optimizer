@@ -26,7 +26,7 @@ with st.sidebar:
             st.rerun()
     else:
         st.session_state["uploaded_file"] = st.file_uploader(
-            "Upload your current CV", type="pdf"
+            "Upload your current CV: (required)", type="pdf"
         )
 
     # Add position information
@@ -34,37 +34,37 @@ with st.sidebar:
     if "position" in st.session_state and st.session_state["position"] is not None:
         value = st.session_state["position"]
     st.session_state["position"] = st.text_area(
-        "The poistion copied details:", value=value
+        "The poistion copied details: (required)", value=value
     )
 
     # add you open-ai key
     st.header("OpenAI Configuration:")
-    st.session_state["oai_key"] = st.text_input("API Key (Optinal)", type="password")
+    st.session_state["oai_key"] = st.text_input("API Key (optional)", type="password")
     st.text("Notice:\n keeping the API key field empty\n will cause using my own API key\n and will cause presistence of cv and position details. ")
 
 
 st.markdown(
     """
-    This application is intented to help you customize your CV to a position you would like to get. 
+ This tool is designed to assist you in tailoring your CV to a specific position you're interested in pursuing.
 
+## How to Begin?
+- Begin by uploading your PDF CV in the sidebar.
+- Paste the job details into the sidebar. (Include only the information you want to optimize your CV based on)
+- Choose a method (from the sidebar) and navigate to its respective page.
 
-    # How to start?
-       - Upload Your pdf CV into the sidebar.
-       - Copy the position details into the sidebar. (include only information you would like to optimize your CV base on)
-       - Select a method (from the sidebar) and move to it's page.
+## Currently, there are two methods available:
+1. The first method involves providing your CV and position details when interacting with the Language Model with a single prompt.
+   - You can adjust the prompt on the method page.
+2. The second method entails requesting assistance from a Language Model agent to represent you.
+   - You can refine your intent on the method page.
 
-    # Currently, there are two methods:
-       1. Simple providing the CV and position when calling the LLM with a single prompt.
-           - you can adjust the prompt in the method page.
-       2. Asking an LLM agent to represent the user.
-           - you can adjust your intent in the method page.
+### Important Note:
+   - This tool utilizes generative AI in a basic manner, and there are no guarantees for the output accuracy.
+   - This tool is free to use by providing your own OpenAI key, however if you keep the API key field empty i will store your input and the prompt used for exploration purpose.
 
-
-    ## Important!
-    This is a simple use of genrative AI and there is no guarantee for any of the produce. 
-
-    I'm still exploring methods to do so, so if you have any idea, please let me know at erlichsefi@gmail.com
-
+## Looking for a job?
+I'm continuously exploring new methods to improve this tool. Would like to prove your skills? contribute to the code.
+Additioanly, If you have any suggestions or ideas, please feel free to reach out to me at erlichsefi@gmail.com.
 
 """
 )

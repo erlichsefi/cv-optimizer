@@ -3,7 +3,7 @@ import dotenv
 
 dotenv.load_dotenv(".env") # load .env
 st.set_page_config(
-    page_title="Hello",
+    page_title="Wellcome",
     page_icon="👋",
 )
 

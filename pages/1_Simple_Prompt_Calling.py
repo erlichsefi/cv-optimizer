@@ -1,6 +1,7 @@
 import streamlit as st
 from PyPDF2 import PdfReader, PdfWriter
 from io import BytesIO
+import os
 
 from openai import OpenAI
 st.set_page_config(page_title="Single Prompt")
@@ -26,9 +27,9 @@ def create_pdf_from_text(text):
     writer.write(output_pdf)
     return output_pdf.getvalue()
 
-def call_open_ai(prompt, model="gpt-3.5-turbo"):
+def call_open_ai(prompt, api_key, model="gpt-3.5-turbo"):
 
-    client = OpenAI()
+    client = OpenAI(api_key=api_key)
 
     stream = client.chat.completions.create(
         model=model,
@@ -71,22 +72,32 @@ def main():
 
     if st.button("Optimize my CV!"):
         if 'uploaded_file' not in st.session_state or st.session_state['uploaded_file'] is None:
-            st.warning("Please upload file")
+            st.warning("Please upload your CV. (in the sidebar)")
             st.stop()
 
         
         if "position" not in st.session_state or st.session_state['position'] is None and len(st.session_state['position']) > 10:
-            st.warning("Please fill position details")
+            st.warning("Please fill position details before moving on. (in the sidebar")
             st.stop()
 
         if "{cv_text}" not in prompt or "{position}" not in prompt:
-            st.warning("make sure the prompt hold place to {position} and {cv_text}")
+            st.warning("Make sure the keep the holdplacers {position} and {cv_text} in your prompt.")
             st.stop()
+
 
         cv_text = extract_text_from_pdf(st.session_state['uploaded_file'])
         
+        api_key = os.environ.get("OPENAI_API_KEY",None)
+        if "oai_key" not in st.session_state or st.session_state['oai_key'] is None  or not st.session_state['oai_key'].startswith("sk"):
+            st.toast("here you go, a free api call to openai")
+        else:
+            api_key = st.session_state['oai_key']
+            st.toast("ok ok... using your token")
+
+
+
         if cv_text.strip():
-            response = call_open_ai(prompt.format(position=st.session_state['position'],cv_text=cv_text))
+            response = call_open_ai(prompt.format(position=st.session_state['position'],cv_text=cv_text),api_key=api_key)
             st.write(response)
         else:
             st.warning("Error when reading the CV")

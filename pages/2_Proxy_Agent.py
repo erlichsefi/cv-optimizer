@@ -40,11 +40,6 @@ def extract_text_from_pdf(file):
         return text
     
 
-selected_model = "gpt-3.5-turbo"
-selected_key = os.environ['OPENAI_API_KEY']
-
-
-
 prompt_value = """Hey there,
 
 I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
@@ -66,6 +61,7 @@ prompt = st.text_area("The prompt",value=prompt_value, height=int(len(prompt_val
 
 with st.container():
     if st.button("Let's go."):
+        
         if 'uploaded_file' not in st.session_state or st.session_state['uploaded_file'] is None:
             st.warning("Please upload file")
             st.stop()
@@ -77,17 +73,19 @@ with st.container():
             st.warning("Please fill position details")
             st.stop()
 
-        if not selected_key or not selected_model:
-            st.warning(
-                'You must provide valid OpenAI API key and choose preferred model', icon="⚠️")
-            st.stop()
+        api_key = os.environ.get("OPENAI_API_KEY",None)
+        if "oai_key" not in st.session_state or st.session_state['oai_key'] is None  or not st.session_state['oai_key'].startswith("sk"):
+            st.toast("here you go, a free api call to openai")
+        else:
+            api_key = st.session_state['oai_key']
+            st.toast("ok ok... using your token")
 
         llm_config = {
             # "request_timeout": 600,
             "config_list": [
                 {
-                    "model": selected_model,
-                    "api_key": selected_key
+                    "model": "gpt-3.5-turbo",
+                    "api_key": api_key
                 }
             ]
         }

@@ -1,5 +1,6 @@
 import streamlit as st
 import dotenv
+import os
 
 dotenv.load_dotenv(".env") # load .env
 st.set_page_config(
@@ -12,9 +13,6 @@ st.write("# Welcome to CV optimiztion to a certain position! 👋")
 # selected_model = None
 # selected_key = None
 with st.sidebar:
-    # st.header("OpenAI Configuration")
-    # selected_model = st.selectbox("Model", ['gpt-3.5-turbo', 'gpt-4'], index=1)
-    # selected_key = st.text_input("API Key", type="password")
 
     st.header("Your details:")
     value = ""
@@ -30,6 +28,9 @@ with st.sidebar:
     if "position" in st.session_state and st.session_state['position'] is not None:
         value = st.session_state['position']
     st.session_state['position'] = st.text_area("The poistion copied details:",value=value)
+
+    st.header("OpenAI Configuration")
+    st.session_state['oai_key'] = st.text_input("API Key (Optinal)", type="password")
 
 st.markdown(
     """

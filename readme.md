@@ -16,3 +16,9 @@ This application is a proof of concept intended to demonstrate how you can custo
 ### Important Note
 This application is a proof of concept and does not guarantee accurate results. Use it for experimental purposes only.
 Feedback is welcome at erlichsefi@gmail.com.
+
+
+# Dev
+## Setup:
+- Setup google sheet service account has stated [here](https://github.com/streamlit/gsheets-connection/blob/main/examples/pages/Service_Account_Example.py)
+- Get Open.AI keys [here](https://platform.openai.com/account/api-keys) 

@@ -39,8 +39,12 @@ with st.sidebar:
 
     # add you open-ai key
     st.header("OpenAI Configuration:")
-    st.session_state["oai_key"] = st.text_input("API Key (optional)", type="password")
-    st.text("Notice:\n keeping the API key field empty\n will cause using my own API key\n and will cause presistence of cv and position details. ")
+    value = None
+    if "oai_key" in st.session_state and st.session_state["oai_key"] is not None:
+        value = st.session_state["oai_key"]
+
+    st.session_state["oai_key"] = st.text_input("API Key (optional)", type="password",value=value)
+    st.text("Notice:\n keeping the API key field empty\n will cause using my own private\n API key and hence will presistence\n the cv and position details. ")
 
 
 st.markdown(

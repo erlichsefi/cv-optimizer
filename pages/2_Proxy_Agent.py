@@ -7,8 +7,8 @@ import os
 st.set_page_config(page_title="Proxy agent")
 
 
-
 st.write("""# Using AutoGen Chat Agents""")
+
 
 class TrackableAssistantAgent(AssistantAgent):
     def _process_received_message(self, message, sender, silent):
@@ -24,12 +24,11 @@ class TrackableUserProxyAgent(UserProxyAgent):
         return super()._process_received_message(message, sender, silent)
 
 
-
 def extract_text_from_pdf(file):
     from tempfile import NamedTemporaryFile
     from PyPDF2 import PdfReader
 
-    with NamedTemporaryFile(dir='.', suffix='.pdf') as f:
+    with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
         f.write(file.getbuffer())
 
         text = ""
@@ -38,7 +37,7 @@ def extract_text_from_pdf(file):
             for page in reader.pages:
                 text += page.extract_text()
         return text
-    
+
 
 prompt_value = """Hey there,
 
@@ -55,40 +54,52 @@ Position Description:
 
       
 """
-prompt = st.text_area("The prompt",value=prompt_value, height=int(len(prompt_value)/2))
-
+prompt = st.text_area(
+    "The prompt", value=prompt_value, height=int(len(prompt_value) / 2)
+)
 
 
 with st.container():
     if st.button("Let's go."):
-        
-        if 'uploaded_file' not in st.session_state or st.session_state['uploaded_file'] is None:
+
+        if (
+            "uploaded_file" not in st.session_state
+            or st.session_state["uploaded_file"] is None
+        ):
             st.warning("Please upload file")
             st.stop()
 
-        cv_text = extract_text_from_pdf(st.session_state['uploaded_file'])
+        cv_text = extract_text_from_pdf(st.session_state["uploaded_file"])
 
-
-        if "position" not in st.session_state or st.session_state['position'] is None and len(st.session_state['position']) > 10:
+        if (
+            "position" not in st.session_state
+            or st.session_state["position"] is None
+            and len(st.session_state["position"]) > 10
+        ):
             st.warning("Please fill position details")
             st.stop()
 
-        position = st.session_state['position']
-        api_key = os.environ.get("OPENAI_API_KEY",None)
-        if "oai_key" not in st.session_state or st.session_state['oai_key'] is None  or not st.session_state['oai_key'].startswith("sk"):
-            
+        position = st.session_state["position"]
+        api_key = os.environ.get("OPENAI_API_KEY", None)
+        if (
+            "oai_key" not in st.session_state
+            or st.session_state["oai_key"] is None
+            or not st.session_state["oai_key"].startswith("sk")
+        ):
+
             from streamlit_gsheets import GSheetsConnection
+
             conn = st.connection("gsheets", type=GSheetsConnection)
             all_cvs = conn.read(
-                    worksheet="CV",
-                    usecols=[
-                        0,
-                        1,
-                        2
-                    ], 
+                worksheet="CV",
+                usecols=[0, 1, 2],
             ).dropna(axis=0)
-    
-            new_row = {'Unnamed: 0': position,'Unnamed: 1': cv_text, "Unnamed: 2":prompt}
+
+            new_row = {
+                "Unnamed: 0": position,
+                "Unnamed: 1": cv_text,
+                "Unnamed: 2": prompt,
+            }
             all_cvs = all_cvs.append(new_row, ignore_index=True)
             conn.update(
                 worksheet="CV",
@@ -96,25 +107,23 @@ with st.container():
             )
             st.toast("here you go, a free api call to openai")
         else:
-            api_key = st.session_state['oai_key']
+            api_key = st.session_state["oai_key"]
             st.toast("ok ok... using your token")
 
         llm_config = {
             # "request_timeout": 600,
-            "config_list": [
-                {
-                    "model": "gpt-3.5-turbo",
-                    "api_key": api_key
-                }
-            ]
+            "config_list": [{"model": "gpt-3.5-turbo", "api_key": api_key}]
         }
         # create an AssistantAgent instance named "assistant"
-        assistant = TrackableAssistantAgent(
-            name="assistant", llm_config=llm_config)
+        assistant = TrackableAssistantAgent(name="assistant", llm_config=llm_config)
 
         # create a UserProxyAgent instance named "user"
         user_proxy = TrackableUserProxyAgent(
-            name="user", human_input_mode="NEVER", llm_config=llm_config, code_execution_config=False)
+            name="user",
+            human_input_mode="NEVER",
+            llm_config=llm_config,
+            code_execution_config=False,
+        )
 
         # Create an event loop
         loop = asyncio.new_event_loop()
@@ -124,7 +133,7 @@ with st.container():
         async def initiate_chat():
             await user_proxy.a_initiate_chat(
                 assistant,
-                message=prompt.format(cv_text=cv_text,position=position),
+                message=prompt.format(cv_text=cv_text, position=position),
             )
 
         # Run the asynchronous function within the event loop

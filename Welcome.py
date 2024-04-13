@@ -2,7 +2,7 @@ import streamlit as st
 import dotenv
 import os
 
-dotenv.load_dotenv(".env") # load .env
+dotenv.load_dotenv(".env")  
 st.set_page_config(
     page_title="Wellcome",
     page_icon="👋",
@@ -10,27 +10,38 @@ st.set_page_config(
 
 st.write("# Welcome to CV optimiztion to a certain position! 👋")
 
-# selected_model = None
-# selected_key = None
 with st.sidebar:
 
     st.header("Your details:")
+
+    # add CV
     value = ""
-    if "uploaded_file" in st.session_state and st.session_state['uploaded_file'] is not None:
-        
+    if (
+        "uploaded_file" in st.session_state
+        and st.session_state["uploaded_file"] is not None
+    ):
+
         if st.button(f"Remove '{st.session_state['uploaded_file'].name}'"):
             st.session_state.pop("uploaded_file")
             st.rerun()
     else:
-        st.session_state['uploaded_file'] = st.file_uploader("Upload your current CV", type="pdf")
+        st.session_state["uploaded_file"] = st.file_uploader(
+            "Upload your current CV", type="pdf"
+        )
 
+    # Add position information
     value = ""
-    if "position" in st.session_state and st.session_state['position'] is not None:
-        value = st.session_state['position']
-    st.session_state['position'] = st.text_area("The poistion copied details:",value=value)
+    if "position" in st.session_state and st.session_state["position"] is not None:
+        value = st.session_state["position"]
+    st.session_state["position"] = st.text_area(
+        "The poistion copied details:", value=value
+    )
 
-    st.header("OpenAI Configuration")
-    st.session_state['oai_key'] = st.text_input("API Key (Optinal)", type="password")
+    # add you open-ai key
+    st.header("OpenAI Configuration:")
+    st.session_state["oai_key"] = st.text_input("API Key (Optinal)", type="password")
+    st.text("Notice:\n keeping the API key field empty\n will cause using my own API key\n and will cause presistence of cv and position details. ")
+
 
 st.markdown(
     """

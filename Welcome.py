@@ -56,10 +56,11 @@ st.markdown(
 - Paste the job details into the sidebar. (Include only the information you want to optimize your CV based on)
 - Choose a method (from the sidebar) and navigate to its respective page.
 
-## Currently, there are two methods available:
-1. The first method involves providing your CV and position details when interacting with the Language Model with a single prompt.
+## Methods available:
+1. Is there any infromation you've missed from you CV that can help you get the position? an LLN agent will drtill through your CV and position to help you find details to add to the CV.
+2. Providing your CV and position details in a single prompt to the LLM, guiding it to align the CV to the position.
    - You can adjust the prompt on the method page.
-2. The second method entails requesting assistance from a Language Model agent to represent you.
+3. Requesting an LLM agent the represnet you in the CV improvemtns.
    - You can refine your intent on the method page.
 
 ### Important Note:

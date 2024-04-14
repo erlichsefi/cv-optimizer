@@ -19,6 +19,7 @@ CV:
 {cv_text}
 
 provide a short and consice questions in a mean to find information that i've missed from my CV and will help me get the position.
+provide one question at a time and continue from there.
 """
 
 def extract_text_from_pdf(file):

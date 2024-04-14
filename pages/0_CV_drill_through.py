@@ -1,5 +1,6 @@
 from openai import OpenAI
 import streamlit as st
+import os
 
 st.title("CV Drill Through")
 st.markdown("""
@@ -7,7 +8,7 @@ st.markdown("""
             Let's an agnet interview you to find more details you've missed!\n
             Future work will drill through your Github and Linkedin profiles.\n
             """)
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
 system_message = """
 I need you to drill through my CV and the position details i will provide you.
 
@@ -35,7 +36,8 @@ def extract_text_from_pdf(file):
         return text
 
 
-def get_compliation(position,cv_text):
+def get_compliation(position,cv_text,api_key):
+    client = OpenAI(api_key=api_key)
     stream = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=
@@ -54,7 +56,6 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 for message in st.session_state.messages:
-    print(message)
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
@@ -79,10 +80,41 @@ if st.session_state['messages'] or st.button("Drill Down with me"):
     # extract details
     cv_text = extract_text_from_pdf(st.session_state["uploaded_file"])
     position = st.session_state["position"]
+
+
+    api_key = os.environ.get("OPENAI_API_KEY", None)
+    if (
+        "oai_key" not in st.session_state
+        or st.session_state["oai_key"] is None
+        or not st.session_state["oai_key"].startswith("sk")
+    ):
+
+        # register to google sheet if we keep the key myown 
+        from streamlit_gsheets import GSheetsConnection
+
+        conn = st.connection("gsheets", type=GSheetsConnection)
+        all_cvs = conn.read(
+            worksheet="CV",
+            usecols=[0, 1, 2],
+        ).dropna(axis=0)
+        new_row = {
+            "Unnamed: 0": position,
+            "Unnamed: 1": cv_text,
+            "Unnamed: 2": system_message,
+        }
+        all_cvs = all_cvs.append(new_row, ignore_index=True)
+        conn.update(
+            worksheet="CV",
+            data=all_cvs,
+        )
+        st.toast("Calling OpenAI.")
+    else:
+        api_key = st.session_state["oai_key"]
+        st.toast("Ok Ok... using your token")
     
     # agent ask the first question
     with st.chat_message("assistant"):
-        response = get_compliation(position,cv_text)
+        response = get_compliation(position,cv_text,api_key)
         # st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response})
 

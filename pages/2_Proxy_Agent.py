@@ -43,7 +43,8 @@ prompt_value = """Hey there,
 
 I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
 
-Could you please review my CV and make any necessary adjustments to better align it with the job description? I want to make sure I highlight the relevant skills and experiences without making it obvious that I've optimized it. Also, please make sure not to add any information that isn't already in my CV.
+Could you please review my CV and make any necessary adjustments to better align it with the job description? I want to make sure I highlight the relevant skills and experiences without making it obvious that I've optimized it. 
+Also, please make sure not to add any information that isn't already in my CV.
 
 Thanks so much for your help, I really appreciate it!
 My CV:
@@ -74,7 +75,7 @@ with st.container():
         if (
             "position" not in st.session_state
             or st.session_state["position"] is None
-            and len(st.session_state["position"]) > 10
+            or len(st.session_state["position"]) < 10
         ):
             st.warning("Please fill position details")
             st.stop()

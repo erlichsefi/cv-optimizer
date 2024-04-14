@@ -18,7 +18,7 @@ Position details:
 CV:
 {cv_text}
 
-provide a short and consice question in a mean my to find information that i've missed from my CV and can enrich my CV.
+provide a short and consice questions in a mean to find information that i've missed from my CV and will help me get the position.
 """
 
 def extract_text_from_pdf(file):

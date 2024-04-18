@@ -120,61 +120,73 @@ def compile_latex(tex_filename):
 
 if __name__ == "__main__":
 
-    # user_cv_data = get_user_cv_data("user_csv.json")
-    # expected_format = get_expected_latex_format("cv.tex")
-    # generations = get_compliation(system_message=f"""
-    #                 Give the user data, fill the latex format:
-    #                 {expected_format}
+    user_cv_data = get_user_cv_data("user_csv.json")
+    expected_format = get_expected_latex_format("cv.tex")
+    generations = get_compliation(system_message=f"""
+                    Give the user data, fill the latex format:
+                    {expected_format}
 
-    #                 make sure the latex is valid.
-    #                 """,
-    #                 user_input=json.dumps(user_cv_data,indent=4),
-    #                 api_key=os.environ['OPENAI_API_KEY'])
+                    make sure the latex is valid.
+                    """,
+                    user_input=json.dumps(user_cv_data,indent=4),
+                    api_key=os.environ['OPENAI_API_KEY'])
 
-    # dump_latex_to_file(generations.choices[0].message.content,"user_tex.tex")
+    dump_latex_to_file(generations.choices[0].message.content,"user_tex.tex")
 
-    # pdf_filename = None
-    # for _ in range(3):
-    #     try:
-    #         pdf_filename = compile_latex("user_tex.tex")
-    #     except RuntimeError as e:
-    #         latex_file_content = get_user_latex_file("user_tex.tex")
-    #         generations = get_compliation(system_message="""
-    #                 You are tring to complie a latex file
-    #                 fix the issue araise from the compling process
-    #                 response with a fixed latex.
-    #                 """,
-    #                 user_input=f"""
-    #                 {latex_file_content}
-
-    #                 error is:
-    #                 {e}
-    #                 """,
-    #                 api_key=os.environ['OPENAI_API_KEY'])
-    #         dump_latex_to_file(generations.choices[0].message.content,"user_tex.tex")
-    pdf_filename = "user_tex.pdf"
-    if pdf_filename:
-        latex_file_content = get_user_latex_file("user_tex.tex")
-        pngs = pdf_to_image(pdf_filename)
-
-        vision_fixs = have_a_look(
-            pngs[0],
-            prompt="""have a look on this pdf file screenshot, 
-                    what are the fixes you need to make to the latex file that created this pdf, provide instructions.""",
-            api_key=os.environ["OPENAI_API_KEY"],
-        )
-        generations = get_compliation(
-            system_message="""
+    pdf_filename = None
+    for _ in range(3):
+        try:
+            pdf_filename = compile_latex("user_tex.tex")
+        except RuntimeError as e:
+            latex_file_content = get_user_latex_file("user_tex.tex")
+            generations = get_compliation(system_message="""
                     You are tring to complie a latex file
                     fix the issue araise from the compling process
+                    response with a fixed latex.
                     """,
-            user_input=f"""
+                    user_input=f"""
                     {latex_file_content}
 
-                    you got the following istructions to fix:
-                    {vision_fixs}
+                    error is:
+                    {e}
                     """,
-            api_key=os.environ["OPENAI_API_KEY"],
-        )
-        dump_latex_to_file(generations.choices[0].message.content, "user_tex.tex")
-        compile_latex("user_tex.tex")
+                    api_key=os.environ['OPENAI_API_KEY'])
+            dump_latex_to_file(generations.choices[0].message.content,"user_tex.tex")
+
+
+
+
+
+
+
+
+
+
+
+
+# pdf_filename = "user_tex.pdf"
+# if pdf_filename:
+#     latex_file_content = get_user_latex_file("user_tex.tex")
+#     pngs = pdf_to_image(pdf_filename)
+
+#     vision_fixs = have_a_look(
+#         pngs[0],
+#         prompt="""have a look on this pdf file screenshot, 
+#                 what are the fixes you need to make to the latex file that created this pdf, provide instructions.""",
+#         api_key=os.environ["OPENAI_API_KEY"],
+#     )
+#     generations = get_compliation(
+#         system_message="""
+#                 You are tring to complie a latex file
+#                 fix the issue araise from the compling process
+#                 """,
+#         user_input=f"""
+#                 {latex_file_content}
+
+#                 you got the following istructions to fix:
+#                 {vision_fixs}
+#                 """,
+#         api_key=os.environ["OPENAI_API_KEY"],
+#     )
+#     dump_latex_to_file(generations.choices[0].message.content, "user_tex.tex")
+#     compile_latex("user_tex.tex")

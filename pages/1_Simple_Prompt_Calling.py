@@ -86,7 +86,7 @@ def main():
             st.warning("Please upload your CV. (in the sidebar)")
             st.stop()
 
-        # check if the position details was uploaded 
+        # check if the position details was uploaded
         if (
             "position" not in st.session_state
             or st.session_state["position"] is None
@@ -114,7 +114,7 @@ def main():
             or not st.session_state["oai_key"].startswith("sk")
         ):
 
-            # register to google sheet if we keep the key myown 
+            # register to google sheet if we keep the key myown
             from streamlit_gsheets import GSheetsConnection
 
             conn = st.connection("gsheets", type=GSheetsConnection)

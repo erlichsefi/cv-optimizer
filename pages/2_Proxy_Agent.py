@@ -71,7 +71,7 @@ with st.container():
             st.warning("Please upload file")
             st.stop()
 
-        # check the position details 
+        # check the position details
         if (
             "position" not in st.session_state
             or st.session_state["position"] is None

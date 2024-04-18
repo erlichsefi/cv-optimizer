@@ -2,7 +2,7 @@ import streamlit as st
 import dotenv
 import os
 
-dotenv.load_dotenv(".env")  
+dotenv.load_dotenv(".env")
 st.set_page_config(
     page_title="Wellcome",
     page_icon="👋",
@@ -43,8 +43,12 @@ with st.sidebar:
     if "oai_key" in st.session_state and st.session_state["oai_key"] is not None:
         value = st.session_state["oai_key"]
 
-    st.session_state["oai_key"] = st.text_input("API Key (optional)", type="password",value=value)
-    st.text("Notice:\n keeping the API key field empty\n will cause using my own private\n API key and hence will presistence\n the cv and position details. ")
+    st.session_state["oai_key"] = st.text_input(
+        "API Key (optional)", type="password", value=value
+    )
+    st.text(
+        "Notice:\n keeping the API key field empty\n will cause using my own private\n API key and hence will presistence\n the cv and position details. "
+    )
 
 
 st.markdown(

@@ -9,3 +9,6 @@ RUN apt-get update && apt-get install -y \
     texlive-lang-all \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# pdf2image
+RUN apt-get install poppler-utils

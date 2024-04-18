@@ -3,3 +3,7 @@ env
 .cache
 __pycache__
 .streamlit/
+*.log
+*.out
+*.aux
+*.pdf

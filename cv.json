@@ -1,65 +1,90 @@
 {
-    "personal_info": {
-      "name": "[Full Name]",
-      "email": "[Email]",
-      "phone": "[Phone Number]",
-      "address": "[Address]",
-      "linkedin": "[LinkedIn Profile]",
-      "website": "[Website]"
+  "personal_info": {
+    "first_name": "[First Name]",
+    "last_name": "[Last Name]",
+    "email": "[Email]",
+    "phone": "[Phone Number]",
+    "address": "[Address]",
+    "linkedin": "[LinkedIn Profile]",
+    "github": "[Github Profile]",
+    "additional_websites": ["[Website]", "[Website]"]
+  },
+  "education": [
+    {
+      "degree": "[Degree]",
+      "institution": "[University Name]",
+      "location": "[Location]",
+      "graduation_date": "[Graduation Date]",
+      "grade": "[Grade]"
     },
-    "summary": "[Summary]",
-    "education": [
-      {
-        "degree": "[Degree]",
-        "institution": "[University Name]",
-        "location": "[Location]",
-        "graduation_date": "[Graduation Date]",
-        "grade": "[Grade]"
-      },
-      {
-        "degree": "[Degree]",
-        "institution": "[University Name]",
-        "location": "[Location]",
-        "graduation_date": "[Graduation Date]",
-        "grade": "[Grade]"
-      }
-    ],
-    "experience": [
-      {
-        "title": "[Job Title]",
-        "company": "[Company]",
-        "location": "[Location]",
-        "start_date": "[Start Date]",
-        "end_date": "[End Date]",
-        "responsibilities": ["[Responsibility]", "[Responsibility]"],
-        "keywords": ["[Keyword]", "[Keyword]"]
-      },
-      {
-        "title": "[Job Title]",
-        "company": "[Company]",
-        "location": "[Location]",
-        "start_date": "[Start Date]",
-        "end_date": "[End Date]",
-        "responsibilities": ["[Responsibility]", "[Responsibility]"],
-        "keywords": ["[Keyword]", "[Keyword]"]
-      }
-    ],
-    "skills": ["[Skill]", "[Skill]", "[Skill]", "[Skill]"],
-    "certifications": ["[Certification]", "[Certification]"],
-    "projects": [
-      {
-        "title": "[Project Title]",
-        "description": "[Project Description]",
-        "technologies": ["[Technology]", "[Technology]", "[Technology]"],
-        "github_link": "[GitHub Link]"
-      },
-      {
-        "title": "[Project Title]",
-        "description": "[Project Description]",
-        "technologies": ["[Technology]", "[Technology]", "[Technology]"],
-        "github_link": "[GitHub Link]"
-      }
-    ],
-    "languages": ["[Language]", "[Language]", "[Language]"]
-  }
-  
+    {
+      "degree": "[Degree]",
+      "institution": "[University Name]",
+      "location": "[Location]",
+      "graduation_date": "[Graduation Date]",
+      "grade": "[Grade]"
+    }
+  ],
+  "experience": [
+    {
+      "title": "[Job Title]",
+      "company": "[Company]",
+      "location": "[Location]",
+      "start_date": "[Start Date]",
+      "end_date": "[End Date]",
+      "responsibilities": ["[Responsibility]", "[Responsibility]"],
+      "keywords": ["[Keyword]", "[Keyword]"]
+    },
+    {
+      "title": "[Job Title]",
+      "company": "[Company]",
+      "location": "[Location]",
+      "start_date": "[Start Date]",
+      "end_date": "[End Date]",
+      "responsibilities": ["[Responsibility]", "[Responsibility]"],
+      "keywords": ["[Keyword]", "[Keyword]"]
+    }
+  ],
+  "skills": ["[Skill]", "[Skill]", "[Skill]", "[Skill]"],
+  "certifications": ["[Certification]", "[Certification]"],
+  "projects": [
+    {
+      "title": "[Project Title]",
+      "description": "[Project Description]",
+      "technologies": ["[Technology]", "[Technology]", "[Technology]"],
+      "github_link": "[GitHub Link]"
+    },
+    {
+      "title": "[Project Title]",
+      "description": "[Project Description]",
+      "technologies": ["[Technology]", "[Technology]", "[Technology]"],
+      "github_link": "[GitHub Link]"
+    }
+  ],
+  "languages": ["[Language]", "[Language]", "[Language]"],
+  "summary": "[Summary]",
+  "achievements": [
+    {
+      "achievement": "[Achievement]",
+      "date": "[Date]"
+    },
+    {
+      "achievement": "[Achievement]",
+      "date": "[Date]"
+    }
+  ],
+  "publications": [
+    {
+      "title": "[Publication Title]",
+      "date": "[Date]",
+      "description": "[Publication Description]",
+      "link": "[Publication Link]"
+    },
+    {
+      "title": "[Publication Title]",
+      "date": "[Date]",
+      "description": "[Publication Description]",
+      "link": "[Publication Link]"
+    }
+  ]
+}

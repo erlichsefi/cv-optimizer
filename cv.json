@@ -1,12 +1,18 @@
 {
   "personal_info": {
-    "first_name": "[First Name]",
-    "last_name": "[Last Name]",
+    "firstname": "[First Name]",
+    "lastname": "[Last Name]",
     "email": "[Email]",
     "phone": "[Phone Number]",
     "address": "[Address]",
-    "linkedin": "[LinkedIn Profile]",
-    "github": "[Github Profile]",
+    "linkedin": {
+      "link": "[Linkedin link]",
+      "username": ["LinkedIn username"]
+    },
+    "github": {
+      "link": "[Github link]",
+      "username": ["Github username"]
+    },
     "additional_websites": ["[Website]", "[Website]"]
   },
   "education": [

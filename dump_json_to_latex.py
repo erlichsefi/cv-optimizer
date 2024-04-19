@@ -33,7 +33,8 @@ def get_compliation(system_message, user_input, api_key, model="gpt-3.5-turbo"):
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_input},
         ],
-        stream=False,
+        temperature=0,
+        stream=False
     )
     return stream
 
@@ -112,49 +113,69 @@ def compile_latex(tex_filename):
 
     # check if PDF is successfully generated
     if not os.path.exists(pdf_filename):
-        error_message = "Standard output:" + result.stdout.decode() + "\n"
-        error_message += "Standard error:" + result.stderr.decode()
+        error_message  = "process output:" + result.stdout.decode().split("Runaway argument?")[1]
         raise RuntimeError(f"PDF output not found. Error message: {error_message}")
     return pdf_filename
 
+def extract_response(generations):
+    string = generations.choices[0].message.content
+    return string.split("```latex")[1].split("```")[0]
+    
 
 if __name__ == "__main__":
 
     user_cv_data = get_user_cv_data("user_csv.json")
     expected_format = get_expected_latex_format("cv.tex")
     generations = get_compliation(system_message=f"""
-                    Give the user data, fill the latex format:
+                    Given the user data, fill the latex format with the user details.
+                                  
+                    Here is an example of the latex content:
                     {expected_format}
 
-                    make sure the latex is valid.
+                    You need to:
+                        - replace the not latex content of the file with the user details.
+                        - try not to change the latex content that aren't user data.
+                    
+
+                    Respond in the following format:
+                    ```latex
+                    // place your response here
+                    ```
                     """,
                     user_input=json.dumps(user_cv_data,indent=4),
                     api_key=os.environ['OPENAI_API_KEY'])
 
-    dump_latex_to_file(generations.choices[0].message.content,"user_tex.tex")
+    
+    dump_latex_to_file(extract_response(generations),"user_tex.tex")
 
     pdf_filename = None
     for _ in range(3):
         try:
             pdf_filename = compile_latex("user_tex.tex")
         except RuntimeError as e:
-            latex_file_content = get_user_latex_file("user_tex.tex")
-            generations = get_compliation(system_message="""
-                    You are tring to complie a latex file
-                    fix the issue araise from the compling process
-                    response with a fixed latex.
+            latex_file_content = get_user_latex_file("user_tex.tex") #assert latex_file_content == extract_response(generations)
+            generations = get_compliation(system_message=f"""
+You are trying to compile a latex file.
+You need to fix the issues raised by the compiling process.
+
+Guideline:
+    - make minimal changes
+```latex
+// place your the fixd latex here
+```
                     """,
                     user_input=f"""
-                    {latex_file_content}
+Errors:
+{e}
 
-                    error is:
-                    {e}
+File content to fix:
+{latex_file_content}
                     """,
                     api_key=os.environ['OPENAI_API_KEY'])
-            dump_latex_to_file(generations.choices[0].message.content,"user_tex.tex")
+            dump_latex_to_file(extract_response(generations),"user_tex.tex")
 
-
-
+    if not pdf_filename:
+        pdf_filename = compile_latex("user_tex.tex")
 
 
 

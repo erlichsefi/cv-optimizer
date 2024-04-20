@@ -133,8 +133,6 @@ if __name__ == "__main__":
                     {expected_format}
 
                     You need to:
-                        - replace the not latex content of the file with the user details.
-                        - try not to change the latex content that aren't user data.
                         - replace all '&' symbol in user details to the word 'and'
                     
 
@@ -181,36 +179,30 @@ File content to fix:
         pdf_filename = compile_latex("user_tex.tex")
 
 
+    # pdf_filename = "user_tex.pdf"
+    # if pdf_filename:
+    #     latex_file_content = get_user_latex_file("user_tex.tex")
+    #     pngs = pdf_to_image(pdf_filename)
 
+    #     vision_fixs = have_a_look(
+    #         pngs[0],
+    #         prompt="""have a look on this pdf file screenshot, 
+    #                 what are the fixes you need to make to the latex file that created this pdf?
+    #                 is there text overlapping? is there text that is not in place? 
+    #                 provide instructions.""",
+    #         api_key=os.environ["OPENAI_API_KEY"],
+    #     )
+    #     generations = get_compliation(
+    #         system_message="""
+    #                 You are tring the issues provided to you by the user.
+    #                 """,
+    #         user_input=f"""
+    #                 {latex_file_content}
 
-
-
-
-
-
-# pdf_filename = "user_tex.pdf"
-# if pdf_filename:
-#     latex_file_content = get_user_latex_file("user_tex.tex")
-#     pngs = pdf_to_image(pdf_filename)
-
-#     vision_fixs = have_a_look(
-#         pngs[0],
-#         prompt="""have a look on this pdf file screenshot, 
-#                 what are the fixes you need to make to the latex file that created this pdf, provide instructions.""",
-#         api_key=os.environ["OPENAI_API_KEY"],
-#     )
-#     generations = get_compliation(
-#         system_message="""
-#                 You are tring to complie a latex file
-#                 fix the issue araise from the compling process
-#                 """,
-#         user_input=f"""
-#                 {latex_file_content}
-
-#                 you got the following istructions to fix:
-#                 {vision_fixs}
-#                 """,
-#         api_key=os.environ["OPENAI_API_KEY"],
-#     )
-#     dump_latex_to_file(generations.choices[0].message.content, "user_tex.tex")
-#     compile_latex("user_tex.tex")
+    #                 you got the following istructions to fix:
+    #                 {vision_fixs}
+    #                 """,
+    #         api_key=os.environ["OPENAI_API_KEY"],
+    #     )
+    #     dump_latex_to_file(generations.choices[0].message.content, "user_tex.tex")
+    #     compile_latex("user_tex.tex")

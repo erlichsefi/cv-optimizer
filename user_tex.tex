@@ -1,3 +1,6 @@
+% AUTHOR: Sina Atalay
+% LICENSE: https://github.com/sinaatalay/rendercv/blob/main/LICENSE
+
 \documentclass[10pt, letterpaper]{article}
 
 % Packages:
@@ -19,8 +22,8 @@
 \usepackage{fontawesome5} % for using icons
 \usepackage{amsmath} % for math
 \usepackage[
-    pdftitle={Netanel Erlich's CV},
-    pdfauthor={Netanel Erlich},
+    pdftitle={John Doe's CV},
+    pdfauthor={John Doe},
     colorlinks=true,
     urlcolor=primaryColor
 ]{hyperref} % for links, metadata and bookmarks
@@ -39,7 +42,7 @@
 \makeatletter
 \let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
 \patchcmd{\ps@customFooterStyle}{\thepage}{
-    \color{gray}\textit{\small Netanel Erlich - Page \thepage{} of \pageref*{LastPage}}
+    \color{gray}\textit{\small John Doe - Page \thepage{} of \pageref*{LastPage}}
 }{}{} % replace number by desired string
 \makeatother
 \pagestyle{customFooterStyle}
@@ -127,18 +130,22 @@
     \placelastupdatedtext
     \begin{header}
         \fontsize{30 pt}{30 pt}
-        \textbf{Netanel Erlich}
+        \textbf{John Doe}
 
         \vspace{0.3 cm}
 
         \normalsize
-        \mbox{\hrefWithoutArrow{tel:+972524306924}{{\footnotesize\faPhone*}\hspace*{0.13cm}+972-52-4306924}}
+        \mbox{\hrefWithoutArrow{tel:+905419999999}{{\footnotesize\faPhone*}\hspace*{0.13cm}+90 541 999 99 99}}
         \hspace*{0.5 cm}
-        \mbox{\hrefWithoutArrow{mailto:erlichnet57@gmail.com}{{\small\faEnvelope[regular]}\hspace*{0.13cm}erlichnet57@gmail.com}}
+        \mbox{\hrefWithoutArrow{mailto:youremail@yourdomain.com}{{\small\faEnvelope[regular]}\hspace*{0.13cm}youremail@yourdomain.com}}
         \hspace*{0.5 cm}
-        \mbox{{\small\faMapMarker*}\hspace*{0.13cm}Tel Aviv}
+        \mbox{{\small\faMapMarker*}\hspace*{0.13cm}Your Location}
         \hspace*{0.5 cm}
-        \mbox{\hrefWithoutArrow{https://github.com/EhrlichNati}{{\small\faGithub}\hspace*{0.13cm}EhrlichNati}}
+        \mbox{\hrefWithoutArrow{https://yourwebsite.com/}{{\small\faLink}\hspace*{0.13cm}yourwebsite.com}}
+        \hspace*{0.5 cm}
+        \mbox{\hrefWithoutArrow{https://linkedin.com/in/yourusername}{{\small\faLinkedinIn}\hspace*{0.13cm}yourusername}}
+        \hspace*{0.5 cm}
+        \mbox{\hrefWithoutArrow{https://github.com/yourusername}{{\small\faGithub}\hspace*{0.13cm}yourusername}}
         \hspace*{0.5 cm}
     \end{header}
 
@@ -148,7 +155,7 @@
     \section{Summary}
 
         \begin{changemargin}{0.2 cm}{0.2 cm}
-        Student for Bioinformatics with experience in Data Analysis, Engineering, and tutoring. Seeking research or student position in software and ML.
+        This is an example resume to showcase the capabilities of the open-source LaTeX CV generator, \href{https://github.com/sinaatalay/rendercv}{RenderCV}. A substantial part of the content is taken from \href{https://www.careercup.com/resume}{here}, where a \textit{clean and tidy CV} pattern is proposed by \textbf{Gayle L. McDowell}.
         \end{changemargin}
 
 
@@ -165,69 +172,20 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            \textbf{Third year student}
+            \textbf{BS}
             &
-            \textbf{Tel Aviv University}, Computer Science and Biology with specialisation in Bioinformatics
+            \textbf{University of Pennsylvania}, Computer Science
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Graduation Date: 2025
-                \item Degree: Third year student
+                \item GPA: 3.9/4.0 (\href{https://example.com}{Transcript})
+                \item \textbf{Coursework:} Software Foundations, Computer Architecture, Algorithms, Artificial Intelligence, Comparison of Learning Algorithms, Computational Theory.
             \end{highlights}
             &
             
 
-            Tel Aviv
-        \end{tabularx}
-
-
-        \vspace{0.2 cm}
-        \begin{tabularx}{
-            \textwidth-0.4 cm-0.13cm
-        }{
-            L{0.85cm}
-            K{0.2 cm}
-            R{4.1 cm}
-        }
-            
-            &
-            \textbf{Tel Aviv University}, Pre-Med and Biology
-
-            \vspace{0.10 cm}
-
-            \begin{highlights}
-                \item Graduation Date: 2021
-            \end{highlights}
-            &
-            
-
-            Tel Aviv
-        \end{tabularx}
-
-
-        \vspace{0.2 cm}
-        \begin{tabularx}{
-            \textwidth-0.4 cm-0.13cm
-        }{
-            L{0.85cm}
-            K{0.2 cm}
-            R{4.1 cm}
-        }
-            \textbf{5 units: Mathematics, English}
-            &
-            \textbf{Kfar Ganim “Amit” High School}, Full Matriculation
-
-            \vspace{0.10 cm}
-
-            \begin{highlights}
-                \item Graduation Date: 2013
-                \item Subject: 5 units: Mathematics, English
-            \end{highlights}
-            &
-            
-
-            
+            Sept. 2000 to May 2005
         \end{tabularx}
 
 
@@ -240,18 +198,21 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            
-            \textbf{Tel Aviv University - Ron Shamir Lab's}, Data Analyst & Engeneering
+            \textbf{Apple Computer}, Software Engineer, Intern
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Analysis and Engineering of Databases as part of ML tool pipeline using Pandas, Numpy, Statistics
+                \item Reduced time to render the user's buddy list by 75\% by implementing a prediction algorithm.
+                \item Implemented iChat integration with OS X Spotlight Search by creating a tool that extracts metadata from saved chat transcripts and provides metadata to a system-wide search database.
+                \item Redesigned chat file format and implemented backward compatibility for search.
             \end{highlights}
             &
-            Tel Aviv
+            CA, USA
 
-            2024 to Current
+            June 2004 to Aug. 2004
+
+            2 months
         \end{tabularx}
 
         \vspace{0.2 cm}
@@ -261,20 +222,20 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            
-            \textbf{Tel Aviv University}, Network Control Center
+            \textbf{Microsoft Corporation}, Lead Student Ambassador
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Monitoring network issues
-                \item Initial incident response
-                \item Troubleshooting
+                \item Promoted to Lead Student Ambassador in the Fall of 2004, supervised 10 - 15 Student Ambassadors.
+                \item Created and taught a computer science course, CSE 099: Software Design and Development.
             \end{highlights}
             &
-            Tel Aviv
+            WA, USA
 
-            2023 to 2024
+            Sept. 2003 to Apr. 2005
+
+            1 year 7 months
         \end{tabularx}
 
         \vspace{0.2 cm}
@@ -284,19 +245,23 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            
-            \textbf{The Psychometric of the State}, Psychometric Essay Examiner
+            \textbf{University of Pennsylvania}, Head Teaching Assistant
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Evaluation and assessment of psychometric essays
+                \item Implemented a user interface for the VS open file switcher (ctrl-tab) and extended it to tool windows.
+                \item Created a service to provide gradient across VS and VS add-ins. Optimized service via caching.
+                \item Programmer Productivity Research Center (Summers 2001, 2002)
+                \item Built app to compute the similarity of all methods in a code base, reduced time from $\mathcal{O}(n^2)$ to $\mathcal{O}(n \log n)$. 
+                \item Created a test case generation tool that creates random XML docs from XML Schema.
             \end{highlights}
             &
-            
+            PA, USA
 
-            
-            2020 to 2021
+            Oct. 2001 to May 2005
+
+            3 years 7 months
         \end{tabularx}
 
         \vspace{0.2 cm}
@@ -306,31 +271,37 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            
-            \textbf{Independent Psychometrics and Mathematics Tutor}
+            \textbf{Microsoft Corporation}, Software Design Engineer, Intern
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Designing personalised study plans
-                \item Conducting effective teaching sessions
+                \item Promoted to Lead Student Ambassador in the Fall of 2004, supervised 10 - 15 Student Ambassadors.
             \end{highlights}
             &
-            
+            WA, USA
 
-            
-            2019 to 2020
+            June 2003 to Aug. 2003
+
+            2 months
         \end{tabularx}
 
 
     
-    \section{Skills}
+    \section{Publications}
 
-        \begingroup\leftskip=0.2 cm
-        \advance\csname @rightskip\endcsname 0.2 cm
-        \advance\rightskip 0.2 cm
+        \begin{tabularx}{\textwidth-0.4 cm-0.13cm}{K{0.2 cm} R{4.1 cm}}
+            \textbf{Magneto-Thermal Thin Shell Approximation for 3D Finite Element Analysis of No-Insulation Coils}
 
-        \textbf{Languages:} Python, Java, Object-oriented programming/design, CS Statistics, Data analysis, Data Structures, Introduction to Machine Learning, Algorithms, Git and GitHub \par\endgroup
+            \vspace{0.10 cm}
+
+            \mbox{A. Smith}, \mbox{\textbf{\textit{J. Doe}}}, \mbox{J. Derry}, \mbox{H. Tom}, \mbox{A. Andsurname}
+
+            \vspace{0.10 cm}
+
+            \href{https://doi.org/10.1109/TASC.2023.3340648}{10.1109/TASC.2023.3340648} ()    &
+            Jan. 2004
+        \end{tabularx}
 
 
     
@@ -342,20 +313,20 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            
-            \textbf{Raw Data Preparation using Pandas}
+            \textbf{Multi-User Drawing Tool}
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Data Cleanup for Garmin Sports Watch
+                \item Developed an electronic classroom where multiple users can view and simultaneously draw on a "chalkboard" with each person's edits synchronized.
+                \item Used C++ and MFC.
             \end{highlights}
             &
             
 
-            
-            \href{https://github.com/EhrlichNati/Garmin-Sports-Watch-Data-Cleanup}{GitHub Link}
+            Jan. 2004
         \end{tabularx}
+
 
         \vspace{0.2 cm}
         \begin{tabularx}{
@@ -364,65 +335,78 @@
             K{0.2 cm}
             R{4.1 cm}
         }
-            
-            \textbf{CNN Classification From Scratch using Numpy}
+            \textbf{Synchronized Calendar}
 
             \vspace{0.10 cm}
 
             \begin{highlights}
-                \item Binary Classification
+                \item Developed a desktop calendar with globally shared and synchronized calendars, allowing users to schedule meetings with other users.
+                \item Used C\#.NET, SQL, and XML.
             \end{highlights}
             &
             
 
-            
-            \href{https://github.com/EhrlichNati/CNN-from-scratch-Binary-Classification-}{GitHub Link}
+            2003 to 2004
         \end{tabularx}
 
 
+        \vspace{0.2 cm}
+        \begin{tabularx}{
+            \textwidth-0.4 cm-0.13cm
+        }{
+            K{0.2 cm}
+            R{4.1 cm}
+        }
+            \textbf{Operating System}
+
+            \vspace{0.10 cm}
+
+            \begin{highlights}
+                \item Developed a UNIX-style OS with a scheduler, file system, text editor, and calculator.
+                \item Used C.
+            \end{highlights}
+            &
+            
+
+            Jan. 2002
+        \end{tabularx}
+
+
+
     
-    \section{Languages}
+    \section{Additional Experience And Awards}
 
         \begingroup\leftskip=0.2 cm
         \advance\csname @rightskip\endcsname 0.2 cm
         \advance\rightskip 0.2 cm
 
-        \textbf{Languages:} Hebrew, English \par\endgroup
-
-
-    
-    \section{Achievements}
-
-        \begin{tabularx}{\textwidth-0.4 cm-0.13cm}{K{0.2 cm} R{4.1 cm}}
-            
-            \textbf{Excellence Badge during military training}
-
-            \vspace{0.10 cm}
-
-            \mbox{Date: 2017}
-            &
-            
-            
-        \end{tabularx}
+        \textbf{Instructor (2003 - 2005):} Taught two full-credit Computer Science courses. \par\endgroup
 
         \vspace{0.2 cm}
-        \begin{tabularx}{\textwidth-0.4 cm-0.13cm}{K{0.2 cm} R{4.1 cm}}
-            
-            \textbf{Top rank among company commanders}
+        \begingroup\leftskip=0.2 cm
+        \advance\csname @rightskip\endcsname 0.2 cm
+        \advance\rightskip 0.2 cm
 
-            \vspace{0.10 cm}
-
-            \mbox{Date: 2017}
-            &
-            
-            
-        \end{tabularx}
+        \textbf{Third Prize, Senior Design Projects:} Awarded 3rd prize for a synchronized calendar project out of 100 projects. \par\endgroup
 
 
     
-    \section{Publications}
+    \section{Technologies}
 
-        % No publications
+        \begingroup\leftskip=0.2 cm
+        \advance\csname @rightskip\endcsname 0.2 cm
+        \advance\rightskip 0.2 cm
 
+        \textbf{Languages:} C++, C, Java, Objective-C, C\#.NET, SQL, JavaScript \par\endgroup
+
+        \vspace{0.2 cm}
+        \begingroup\leftskip=0.2 cm
+        \advance\csname @rightskip\endcsname 0.2 cm
+        \advance\rightskip 0.2 cm
+
+        \textbf{Software:} Visual Studio, Microsoft SQL Server, Eclipse, XCode, Interface Builder \par\endgroup
+
+
+    
 
 \end{document}

@@ -5,10 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "User Pdf to CSV",
+            "name": "User Pdf to JSON",
             "type": "debugpy",
             "request": "launch",
-            "program": "extract_data.py",
+            "program": "extract_cv_data.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "Position to JSON",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "extract_position_data.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env"
         },

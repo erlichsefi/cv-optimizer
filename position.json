@@ -1,0 +1,36 @@
+{
+    "job_title": "[Job Title]",
+    "company": "[Company Name]",
+    "location": "[Location]",
+    "job_type": "[Job Type]",
+    "salary": "[Salary Range]",
+    "description": "[Job Description]",
+    "requirements": [
+      "[Requirement 1]",
+      "[Requirement 2]",
+      "[Requirement 3]",
+      "[Requirement 4]",
+      "[Requirement 5]"
+    ],
+    "responsibilities": [
+      "[Responsibility 1]",
+      "[Responsibility 2]",
+      "[Responsibility 3]",
+      "[Responsibility 4]",
+      "[Responsibility 5]"
+    ],
+    "benefits": [
+      "[Benefit 1]",
+      "[Benefit 2]",
+      "[Benefit 3]",
+      "[Benefit 4]",
+      "[Benefit 5]"
+    ],
+    "skills": [
+      {"tag": "Programming Languages", "importance": 5},
+      {"tag": "Web Development Frameworks", "importance": 4},
+      {"tag": "Data Structures and Algorithms", "importance": 4},
+      {"tag": "Communication Skills", "importance": 5},
+      {"tag": "Problem-solving", "importance": 5}
+    ]
+  }

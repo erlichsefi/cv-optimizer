@@ -135,6 +135,7 @@ if __name__ == "__main__":
                     You need to:
                         - replace the not latex content of the file with the user details.
                         - try not to change the latex content that aren't user data.
+                        - replace all '&' symbol in user details to the word 'and'
                     
 
                     Respond in the following format:
@@ -148,12 +149,14 @@ if __name__ == "__main__":
     
     dump_latex_to_file(extract_response(generations),"user_tex.tex")
 
+    tex_filename = "user_tex.tex"
     pdf_filename = None
     for _ in range(3):
         try:
-            pdf_filename = compile_latex("user_tex.tex")
+            pdf_filename = compile_latex(tex_filename)
+            break
         except RuntimeError as e:
-            latex_file_content = get_user_latex_file("user_tex.tex") #assert latex_file_content == extract_response(generations)
+            latex_file_content = get_user_latex_file(tex_filename) #assert latex_file_content == extract_response(generations)
             generations = get_compliation(system_message=f"""
 You are trying to compile a latex file.
 You need to fix the issues raised by the compiling process.

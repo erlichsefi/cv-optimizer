@@ -41,9 +41,6 @@
 \setlength{\topskip}{0pt} % no top skip
 \makeatletter
 \let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
-\patchcmd{\ps@customFooterStyle}{\thepage}{
-    \color{gray}\textit{\small John Doe - Page \thepage{} of \pageref*{LastPage}}
-}{}{} % replace number by desired string
 \makeatother
 \pagestyle{customFooterStyle}
 

@@ -51,5 +51,5 @@ if __name__ == "__main__":
 
     user_extracted_data = json.loads(json_format.choices[0].message.content)
     set_user_cv_data(
-        user_json_filename="user_csv.json", user_cv_user=user_extracted_data
+        user_json_filename="user_cv.json", user_cv_user=user_extracted_data
     )

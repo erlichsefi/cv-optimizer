@@ -124,7 +124,7 @@ def extract_response(generations):
 
 if __name__ == "__main__":
 
-    user_cv_data = get_user_cv_data("user_csv.json")
+    user_cv_data = get_user_cv_data("user_cv.json")
     expected_format = get_expected_latex_format("cv.tex")
     generations = get_compliation(system_message=f"""
                     Given the user data, fill the latex format with the user details.

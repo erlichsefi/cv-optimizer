@@ -4,3 +4,4 @@ python-dotenv
 openai
 pyautogen
 st-gsheets-connection
+google-generativeai==0.3.1

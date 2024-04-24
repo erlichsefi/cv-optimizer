@@ -8,7 +8,7 @@
             "name": "User Pdf to JSON",
             "type": "debugpy",
             "request": "launch",
-            "program": "extract_cv_data.py",
+            "program": "utils/extract_cv_data.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env"
         },
@@ -16,7 +16,7 @@
             "name": "Position to JSON",
             "type": "debugpy",
             "request": "launch",
-            "program": "extract_position_data.py",
+            "program": "utils/extract_position_data.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env"
         },
@@ -24,7 +24,16 @@
             "name": "User data to Latex",
             "type": "debugpy",
             "request": "launch",
-            "program": "dump_json_to_latex.py",
+            "program": "utils/dump_json_to_latex.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": false
+        },
+        {
+            "name": "Stremlit",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/dump_json_to_latex.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": false

@@ -3,13 +3,27 @@ import json
 import os
 
 
-def extract_text_from_pdf(file):
-    text = ""
-    with open(file, "rb") as f:
-        reader = PdfReader(f)
-        for page in reader.pages:
-            text += page.extract_text()
-    return text
+def extract_text_from_pdf(filename):
+    if isinstance(filename,str):
+        text = ""
+        with open(filename, "rb") as f:
+            reader = PdfReader(f)
+            for page in reader.pages:
+                text += page.extract_text()
+        return text
+    else:
+        from tempfile import NamedTemporaryFile
+        from PyPDF2 import PdfReader
+
+        with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
+            f.write(filename.getbuffer())
+
+            text = ""
+            with open(f.name, "rb") as f:
+                reader = PdfReader(f)
+                for page in reader.pages:
+                    text += page.extract_text()
+            return text
 
 
 def get_compliation(system_message, user_input, api_key):
@@ -37,9 +51,9 @@ def set_user_cv_data(user_json_filename, user_cv_user):
         return json.dump(user_cv_user, file)
 
 
-if __name__ == "__main__":
-    extracted_text = extract_text_from_pdf("Netanel Erlich- CV.pdf")
-    expected_json = get_expected_cv_data("cv.json")
+def run(cv_path,cv_json_format_path,output_path):
+    extracted_text = extract_text_from_pdf(cv_path)
+    expected_json = get_expected_cv_data(cv_json_format_path)
     json_format = get_compliation(
         system_message=f"""
                 Extract the CV into the following format:
@@ -51,5 +65,10 @@ if __name__ == "__main__":
 
     user_extracted_data = json.loads(json_format.choices[0].message.content)
     set_user_cv_data(
-        user_json_filename="user_cv.json", user_cv_user=user_extracted_data
+        user_json_filename=output_path, user_cv_user=user_extracted_data
     )
+    return user_extracted_data
+
+
+if __name__ == "__main__":
+    run("Netanel Erlich- CV.pdf","cv.json","user_cv.json")

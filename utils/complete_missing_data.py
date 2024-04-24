@@ -77,7 +77,7 @@ def get_questions(user_cv):
         "question":"<the question to the user>",
         "regex":"<a python regex to validate the user input>",
         "regex_fail_message":"<the message if the regex fail>",
-        "target_missing": [xpath from the root of the json to the key in a list]
+        "target_missing": [a list of path 'key' and indexies only from the root of the json to the place to put the value]
     }},
     // more if you have
     ]
@@ -112,4 +112,4 @@ def run(user_cs_json_path,output_user_csv):
 
 
 if __name__ == "__main__":
-    run("user_cv.json",output_user_csv="full_user_cv.json")
+    run("user_data/user.json",output_user_csv="user_data/full_user_cv.json")

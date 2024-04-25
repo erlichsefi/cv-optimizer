@@ -17,6 +17,7 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
             {"role": "user", "content": user_input},
         ],
         stream=False,
+        temperature=0
     )
 
     if is_json_expected:

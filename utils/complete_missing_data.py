@@ -40,22 +40,24 @@ def get_questions(user_cv):
 def get_issues_need_to_be_adressed(user_cv):
 
     prompt = f"""
-    Your goal is to complete the information missing or corrupted user data.
-    For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+    Your goal is to complete the information missing or corrupted in the user data.
+    For all values (included nested ones) in the user data:
+        - is the value missing? if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+        - is the value corrupted? is the data there is correpted? if it corrupted provide a question that will verfiy the true value.
+        - is the value make sense given the key? if not, verify it with the user. 
 
     user data:
     {json.dumps(user_cv,indent=4)}
 
+    
     Provide all questions in the following format:
 
     ```json
-    [{{
-        "question":"<the question to the user>",
-    }},
+    [
+    "<the question to the user>",
     // more if you have
     ]
     ```
-    When you don't have any other question respond with 'quit'.
     """
 
     return get_compliation("",prompt,is_json_expected=True)
@@ -106,16 +108,16 @@ def complete_by_qna(user_cv):
 
 
 def chat_on_question(user_cv):
-    #issues_to_adresss = get_issues_need_to_be_adressed(user_cv)
+    issues_to_adresss = get_issues_need_to_be_adressed(user_cv)
 
     system_prompt = f"""
         Your goal is to complete the information missing or corrupted user data.
-        For each entry in the user data, make sure the value stored make sense:
-         - is it missing? if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
-         - is it corrupted? is the data there make correpted? if it mising provide a question that will verfiy the true value 
 
         user data:
         {json.dumps(user_cv,indent=4)}
+
+        issues to address:
+        {json.dumps(issues_to_adresss,indent=4)}
     """
 
     messages = chatbot(system_prompt,topic="understanding the cv")

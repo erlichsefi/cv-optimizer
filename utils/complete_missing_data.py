@@ -5,13 +5,12 @@ from enum import Enum
 from openai import OpenAI
 import retry
 
-from llm_store import chatbot
+from llm_store import chatbot,get_compliation
 from filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint
 
 
 
 
-@retry.retry(exceptions=(json.decoder.JSONDecodeError))
 def get_questions(user_cv):
 
     prompt = f"""
@@ -36,9 +35,30 @@ def get_questions(user_cv):
     When you don't have any other question respond with 'quit'.
     """
 
-    response = get_compliation("",prompt)
-    return json.loads(response.choices[0].message.content.replace("```json","").replace("```",""))
+    return get_compliation("",prompt,is_json_expected=True)
     
+def get_issues_need_to_be_adressed(user_cv):
+
+    prompt = f"""
+    Your goal is to complete the information missing or corrupted user data.
+    For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+
+    user data:
+    {json.dumps(user_cv,indent=4)}
+
+    Provide all questions in the following format:
+
+    ```json
+    [{{
+        "question":"<the question to the user>",
+    }},
+    // more if you have
+    ]
+    ```
+    When you don't have any other question respond with 'quit'.
+    """
+
+    return get_compliation("",prompt,is_json_expected=True)
 
 
 def complete_by_qna(user_cv):
@@ -86,6 +106,8 @@ def complete_by_qna(user_cv):
 
 
 def chat_on_question(user_cv):
+    #issues_to_adresss = get_issues_need_to_be_adressed(user_cv)
+
     system_prompt = f"""
         Your goal is to complete the information missing or corrupted user data.
         For each entry in the user data, make sure the value stored make sense:
@@ -94,8 +116,6 @@ def chat_on_question(user_cv):
 
         user data:
         {json.dumps(user_cv,indent=4)}
-
-        
     """
 
     messages = chatbot(system_prompt,topic="understanding the cv")

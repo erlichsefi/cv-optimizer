@@ -20,7 +20,7 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
     )
 
     if is_json_expected:
-       return json.loads(stream.choices[0].message.content)
+       return json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
     return stream
 
 
@@ -35,9 +35,13 @@ def chatbot(system_prompt,topic):
     Response format:
     ```json
     {{
+        "issues_addressed":[
+          // list of all inforamtion already gained.
+        ],
         "information_gain": "<the information you would like to retrive>",
         "is_followup": "<is this message a followup to complted previous messages",
         "message": "<the message to send the user to obtain the information. be nice!>",
+        "is_all_issue_adressed": "<true if all the issues addressed and this is a goodbye message>",
         "expectation": "<what you expected to learn from the user answer>"
         
     }}
@@ -75,9 +79,10 @@ def chatbot(system_prompt,topic):
                 
 
     # Print the response and add it to the messages list
-    if chat_message['message'].lower() == "quit":
-      break
     print(f"Bot: {chat_message['message']}")
+    if str(chat_message['is_all_issue_adressed']).lower() == "true":
+      break
+    
 
     # Prompt user for input
     message = input("User: ")

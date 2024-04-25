@@ -84,13 +84,13 @@
   "publications": [
     {
       "title": "[Publication Title]",
-      "date": "[Date]",
+      "publish_date": "[Date]",
       "description": "[Publication Description]",
       "link": "[Publication Link]"
     },
     {
       "title": "[Publication Title]",
-      "date": "[Date]",
+      "publish_date": "[Date]",
       "description": "[Publication Description]",
       "link": "[Publication Link]"
     }

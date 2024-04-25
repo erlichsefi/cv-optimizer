@@ -28,9 +28,11 @@ def chatbot(system_prompt,topic):
     Response format:
     ```json
     {{
-        "question": "the question to ask",
-        "message": "the message to send the user, that contains the question. be nice!",
-        "expectation": "what you expected to learn from the user answer"
+        "information_gain": "<the information you would like to retrive>",
+        "is_followup": "<is this message a followup to complted previous messages",
+        "message": "<the message to send the user to obtain the information. be nice!>",
+        "expectation": "<what you expected to learn from the user answer>"
+        
     }}
     ```"""
   messages = [

@@ -22,8 +22,7 @@
       "location": "[Location]",
       "start_date": "[The Start of the dgree]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade]",
-      "is_ongoing": "[True if the user currently work here]"
+      "grade": "[Grade]"
     },
     {
       "degree": "[Degree]",
@@ -31,8 +30,7 @@
       "location": "[Location]",
       "start_date": "[The Start of the dgree]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade]",
-      "is_ongoing": "[True if the user currently work here]"
+      "grade": "[Grade]"
     }
   ],
   "experience": [
@@ -41,7 +39,7 @@
       "company": "[Company]",
       "location": "[Location]",
       "start_date": "[Start Date]",
-      "end_date": "[End Date]",
+      "end_date": "[End Date or 'ongoing']",
       "responsibilities": ["[Responsibility]", "[Responsibility]"],
       "keywords": ["[Keyword]", "[Keyword]"]
     },
@@ -50,7 +48,7 @@
       "company": "[Company]",
       "location": "[Location]",
       "start_date": "[Start Date]",
-      "end_date": "[End Date]",
+      "end_date": "[End Date or 'ongoing']",
       "responsibilities": ["[Responsibility]", "[Responsibility]"],
       "keywords": ["[Keyword]", "[Keyword]"]
     }

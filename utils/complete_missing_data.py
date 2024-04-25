@@ -8,65 +8,7 @@ import retry
 from llm_store import chatbot
 from filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint
 
-def get_user_cv(user_cv_json_path):
-    with open(user_cv_json_path,'r') as file:
-        return json.load(file)
 
-def get_expected_cv_data(user_json_filename):
-    with open(user_json_filename, "r") as file:
-        return json.load(file)
-    
-def set_user_cv(output_user_csv,user_cv):
-    with open(output_user_csv,"w") as file:
-        json.dump(user_cv,file)
-
-def get_compliation(system_message, user_input, api_key=None):
-    if not api_key:
-        api_key = os.environ['OPENAI_API_KEY']
-
-    client = OpenAI(api_key=api_key)
-    stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_input},
-        ],
-        stream=False,
-    )
-    return stream
-
-
-
-def set_value_at_xpath(current, xpath, value):
-    for step in xpath[:-1]:
-        if isinstance(current, list):
-            current = current[step]
-        elif isinstance(current, dict):
-            current = current.get(step)
-            if current is None:
-                return
-        else:
-            return
-    if isinstance(current, list):
-        try:
-            current[xpath[-1]] = value
-        except IndexError:
-            return
-    elif isinstance(current, dict):
-        current[xpath[-1]] = value
-
-
-
-def validate_regex(regex, string):
-    try:
-        re.compile(regex)
-        match = re.search(regex, string)
-        if match:
-            return True
-        else:
-            return False
-    except re.error:
-        return False
 
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
@@ -100,6 +42,37 @@ def get_questions(user_cv):
 
 
 def complete_by_qna(user_cv):
+    def set_value_at_xpath(current, xpath, value):
+        for step in xpath[:-1]:
+            if isinstance(current, list):
+                current = current[step]
+            elif isinstance(current, dict):
+                current = current.get(step)
+                if current is None:
+                    return
+            else:
+                return
+        if isinstance(current, list):
+            try:
+                current[xpath[-1]] = value
+            except IndexError:
+                return
+        elif isinstance(current, dict):
+            current[xpath[-1]] = value
+
+
+
+    def validate_regex(regex, string):
+        try:
+            re.compile(regex)
+            match = re.search(regex, string)
+            if match:
+                return True
+            else:
+                return False
+        except re.error:
+            return False
+    
     question_to_ask = get_questions(user_cv)
     for entry in question_to_ask:
         while True:

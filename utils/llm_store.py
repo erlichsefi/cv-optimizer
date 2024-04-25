@@ -1,8 +1,10 @@
 import os
 import json
 from openai import OpenAI
+import retry
 
-def get_compliation(system_message, user_input, api_key=None):
+@retry.retry(exceptions=(json.decoder.JSONDecodeError))
+def get_compliation(system_message, user_input, is_json_expected=False, api_key=None):
     if not api_key:
         api_key = os.environ['OPENAI_API_KEY']
 
@@ -15,6 +17,9 @@ def get_compliation(system_message, user_input, api_key=None):
         ],
         stream=False,
     )
+
+    if is_json_expected:
+       return json.loads(stream.choices[0].message.content)
     return stream
 
 

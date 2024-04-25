@@ -90,7 +90,7 @@ def get_questions(user_cv):
     // more if you have
     ]
     ```
-
+    When you don't have any other question respond with 'quit'.
     """
 
     response = get_compliation("",prompt)
@@ -114,10 +114,14 @@ def complete_by_qna(user_cv):
 def chat_on_question(user_cv):
     system_prompt = f"""
         Your goal is to complete the information missing or corrupted user data.
-        For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+        For each entry in the user data, make sure the value stored make sense:
+         - is it missing? if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+         - is it corrupted? is the data there make correpted? if it mising provide a question that will verfiy the true value 
 
         user data:
         {json.dumps(user_cv,indent=4)}
+
+        
     """
 
     messages = chatbot(system_prompt,topic="understanding the cv")
@@ -135,7 +139,7 @@ def chat_on_question(user_cv):
     emend the user data according to the information in the interview:
     1. include all the information from the user data.
     2. emend the infromation according to the information provided in the interview.
-
+    
     ```json
     {json.dumps(expected,indent=4)}
     ```

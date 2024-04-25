@@ -1,9 +1,9 @@
-from PyPDF2 import PdfReader
 import json
 import os
 
 
 def extract_text_from_pdf(filename):
+    from PyPDF2 import PdfReader
     if isinstance(filename,str):
         text = ""
         with open(filename, "rb") as f:
@@ -71,4 +71,4 @@ def run(cv_path,cv_json_format_path,output_path):
 
 
 if __name__ == "__main__":
-    run("Netanel Erlich- CV.pdf","cv.json","user_cv.json")
+    run(cv_path="Curriculum_Vitae_Jan24.pdf",cv_json_format_path="cv.json",output_path="user_cv.json")

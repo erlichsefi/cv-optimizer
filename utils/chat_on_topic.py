@@ -50,6 +50,8 @@ def chatbot(system_prompt,topic):
                 
 
     # Print the response and add it to the messages list
+    if chat_message['message'].lower() == "quit":
+      break
     print(f"Bot: {chat_message['message']}")
 
     # Prompt user for input

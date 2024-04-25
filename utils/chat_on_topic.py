@@ -3,22 +3,32 @@ from openai import OpenAI
 import os
 import json
 
-# Load your API key from an environment variable or secret management service
-api_key = os.environ['OPENAI_API_KEY']
 
 def chatbot(system_prompt,topic):
   print("Start chatting with the bot (type 'quit' to stop)!")
   print(f"Bot: Let's talk about your time at {topic}")
   # Create a list to store all the messages for context
+
+  system_prompt = f"""{system_prompt} \n.
+    Response format:
+    ```json
+    {{
+        "question": "the question to ask",
+        "message": "the message to send the user, that contains the question. be nice!",
+        "expectation": "what you expected to learn from the user answer"
+    }}
+    ```"""
   messages = [
     {"role": "system", "content": system_prompt},
   ]
+
+  
 
   # Keep repeating the following
   while True:
 
     # Request gpt-3.5-turbo for chat completion
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
     
     max_retries = 3
     retry_count = 0
@@ -52,6 +62,7 @@ def chatbot(system_prompt,topic):
     # Add each new message to the list
     messages.append({"role": "assistant", "content": json.dumps(chat_message,indent=4)})
     messages.append({"role": "user", "content": message})
+  return messages
     
 
 if __name__ == "__main__":
@@ -72,15 +83,6 @@ if __name__ == "__main__":
     {json.dumps(experience_test,indent=4)}
     You Goal is to asses what skills I've gained during this time.
     When you think that you've understood the skill set I've gained you can respond with 'quit'.
-
-    Response format:
-    ```json
-    {{
-    "question": "the question to ask",
-    "message": "the message to send the user, that contains the question. be nice!",
-    "expectation": "what you expected to learn from the user answer"
-    }}
-    ```
     only one question at a time.
     """
   chatbot(system_prompt,topic="TEST TOPIC")

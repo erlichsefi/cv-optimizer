@@ -1,8 +1,11 @@
 import json
 import re
 import os
+from enum import Enum
 from openai import OpenAI
 import retry
+
+from chat_on_topic import chatbot
 
 def get_user_cv(user_cv_json_path):
     with open(user_cv_json_path,'r') as file:
@@ -91,13 +94,9 @@ def get_questions(user_cv):
     
 
 
-def run(user_cs_json_path,output_user_csv):
-    user_cv = get_user_cv(user_cs_json_path)
+def complete_by_qna(user_cv):
     question_to_ask = get_questions(user_cv)
-    
-    # this is UI component.
     for entry in question_to_ask:
-
         while True:
             print(f"Q: {entry['question']}")
             answer = input()
@@ -107,10 +106,36 @@ def run(user_cs_json_path,output_user_csv):
             else:
                 print(entry['regex_fail_message'])
 
+
+def chat_on_question(user_cv):
+    system_prompt = f"""
+        Your goal is to complete the information missing or corrupted user data.
+        For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+
+        user data:
+        {json.dumps(user_cv,indent=4)}
+    """
+
+    messages = chatbot(system_prompt,topic="understanding the cv")
+    with open("messages.json","w") as file:
+        json.dump(messages,file)
+
+
+
+class How(Enum):
+    QNA = complete_by_qna
+    CHAT = chat_on_question
+
+def run(user_cs_json_path,output_user_csv,how):
+    user_cv = get_user_cv(user_cs_json_path)
+
+    # this is UI component.
+    how(user_cv)
+
     set_user_cv(output_user_csv,user_cv)
 
     
 
 
 if __name__ == "__main__":
-    run("user_data/user.json",output_user_csv="user_data/full_user_cv.json")
+    run("user_data/user.json",output_user_csv="user_data/full_user_cv.json",how=How.CHAT)

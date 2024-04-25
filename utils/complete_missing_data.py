@@ -11,6 +11,10 @@ def get_user_cv(user_cv_json_path):
     with open(user_cv_json_path,'r') as file:
         return json.load(file)
 
+def get_expected_cv_data(user_json_filename):
+    with open(user_json_filename, "r") as file:
+        return json.load(file)
+    
 def set_user_cv(output_user_csv,user_cv):
     with open(output_user_csv,"w") as file:
         json.dump(user_cv,file)
@@ -117,20 +121,23 @@ def chat_on_question(user_cv):
     """
 
     messages = chatbot(system_prompt,topic="understanding the cv")
-    with open("messages.json","w") as file:
-        json.dump(messages,file)
-
+    
+    expected = get_expected_cv_data("cv.json")
     final_call = f"""
     You've interviewd a user about his cv in means to complete the information missing or corrupted user data.
-    user data:
-    {json.dumps(user_cv,indent=4)}
 
     iterview:
     {json.dumps(messages,indent=4)}
 
+    user data:
+    {json.dumps(user_cv,indent=4)}
+
     emend the user data according to the information in the interview:
+    1. include all the information from the user data.
+    2. emend the infromation according to the information provided in the interview.
+
     ```json
-    // place here the emended user data json
+    {json.dumps(expected,indent=4)}
     ```
     """
     response = get_compliation("",final_call)

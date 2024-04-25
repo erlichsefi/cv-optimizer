@@ -13,6 +13,14 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
+            "name": "Complete user data",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/complete_missing_data.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
             "name": "Position to JSON",
             "type": "debugpy",
             "request": "launch",

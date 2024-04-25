@@ -65,9 +65,10 @@ def validate_regex(regex, string):
 def get_questions(user_cv):
 
     prompt = f"""
-    Your goal is to complete the information missing in the user data.
-    Provide questions to resolve missing data, user data is:
+    Your goal is to complete the information missing or corrupted user data.
+    For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
 
+    user data:
     {json.dumps(user_cv,indent=4)}
 
     Provide all questions in the following format:

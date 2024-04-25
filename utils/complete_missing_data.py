@@ -120,6 +120,23 @@ def chat_on_question(user_cv):
     with open("messages.json","w") as file:
         json.dump(messages,file)
 
+    final_call = f"""
+    You've interviewd a user about his cv in means to complete the information missing or corrupted user data.
+    user data:
+    {json.dumps(user_cv,indent=4)}
+
+    iterview:
+    {json.dumps(messages,indent=4)}
+
+    emend the user data according to the information in the interview:
+    ```json
+    // place here the emended user data json
+    ```
+    """
+    response = get_compliation("",final_call)
+    return json.loads(response.choices[0].message.content.replace("```json","").replace("```",""))
+
+
 
 
 class How(Enum):
@@ -130,9 +147,9 @@ def run(user_cs_json_path,output_user_csv,how):
     user_cv = get_user_cv(user_cs_json_path)
 
     # this is UI component.
-    how(user_cv)
+    emended_user_cv = how(user_cv)
 
-    set_user_cv(output_user_csv,user_cv)
+    set_user_cv(output_user_csv,emended_user_cv)
 
     
 

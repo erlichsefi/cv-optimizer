@@ -48,11 +48,21 @@ def get_completed_cv_data():
     with open("user_data/user_completed_cv.json", "r") as file:
         return json.load(file)
 
+def get_cache_key():
+    from datetime import datetime
 
+    current_datetime = datetime.now()
+    return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+
+def cache_chat(message,cache_key):
+    with open(f"user_data/cache_message_{cache_key}.json", "w") as file:
+        return json.dump(message, file)
+    
 def set_drill_down_communiation(drill_down):
     with open("user_data/user_drill_down.json", "w") as file:
         return json.dump(drill_down, file)
     
+
 def get_position_blueprint():
     with open("blueprints/position.json", "r") as file:
         return json.load(file)

@@ -2,6 +2,7 @@ import os
 import json
 from openai import OpenAI
 import retry
+from filestore import cache_chat,get_cache_key
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
 def get_compliation(system_message, user_input, is_json_expected=False, api_key=None):
@@ -25,6 +26,7 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
 
 
 def chatbot(system_prompt,topic):
+  cache_key = get_cache_key()
   print("Start chatting with the bot (type 'quit' to stop)!")
   print(f"Bot: focusing on >>{topic}<<")
   # Create a list to store all the messages for context
@@ -57,6 +59,7 @@ def chatbot(system_prompt,topic):
     
     while retry_count < max_retries:
         try:
+            cache_chat(messages,cache_key)
             stream = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages

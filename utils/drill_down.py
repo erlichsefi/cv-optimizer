@@ -1,37 +1,9 @@
 import json
-import os
-from enum import Enum
-from openai import OpenAI
 import retry
+from filestore import get_completed_cv_data,set_drill_down_communiation
+from llm_store import get_compliation,chatbot
 
-from chat_on_topic import chatbot
 
-def get_user_cv(user_cv_json_path):
-    with open(user_cv_json_path,'r') as file:
-        return json.load(file)
-
-def get_expected_cv_data(user_json_filename):
-    with open(user_json_filename, "r") as file:
-        return json.load(file)
-    
-def set_user_cv(output_user_csv,user_cv):
-    with open(output_user_csv,"w") as file:
-        json.dump(user_cv,file)
-
-def get_compliation(system_message, user_input, api_key=None):
-    if not api_key:
-        api_key = os.environ['OPENAI_API_KEY']
-
-    client = OpenAI(api_key=api_key)
-    stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_input},
-        ],
-        stream=False,
-    )
-    return stream
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
 def get_questions(user_cv):
@@ -82,8 +54,8 @@ def chat_on_section(section,section_title):
 
 
 
-def run(user_cs_json_path):
-    user_cv = get_user_cv(user_cs_json_path)
+def run():
+    user_cv = get_completed_cv_data()
 
     # this is UI component.
     drill_down_sections = {
@@ -94,18 +66,22 @@ def run(user_cs_json_path):
         
     }
     # TODO: sort exection by start_date
+    user_cv_message = dict()
     for section,callout in drill_down_sections.items():
         
-        for index,entry in enumerate(user_cv[section]):
+        section_message = list()
+        for entry in user_cv[section]:
             section_title = callout(entry)
             messages = chat_on_section(entry, section_title=section_title)
+            section_message.append(messages)
 
-            with open(f"user_data/{section}_{index}.json",'w') as file:
-                json.dump(messages,file)
-    
+        user_cv_message[section] = section_message
+
+    set_drill_down_communiation()
+
 
     
 
 
 if __name__ == "__main__":
-    run("user_data/full_user_cv.json")
+    run()

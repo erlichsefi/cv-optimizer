@@ -29,7 +29,7 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
-            "name": "Position to JSON",
+            "name": "4) a. Position to JSON",
             "type": "debugpy",
             "request": "launch",
             "program": "utils/extract_position_data.py",

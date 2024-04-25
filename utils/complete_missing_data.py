@@ -5,7 +5,8 @@ from enum import Enum
 from openai import OpenAI
 import retry
 
-from chat_on_topic import chatbot
+from llm_store import chatbot
+from filestore import get_user_extract_cv_data,set_completed_cv_data
 
 def get_user_cv(user_cv_json_path):
     with open(user_cv_json_path,'r') as file:
@@ -154,16 +155,16 @@ class How(Enum):
     QNA = complete_by_qna
     CHAT = chat_on_question
 
-def run(user_cs_json_path,output_user_csv,how):
-    user_cv = get_user_cv(user_cs_json_path)
+def run(how):
+    user_cv = get_user_extract_cv_data()
 
     # this is UI component.
     emended_user_cv = how(user_cv)
 
-    set_user_cv(output_user_csv,emended_user_cv)
+    set_completed_cv_data(emended_user_cv)
 
     
 
 
 if __name__ == "__main__":
-    run("user_data/user.json",output_user_csv="user_data/full_user_cv.json",how=How.CHAT)
+    run(how=How.CHAT)

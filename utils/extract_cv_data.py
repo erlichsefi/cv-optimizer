@@ -71,4 +71,4 @@ def run(cv_path,cv_json_format_path,output_path):
 
 
 if __name__ == "__main__":
-    run(cv_path="Curriculum_Vitae_Jan24.pdf",cv_json_format_path="cv.json",output_path="user_cv.json")
+    run(cv_path="Curriculum_Vitae_Jan24.pdf",cv_json_format_path="cv.json",output_path="user_data/user_cv.json")

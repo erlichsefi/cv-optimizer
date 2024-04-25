@@ -6,7 +6,7 @@ from openai import OpenAI
 import retry
 
 from llm_store import chatbot
-from filestore import get_user_extract_cv_data,set_completed_cv_data
+from filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint
 
 def get_user_cv(user_cv_json_path):
     with open(user_cv_json_path,'r') as file:
@@ -127,7 +127,7 @@ def chat_on_question(user_cv):
 
     messages = chatbot(system_prompt,topic="understanding the cv")
     
-    expected = get_expected_cv_data("cv.json")
+    expected = get_cv_blueprint()
     final_call = f"""
     You've interviewd a user about his cv in means to complete the information missing or corrupted user data.
 

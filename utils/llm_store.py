@@ -21,7 +21,7 @@ def get_compliation(system_message, user_input, api_key=None):
 
 def chatbot(system_prompt,topic):
   print("Start chatting with the bot (type 'quit' to stop)!")
-  print(f"Bot: Let's talk about your time at {topic}")
+  print(f"Bot: focusing on >>{topic}<<")
   # Create a list to store all the messages for context
 
   system_prompt = f"""{system_prompt} \n.

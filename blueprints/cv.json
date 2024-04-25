@@ -22,7 +22,8 @@
       "location": "[Location]",
       "start_date": "[The Start of the dgree]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade]"
+      "grade": "[Grade]",
+      "is_ongoing": "[True if the user currently work here]"
     },
     {
       "degree": "[Degree]",
@@ -30,7 +31,8 @@
       "location": "[Location]",
       "start_date": "[The Start of the dgree]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade]"
+      "grade": "[Grade]",
+      "is_ongoing": "[True if the user currently work here]"
     }
   ],
   "experience": [

@@ -13,8 +13,7 @@ def run(pdf_path):
                 Extract the CV into the following format:
                 {json.dumps(expected_json,indent=4)}
                 """,
-        user_input=extracted_text,
-        api_key=os.environ["OPENAI_API_KEY"],
+        user_input=extracted_text
     )
 
     user_extracted_data = json.loads(json_format.choices[0].message.content)

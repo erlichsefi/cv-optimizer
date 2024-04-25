@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "User Pdf to JSON",
+            "name": "1) User Pdf to JSON",
             "type": "debugpy",
             "request": "launch",
             "program": "utils/extract_cv_data.py",
@@ -13,10 +13,18 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
-            "name": "Complete user data",
+            "name": "2) Complete user data",
             "type": "debugpy",
             "request": "launch",
             "program": "utils/complete_missing_data.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "3) Drill Down",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/drill_down.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env"
         },

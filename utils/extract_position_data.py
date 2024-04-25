@@ -7,13 +7,20 @@ from llm_store import get_compliation
 
 if __name__ == "__main__":
     expected_json = get_position_blueprint()
-    user_input = input("Paste the position infromation")
+    print("Enter/Paste your content. Ctrl-D or Ctrl-Z ( windows ) to save it.")
+    contents = []
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+        contents.append(line)
     user_extracted_data = get_compliation(
         system_message=f"""
                 Extract the Position into the following format:
                 {json.dumps(expected_json,indent=4)}
                 """,
-        user_input=user_input,
+        user_input="\n".join(contents),
         is_json_expected=True
     )
 

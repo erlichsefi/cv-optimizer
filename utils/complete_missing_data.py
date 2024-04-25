@@ -102,7 +102,7 @@ def chat_on_question(user_cv):
     
     expected = get_cv_blueprint()
     final_call = f"""
-    You've interviewd a user about his cv in means to complete the information missing or corrupted user data.
+    You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
 
     iterview:
     {json.dumps(messages,indent=4)}

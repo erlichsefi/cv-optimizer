@@ -60,6 +60,7 @@ def multi_agents():
         }
     user_proxy = autogen.UserProxyAgent(
         name="User_proxy",
+        description="User that would like to submit it's CV",
         system_message=f"""You are looking to get an interview, your CV is:
         {json.dumps(cv_data,indent=4)}
         """,
@@ -67,6 +68,7 @@ def multi_agents():
     )
     recriter = autogen.AssistantAgent(
         name="Recruiter",
+        description="an recruiter in the hiring compeny",
         system_message=f"""You are recruiter need to recruite the right person to the following position:
         {json.dumps(position_data,indent=4)}
 
@@ -76,7 +78,8 @@ def multi_agents():
         llm_config=llm_config
     )
     technical_recriter = autogen.AssistantAgent(
-        name="Technical_Recriter",
+        name="Technical_recruiter",
+        description="Technical recriter that will help me get the position",
         system_message=f"""
         Your need to understand how to adjust the user CV to make it more likely it will get an interview,
         the user you would like to help getting the postion is:
@@ -114,7 +117,7 @@ if __name__ == "__main__":
 
 
 
-
+   
 
 
 

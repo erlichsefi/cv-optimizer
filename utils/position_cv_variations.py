@@ -2,10 +2,12 @@
 from llm_store import get_compliation
 from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers
 import json
+import os
+import autogen
 
 
 
-def run():
+def single_prompt_call():
     position_data = get_position_data()
     cv_data = get_completed_cv_data()
     cv_blueprint = get_cv_blueprint()
@@ -48,9 +50,66 @@ def run():
     )
     set_position_cv_offers(offers)
 
+def multi_agents():
+    position_data = get_position_data()
+    cv_data = get_completed_cv_data()
+    cv_blueprint = get_cv_blueprint()
+    llm_config = {
+            # "request_timeout": 600,
+            "config_list": [{"model": "gpt-3.5-turbo", "api_key": os.environ['OPENAI_API_KEY'], "cache_seed": 42}]
+        }
+    user_proxy = autogen.UserProxyAgent(
+        name="User_proxy",
+        system_message=f"""You are looking to get an interview, your CV is:
+        {json.dumps(cv_data,indent=4)}
+        """,
+        human_input_mode="ALWAYS"
+    )
+    recriter = autogen.AssistantAgent(
+        name="Recruiter",
+        system_message=f"""You are recruiter need to recruite the right person to the following position:
+        {json.dumps(position_data,indent=4)}
 
+        you need to examin issue that can prevent the user from geting the position.
+        rememmber! you need to recruite to right person!
+        """,
+        llm_config=llm_config
+    )
+    technical_recriter = autogen.AssistantAgent(
+        name="Technical_Recriter",
+        system_message=f"""
+        Your need to understand how to adjust the user CV to make it more likely it will get an interview,
+        the user you would like to help getting the postion is:
+        {json.dumps(cv_data,indent=4)}
+
+        Your goal is to understand what to user can change in the CV.
+        
+        keep making varitaions on the CV and update it, the final foramt should be:
+        {json.dumps(cv_blueprint,indent=4)}
+        """,
+        llm_config=llm_config
+    )
+    groupchat = autogen.GroupChat(agents=[recriter, technical_recriter,user_proxy], messages=[], max_round=12)
+    manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=llm_config)
+    user_proxy.initiate_chat(
+    manager, message=f"""Hey there,
+    I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
+
+    Could you please review my CV and make any necessary adjustments to better align it with the job description? I want to make sure I highlight the relevant skills and experiences without making it obvious that I've optimized it. 
+    Also, please make sure not to add any information that isn't already in my CV.
+
+    Thanks so much for your help, I really appreciate it!
+    My CV:
+    {json.dumps(cv_data,indent=4)}
+                            
+    Position Description:
+    {json.dumps(position_data,indent=4)}
+
+        
+    """
+    )
 if __name__ == "__main__":
-    run()
+    multi_agents()
 
 
 

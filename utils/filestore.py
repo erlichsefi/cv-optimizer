@@ -71,3 +71,13 @@ def get_position_blueprint():
 def set_position_data(user_position_data):
     with open("user_data/user_position.json", "w") as file:
         return json.dump(user_position_data, file)
+    
+def get_position_data():
+    with open("user_data/user_position.json", "r") as file:
+        return json.load(file)
+
+def set_position_cv_offers(list_of_cvs_options):
+    for index,cv in enumerate(list_of_cvs_options):
+        with open(f"user_data/user_position_cv_offer_{index}.json", "w") as file:
+            json.dump(cv,file)
+        

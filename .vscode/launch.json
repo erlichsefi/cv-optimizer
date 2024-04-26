@@ -37,7 +37,15 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
-            "name": "User data to Latex",
+            "name": "4) b. Create CV variations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/position_cv_variations.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "5) c. Dump all to Latex",
             "type": "debugpy",
             "request": "launch",
             "program": "utils/dump_json_to_latex.py",

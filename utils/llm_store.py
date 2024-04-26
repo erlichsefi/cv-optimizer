@@ -5,7 +5,7 @@ import retry
 from filestore import cache_chat,get_cache_key
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
-def get_compliation(system_message, user_input, is_json_expected=False, api_key=None):
+def get_compliation(system_message, user_input, is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
     if not api_key:
         api_key = os.environ['OPENAI_API_KEY']
 
@@ -17,11 +17,16 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
             {"role": "user", "content": user_input},
         ],
         stream=False,
-        temperature=0
+        temperature=temperature,
+        n=num_of_gen
     )
 
     if is_json_expected:
-       return json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
+       
+       if num_of_gen == 1:
+           return json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
+       else:
+          return[json.loads(choice.message.content.replace("```json","").replace("```","")) for choice in stream.choices ]
     return stream
 
 

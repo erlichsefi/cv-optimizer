@@ -51,11 +51,12 @@ def single_prompt_call():
     set_position_cv_offers(offers)
 
 def multi_agents():
+    logging_session_id = autogen.runtime_logging.start(config={"dbname": "logs.db"})
+
     position_data = get_position_data()
     cv_data = get_completed_cv_data()
     cv_blueprint = get_cv_blueprint()
     llm_config = {
-            # "request_timeout": 600,
             "config_list": [{"model": "gpt-3.5-turbo", "api_key": os.environ['OPENAI_API_KEY'], "cache_seed": 42}]
         }
     user_proxy = autogen.UserProxyAgent(
@@ -67,19 +68,16 @@ def multi_agents():
         human_input_mode="ALWAYS"
     )
     recriter = autogen.AssistantAgent(
-        name="Technical_recruiter",
+        name="Hiring_technical_recruiter",
         description="an technical recruiter in the hiring compeny",
-        system_message=f"""You are an experienced technical recruiter tasked with filling an open position in a leading tech company. 
+        system_message=f"""
+        You are an experienced technical recruiter tasked with filling an open position in a leading tech company. 
         Your goal is to find the best candidate who not only possesses the necessary technical skills but 
-        also fits well with the company culture. Write a job description for the position of technical recruiter,
-          outlining the key responsibilities, required qualifications, and desired attributes. 
-        Additionally, draft a message to be posted on relevant job boards and social media platforms to attract potential candidates. 
+        also fits well with the company culture.  Your Job is to give critical feedback of the CV you recive to the poistion.
         Be concise, professional, and engaging in your communication.
-        You're only to given feedback!
 
-        The position is:
+        The position your are hiring is:
         {json.dumps(position_data,indent=4)}
-        
         """,
         llm_config=llm_config
     )
@@ -87,23 +85,27 @@ def multi_agents():
         name="External_recruiter",
         description="external HR recruite that will help me get the position",
         system_message=f"""
-        You are HR external recruiter, committed to refer the perfect candidate for the job. 
-        You refer a candidte to the position and see the recruiter reaction and then adjust the candidate CV and try again.
+        You are independent HR recruiter, committed to refer the perfect candidate for the job. 
+        You help candidtes optimize their CV, you iteratively:
+          - optimize the CV to the position
+          - ask the hiring team for feedback
+          - ask the user for more inforamtion that can improve the user CV.
+          - and try again.
        
-        CV must be ion the following format:
+        CV must be in the following format:
         {json.dumps(cv_blueprint,indent=4)}
         """,
         llm_config=llm_config
     )
-    os.environ['WAY'] = "Technical_recruiter"
+    os.environ['WAY'] = "Hiring_technical_recruiter"
     def allowlist(last_speaker: autogen.Agent, groupchat: autogen.GroupChat):
         if last_speaker.name == "User_proxy":
             return list(filter(lambda x: x.name == "External_recruiter",groupchat.agents))[0]
-        elif last_speaker.name == "Technical_recruiter":
+        elif last_speaker.name == "Hiring_technical_recruiter":
             return list(filter(lambda x: x.name == "External_recruiter",groupchat.agents))[0]
         elif last_speaker.name == "External_recruiter":
             agent =  list(filter(lambda x: x.name == os.environ['WAY'],groupchat.agents))[0]
-            os.environ['WAY'] = "User_proxy" if os.environ['WAY'] == "Technical_recruiter" else "External_recruiter"
+            os.environ['WAY'] = "User_proxy" if os.environ['WAY'] == "Hiring_technical_recruiter" else "External_recruiter"
             return agent
         else:
             raise ValueError()
@@ -130,6 +132,10 @@ def multi_agents():
         
     """
     )
+
+    autogen.runtime_logging.stop()
+
+
     result
 if __name__ == "__main__":
     multi_agents()

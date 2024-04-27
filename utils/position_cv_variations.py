@@ -60,41 +60,60 @@ def multi_agents():
         }
     user_proxy = autogen.UserProxyAgent(
         name="User_proxy",
-        description="User that would like to submit it's CV",
+        description="The User that would like to submit it's CV",
         system_message=f"""You are looking to get an interview, your CV is:
         {json.dumps(cv_data,indent=4)}
         """,
         human_input_mode="ALWAYS"
     )
     recriter = autogen.AssistantAgent(
-        name="Recruiter",
-        description="an recruiter in the hiring compeny",
-        system_message=f"""You are recruiter need to recruite the right person to the following position:
-        {json.dumps(position_data,indent=4)}
+        name="Technical_recruiter",
+        description="an technical recruiter in the hiring compeny",
+        system_message=f"""You are an experienced technical recruiter tasked with filling an open position in a leading tech company. 
+        Your goal is to find the best candidate who not only possesses the necessary technical skills but 
+        also fits well with the company culture. Write a job description for the position of technical recruiter,
+          outlining the key responsibilities, required qualifications, and desired attributes. 
+        Additionally, draft a message to be posted on relevant job boards and social media platforms to attract potential candidates. 
+        Be concise, professional, and engaging in your communication.
+        You're only to given feedback!
 
-        you need to examin issue that can prevent the user from geting the position.
-        rememmber! you need to recruite to right person!
+        The position is:
+        {json.dumps(position_data,indent=4)}
+        
         """,
         llm_config=llm_config
     )
     technical_recriter = autogen.AssistantAgent(
-        name="Technical_recruiter",
-        description="Technical recriter that will help me get the position",
+        name="External_recruiter",
+        description="external HR recruite that will help me get the position",
         system_message=f"""
-        Your need to understand how to adjust the user CV to make it more likely it will get an interview,
-        the user you would like to help getting the postion is:
-        {json.dumps(cv_data,indent=4)}
-
-        Your goal is to understand what to user can change in the CV.
-        
-        keep making varitaions on the CV and update it, the final foramt should be:
+        You are HR external recruiter, committed to refer the perfect candidate for the job. 
+        You refer a candidte to the position and see the recruiter reaction and then adjust the candidate CV and try again.
+       
+        CV must be ion the following format:
         {json.dumps(cv_blueprint,indent=4)}
         """,
         llm_config=llm_config
     )
-    groupchat = autogen.GroupChat(agents=[recriter, technical_recriter,user_proxy], messages=[], max_round=12)
-    manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=llm_config)
-    user_proxy.initiate_chat(
+    os.environ['WAY'] = "Technical_recruiter"
+    def allowlist(last_speaker: autogen.Agent, groupchat: autogen.GroupChat):
+        if last_speaker.name == "User_proxy":
+            return list(filter(lambda x: x.name == "External_recruiter",groupchat.agents))[0]
+        elif last_speaker.name == "Technical_recruiter":
+            return list(filter(lambda x: x.name == "External_recruiter",groupchat.agents))[0]
+        elif last_speaker.name == "External_recruiter":
+            agent =  list(filter(lambda x: x.name == os.environ['WAY'],groupchat.agents))[0]
+            os.environ['WAY'] = "User_proxy" if os.environ['WAY'] == "Technical_recruiter" else "External_recruiter"
+            return agent
+        else:
+            raise ValueError()
+
+
+    recriter_groupchat = autogen.GroupChat(agents=[user_proxy, recriter, technical_recriter], messages=[], max_round=12,
+                                       speaker_selection_method=allowlist)
+    manager = autogen.GroupChatManager(groupchat=recriter_groupchat, llm_config=llm_config)
+    
+    result = user_proxy.initiate_chat(
     manager, message=f"""Hey there,
     I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
 
@@ -111,6 +130,7 @@ def multi_agents():
         
     """
     )
+    result
 if __name__ == "__main__":
     multi_agents()
 

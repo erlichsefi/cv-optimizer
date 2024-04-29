@@ -5,7 +5,7 @@ from enum import Enum
 from openai import OpenAI
 import retry
 
-from llm_store import chatbot,get_compliation
+from llm_store import experience_chatbot,get_compliation
 from filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint
 
 
@@ -120,7 +120,7 @@ def chat_on_question(user_cv):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    messages = chatbot(system_prompt,topic="understanding the cv")
+    messages = experience_chatbot(system_prompt,topic="understanding the cv")
     
     expected = get_cv_blueprint()
     final_call = f"""

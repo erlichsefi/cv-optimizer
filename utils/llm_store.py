@@ -31,7 +31,7 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
 
 
 
-def chatbot(system_prompt,topic):
+def experience_chatbot(system_prompt,topic):
   cache_key = get_cache_key()
   print("Start chatting with the bot (type 'quit' to stop)!")
   print(f"Bot: focusing on >>{topic}<<")
@@ -123,4 +123,4 @@ if __name__ == "__main__":
     When you think that you've understood the skill set I've gained you can respond with 'quit'.
     only one question at a time.
     """
-  chatbot(system_prompt,topic="TEST TOPIC")
+  experience_chatbot(system_prompt,topic="TEST TOPIC")

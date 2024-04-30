@@ -3,6 +3,7 @@ import json
 from openai import OpenAI
 import retry
 from filestore import cache_chat,get_cache_key
+from interface import TerminalInterface,UserInterface
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
 def get_compliation(system_message, user_input, is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
@@ -31,10 +32,11 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
 
 
 
-def experience_chatbot(system_prompt,topic):
+def experience_chatbot(system_prompt,user_interface:UserInterface,topic):
   cache_key = get_cache_key()
-  print("Start chatting with the bot (type 'quit' to stop)!")
-  print(f"Bot: focusing on >>{topic}<<")
+
+  user_interface.send_user_message("Start chatting with the bot (type 'quit' to stop)!")
+  user_interface.send_user_message(f"Bot: focusing on >>{topic}<<")
   # Create a list to store all the messages for context
 
   system_prompt = f"""{system_prompt} \n.
@@ -81,17 +83,17 @@ def experience_chatbot(system_prompt,topic):
             if retry_count == max_retries:
                 raise e
             else:
-                print("Bot: ....")
+                user_interface.send_user_message("Bot: ....")
                 
 
     # Print the response and add it to the messages list
-    print(f"Bot: {chat_message['message']}")
+    user_interface.send_user_message(f"{chat_message['message']}")
     if str(chat_message['is_all_issue_adressed']).lower() == "true":
       break
     
 
     # Prompt user for input
-    message = input("User: ")
+    message = user_interface.get_user_input()
 
     # Exit program if user inputs "quit"
     if message.lower() == "quit":
@@ -123,4 +125,5 @@ if __name__ == "__main__":
     When you think that you've understood the skill set I've gained you can respond with 'quit'.
     only one question at a time.
     """
-  experience_chatbot(system_prompt,topic="TEST TOPIC")
+  terminal_interface = TerminalInterface()
+  experience_chatbot(system_prompt,terminal_interface,topic="TEST TOPIC")

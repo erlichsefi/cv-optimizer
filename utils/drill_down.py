@@ -2,6 +2,7 @@ import json
 import retry
 from filestore import get_completed_cv_data,set_drill_down_communiation
 from llm_store import get_compliation,experience_chatbot
+from interface import TerminalInterface
 
 
 
@@ -34,7 +35,7 @@ def get_questions(user_cv):
     
 
 
-def chat_on_section(section,section_title):
+def chat_on_section(section,terminal_interface, section_title):
     system_prompt = f"""
         You are interviewing me about this period in my life:
         {json.dumps(section,indent=4)}
@@ -46,9 +47,11 @@ def chat_on_section(section,section_title):
         {json.dumps(section,indent=4)}
 
         
-    """
+    """ 
 
-    return experience_chatbot(system_prompt,topic=section_title)
+
+
+    return experience_chatbot(system_prompt,terminal_interface,topic=section_title)
     
 
 
@@ -66,12 +69,13 @@ def run():
     }
     # TODO: sort exection by start_date
     user_cv_message = dict()
+    terminal_interface = TerminalInterface()
     for section,callout in drill_down_sections.items():
         
         section_message = list()
         for entry in user_cv[section]:
             section_title = callout(entry)
-            messages = chat_on_section(entry, section_title=section_title)
+            messages = chat_on_section(entry,terminal_interface, section_title=section_title)
             section_message.append(messages)
 
         user_cv_message[section] = section_message

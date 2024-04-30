@@ -1,9 +1,8 @@
 import json
 import re
-import os
 from enum import Enum
-from openai import OpenAI
-import retry
+from interface import TerminalInterface,UserInterface
+
 
 from llm_store import experience_chatbot,get_compliation
 from filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint
@@ -16,6 +15,8 @@ def get_questions(user_cv):
     prompt = f"""
     Your goal is to complete the information missing or corrupted user data.
     For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
+
+    - resolve any unicode issue
 
     user data:
     {json.dumps(user_cv,indent=4)}
@@ -63,7 +64,7 @@ def get_issues_need_to_be_adressed(user_cv):
     return get_compliation("",prompt,is_json_expected=True)
 
 
-def complete_by_qna(user_cv):
+def complete_by_qna(user_cv,user_interface:UserInterface):
     def set_value_at_xpath(current, xpath, value):
         for step in xpath[:-1]:
             if isinstance(current, list):
@@ -98,8 +99,8 @@ def complete_by_qna(user_cv):
     question_to_ask = get_questions(user_cv)
     for entry in question_to_ask:
         while True:
-            print(f"Q: {entry['question']}")
-            answer = input()
+            user_interface.send_user_message(f"{entry['question']}")
+            answer = user_interface.get_user_input()
             if validate_regex(entry['regex'],answer):
                 set_value_at_xpath(user_cv,entry['target_missing'],answer)
                 break
@@ -107,7 +108,7 @@ def complete_by_qna(user_cv):
                 print(entry['regex_fail_message'])
 
 
-def chat_on_question(user_cv):
+def chat_on_question(user_cv,terminal_interface:UserInterface):
     issues_to_adresss = get_issues_need_to_be_adressed(user_cv)
 
     system_prompt = f"""
@@ -120,7 +121,7 @@ def chat_on_question(user_cv):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    messages = experience_chatbot(system_prompt,topic="understanding the cv")
+    messages = experience_chatbot(system_prompt,terminal_interface, topic="understanding the cv")
     
     expected = get_cv_blueprint()
     final_call = f"""
@@ -151,9 +152,10 @@ class How(Enum):
 
 def run(how):
     user_cv = get_user_extract_cv_data()
+    terminal_interface = TerminalInterface()
 
     # this is UI component.
-    emended_user_cv = how(user_cv)
+    emended_user_cv = how(user_cv,terminal_interface)
 
     set_completed_cv_data(emended_user_cv)
 

@@ -1,6 +1,7 @@
 
 from llm_store import get_compliation,experience_chatbot
 from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_position_cv_offer,set_completed_cv_data
+from interface import TerminalInterface
 import json
 import os
 import autogen
@@ -56,6 +57,7 @@ def chat_loop():
     position_data = get_position_data()
     cv_data = get_completed_cv_data()
     cv_blueprint = get_cv_blueprint()
+    terminal_interface = TerminalInterface()
 
 
     def review_by_hiring_team(position_data,cv_data):
@@ -157,7 +159,7 @@ def chat_loop():
     {json.dumps(cv_and_wondering['missing_information'],indent=4)}
 
     """
-    messages = experience_chatbot(system_prompt,topic="understanding the cv")
+    messages = experience_chatbot(system_prompt,terminal_interface,topic="understanding the cv")
     
     # update the global CV object
     cv_data = enrich_from_chat(current_cv,messages,cv_blueprint)

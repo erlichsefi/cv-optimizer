@@ -132,26 +132,32 @@ def chat_loop():
             """
         return get_compliation("",final_call,is_json_expected=True)
     
-    for index in range(2):
-        gaps_to_adresss = review_by_hiring_team(position_data,cv_data)
-        cv_and_wondering = optimize_and_wonder(gaps_to_adresss,cv_data)
+    # define the gaps between the position and the CV
+    gaps_to_adresss = review_by_hiring_team(position_data,cv_data)
 
-        current_cv = cv_and_wondering['user_cv']
-        set_position_cv_offer(current_cv,index)
-        system_prompt = f"""
-        You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
-        You help candidates to optimize the CV for the position, optimize the CV.
-        you've already optimized the your CV to:
-        {json.dumps(current_cv,indent=4)} 
+    # optimize what you can optimize and find what not
+    cv_and_wondering = optimize_and_wonder(gaps_to_adresss,cv_data)
 
-        and have some question to adress:
-        {json.dumps(cv_and_wondering['missing_information'],indent=4)}
+    
+    # drill with the agent
+    current_cv = cv_and_wondering['user_cv']
+    system_prompt = f"""
+    You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
+    You help candidates to optimize the CV for the position, optimize the CV.
+    you've already optimized the your CV to:
+    {json.dumps(current_cv,indent=4)} 
 
-        """
-        
+    and have some question to adress:
+    {json.dumps(cv_and_wondering['missing_information'],indent=4)}
 
-        messages = experience_chatbot(system_prompt,topic="understanding the cv")
-        cv_data = complete_from_chat(cv_data,messages,cv_blueprint)
+    """
+    messages = experience_chatbot(system_prompt,topic="understanding the cv")
+    
+    # update the global CV object
+    cv_data = complete_from_chat(current_cv,messages,cv_blueprint)
+
+    # draft last version
+    final_cv = optimize_and_wonder(gaps_to_adresss,cv_data)
 
 
 def multi_agents():

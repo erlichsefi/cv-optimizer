@@ -1,4 +1,5 @@
 import json
+import os
 
 
 def get_cv_blueprint():
@@ -41,18 +42,39 @@ def get_user_extract_cv_data():
 
 # 
 def set_completed_cv_data(user_cv_data):
+    if os.path.exists("user_data/user_completed_cv.json"):
+        with open("user_data/user_completed_cv.json", "r") as file:
+            complete = json.load(file)
+    else:
+        complete = {}
+    complete[get_datetime_str()] = user_cv_data
     with open("user_data/user_completed_cv.json", "w") as file:
-        return json.dump(user_cv_data, file)
+        return json.dump(complete, file)
     
 def get_completed_cv_data():
     with open("user_data/user_completed_cv.json", "r") as file:
-        return json.load(file)
+        complete = json.load(file)
+        return complete[max(complete.keys(),key=lambda x:str_to_datetime(x))]
 
 def get_cache_key():
     from datetime import datetime
 
     current_datetime = datetime.now()
     return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+
+def get_datetime_str():
+    from datetime import datetime
+
+    current_datetime = datetime.now()
+    return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
+
+def str_to_datetime(date_string):
+    from datetime import datetime
+
+    return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
+
+
+
 
 def cache_chat(message,cache_key):
     with open(f"user_data/cache_message_{cache_key}.json", "w") as file:

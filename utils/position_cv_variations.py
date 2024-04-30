@@ -1,6 +1,6 @@
 
 from llm_store import get_compliation,experience_chatbot
-from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_position_cv_offer
+from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_position_cv_offer,set_completed_cv_data
 import json
 import os
 import autogen
@@ -94,12 +94,15 @@ def chat_loop():
         prompt = f"""
         You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
         You help candidates to optimize the CV for the position, optimize the CV.
-        I've found the following mismatch, 
-        issues to address:
+        I've found the following mismatch:
         {json.dumps(gaps_to_adresss,indent=4)}
 
         user CV:
         {json.dumps(user_cv,indent=4)}
+        
+        - emend the user cv so it may overcome those gaps.
+        - be truthful.
+
         reponse foramt:
         ```json
         {{
@@ -112,20 +115,23 @@ def chat_loop():
         """
         return get_compliation("",prompt,is_json_expected=True)
 
-    def complete_from_chat(user_cv,messages,expected):
+    def enrich_from_chat(user_cv,messages,expected):
         final_call = f"""
             You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
 
             iterview:
             {json.dumps(messages,indent=4)}
 
-            user data:
+            user existing CV:
             {json.dumps(user_cv,indent=4)}
 
             emend the user data according to the information in the interview:
             1. include all the information from the user data.
             2. emend the infromation according to the information provided in the interview.
-            
+            3. try to include has much infromation that is valueable.
+
+
+            expected format:
             ```json
             {json.dumps(expected,indent=4)}
             ```
@@ -154,10 +160,13 @@ def chat_loop():
     messages = experience_chatbot(system_prompt,topic="understanding the cv")
     
     # update the global CV object
-    cv_data = complete_from_chat(current_cv,messages,cv_blueprint)
+    cv_data = enrich_from_chat(current_cv,messages,cv_blueprint)
+    # write it down
+    set_completed_cv_data(cv_data)
 
     # draft last version
     final_cv = optimize_and_wonder(gaps_to_adresss,cv_data)
+    set_position_cv_offer(final_cv,index="final_offer")
 
 
 def multi_agents():

@@ -140,8 +140,7 @@ def chat_on_question(user_cv):
     {json.dumps(expected,indent=4)}
     ```
     """
-    response = get_compliation("",final_call)
-    return json.loads(response.choices[0].message.content.replace("```json","").replace("```",""))
+    return get_compliation("",final_call,is_json_expected=True)
 
 
 

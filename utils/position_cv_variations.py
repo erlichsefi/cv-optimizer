@@ -1,6 +1,6 @@
 
-from llm_store import get_compliation
-from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers
+from llm_store import get_compliation,experience_chatbot
+from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_position_cv_offer
 import json
 import os
 import autogen
@@ -49,6 +49,110 @@ def single_prompt_call():
     temperature=0.1
     )
     set_position_cv_offers(offers)
+
+
+
+def chat_loop():
+    position_data = get_position_data()
+    cv_data = get_completed_cv_data()
+    cv_blueprint = get_cv_blueprint()
+
+
+    def review_by_hiring_team(position_data,cv_data):
+
+        prompt = f"""
+        You are an experienced technical recruiter tasked with filling an open position in a leading tech company. 
+        Your goal is to find the best candidate who not only possesses the necessary technical skills but 
+        also fits well with the company culture.  Your Job is to give critical feedback on the CV you receive to the position.
+        Be concise, professional, compare the lastast CV to the poisition and give feedback if something missing.
+
+        The position you are hiring is:
+        {json.dumps(position_data,indent=4)}
+
+        The user CV:
+        {json.dumps(cv_data,indent=4)}
+        
+        Provide all questions in the following format:
+
+        ```json
+        [
+            {{
+                "missmatch": "<the missmatch betwen the candiate CV and the the position>",
+                "critical_level": "<HIGH,MID,LOW>",
+                "question": "<the question to the user to learn if has an experince>",
+            }}
+            
+            // more if you have
+        ]
+        ```
+        """
+
+        return get_compliation("",prompt,is_json_expected=True)
+
+
+    def optimize_and_wonder(gaps_to_adresss,user_cv):
+        prompt = f"""
+        You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
+        You help candidates to optimize the CV for the position, optimize the CV.
+        I've found the following mismatch, 
+        issues to address:
+        {json.dumps(gaps_to_adresss,indent=4)}
+
+        user CV:
+        {json.dumps(user_cv,indent=4)}
+        reponse foramt:
+        ```json
+        {{
+            "user_cv": {json.dumps(cv_blueprint,indent=4)}
+            "missing_information": [
+                // questions to ask to minimize the gap between the position requirement and the CV
+            ]
+        }}
+        ```
+        """
+        return get_compliation("",prompt,is_json_expected=True)
+
+    def complete_from_chat(user_cv,messages,expected):
+        final_call = f"""
+            You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
+
+            iterview:
+            {json.dumps(messages,indent=4)}
+
+            user data:
+            {json.dumps(user_cv,indent=4)}
+
+            emend the user data according to the information in the interview:
+            1. include all the information from the user data.
+            2. emend the infromation according to the information provided in the interview.
+            
+            ```json
+            {json.dumps(expected,indent=4)}
+            ```
+            """
+        return get_compliation("",final_call,is_json_expected=True)
+    
+    for index in range(2):
+        gaps_to_adresss = review_by_hiring_team(position_data,cv_data)
+        cv_and_wondering = optimize_and_wonder(gaps_to_adresss,cv_data)
+
+        current_cv = cv_and_wondering['user_cv']
+        set_position_cv_offer(current_cv,index)
+        system_prompt = f"""
+        You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
+        You help candidates to optimize the CV for the position, optimize the CV.
+        you've already optimized the your CV to:
+        {json.dumps(current_cv,indent=4)} 
+
+        and have some question to adress:
+        {json.dumps(cv_and_wondering['missing_information'],indent=4)}
+
+        """
+        
+
+        messages = experience_chatbot(system_prompt,topic="understanding the cv")
+        cv_data = complete_from_chat(cv_data,messages,cv_blueprint)
+
 
 def multi_agents():
     logging_session_id = autogen.runtime_logging.start(config={"dbname": "logs.db"})
@@ -138,7 +242,7 @@ def multi_agents():
 
     result
 if __name__ == "__main__":
-    multi_agents()
+    chat_loop()
 
 
 

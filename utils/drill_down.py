@@ -30,8 +30,7 @@ def get_questions(user_cv):
     When you don't have any other question respond with 'quit'.
     """
 
-    response = get_compliation("",prompt)
-    return json.loads(response.choices[0].message.content.replace("```json","").replace("```",""))
+    return get_compliation("",prompt,is_json_expected=True)
     
 
 
@@ -77,7 +76,7 @@ def run():
 
         user_cv_message[section] = section_message
 
-    set_drill_down_communiation()
+    set_drill_down_communiation(user_cv_message)
 
 
     

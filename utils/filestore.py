@@ -78,6 +78,8 @@ def get_position_data():
 
 def set_position_cv_offers(list_of_cvs_options):
     for index,cv in enumerate(list_of_cvs_options):
-        with open(f"user_data/user_position_cv_offer_{index}.json", "w") as file:
-            json.dump(cv,file)
+        set_position_cv_offer(cv,index)
         
+def set_position_cv_offer(cv,index):
+    with open(f"user_data/user_position_cv_offer_{index}.json", "w") as file:
+        json.dump(cv,file)

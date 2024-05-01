@@ -1,8 +1,8 @@
 import json
 import retry
-from filestore import get_completed_cv_data,set_drill_down_communiation
-from llm_store import get_compliation,experience_chatbot
-from interface import TerminalInterface
+from .filestore import get_completed_cv_data,set_drill_down_communiation
+from .llm_store import get_compliation,experience_chatbot
+from .interface import TerminalInterface
 
 
 

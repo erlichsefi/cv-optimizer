@@ -1,11 +1,8 @@
 import json
 import re
-from enum import Enum
-from interface import TerminalInterface,UserInterface
-
-
-from llm_store import experience_chatbot,get_compliation
-from filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint
+from .interface import TerminalInterface,UserInterface
+from .llm_store import experience_chatbot,get_compliation
+from .filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint,has_completed_cv_data
 
 
 
@@ -121,7 +118,7 @@ def chat_on_question(user_cv,terminal_interface:UserInterface):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    messages = experience_chatbot(system_prompt,terminal_interface, topic="understanding the cv")
+    messages = experience_chatbot(system_prompt,terminal_interface, topic="validating what we got")
     
     expected = get_cv_blueprint()
     final_call = f"""
@@ -145,14 +142,17 @@ def chat_on_question(user_cv,terminal_interface:UserInterface):
 
 
 
-def run(terminal_interface):
-    user_cv = get_user_extract_cv_data()
+def run(terminal_interface:UserInterface):
+    if not has_completed_cv_data():
+        user_cv = get_user_extract_cv_data()
 
-    # this is UI component.
-    # complete_by_qna
-    emended_user_cv = chat_on_question(user_cv,terminal_interface)
+        # complete_by_qna
+        emended_user_cv = chat_on_question(user_cv,terminal_interface)
 
-    set_completed_cv_data(emended_user_cv)
+        set_completed_cv_data(emended_user_cv)
+
+        terminal_interface.send_user_message("We got it! Thanks!")
+        terminal_interface.send_user_message("Moving on...")
 
     
 

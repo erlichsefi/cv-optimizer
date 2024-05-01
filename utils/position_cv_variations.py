@@ -1,7 +1,7 @@
 
-from llm_store import get_compliation,experience_chatbot
-from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_completed_cv_data
-from interface import TerminalInterface
+from .llm_store import get_compliation,experience_chatbot
+from .filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_completed_cv_data
+from .interface import TerminalInterface
 import json
 import os
 import autogen
@@ -158,7 +158,7 @@ def chat_loop(terminal_interface):
     {json.dumps(cv_and_wondering['missing_information'],indent=4)}
 
     """
-    messages = experience_chatbot(system_prompt,terminal_interface,topic="understanding the cv")
+    messages = experience_chatbot(system_prompt,terminal_interface,topic="overcoming the gaps between the cv and the position")
     
     # update the global CV object
     cv_data = enrich_from_chat(current_cv,messages,cv_blueprint)
@@ -167,7 +167,7 @@ def chat_loop(terminal_interface):
 
     # draft last version
     final_cv = optimize_and_wonder(gaps_to_adresss,cv_data)
-    set_position_cv_offers([final_cv])
+    set_position_cv_offers([final_cv['user_cv']])
 
 
 def multi_agents():

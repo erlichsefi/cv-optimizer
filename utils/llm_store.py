@@ -2,8 +2,8 @@ import os
 import json
 from openai import OpenAI
 import retry
-from filestore import cache_chat,get_cache_key
-from interface import TerminalInterface,UserInterface
+from .filestore import cache_chat,get_cache_key
+from .interface import TerminalInterface,UserInterface
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
 def get_compliation(system_message, user_input, is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
@@ -74,8 +74,11 @@ def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
 def experience_chatbot(system_prompt,user_interface:UserInterface,topic):
   cache_key = get_cache_key()
 
+  user_interface.send_user_message("--------------------------------------------------")
   user_interface.send_user_message("Start chatting with the bot (type 'quit' to stop)!")
-  user_interface.send_user_message(f"Bot: focusing on >>{topic}<<")
+  user_interface.send_user_message("--------------------------------------------------")
+
+  user_interface.send_user_message(f"Let's focus on {topic} ##")
   # Create a list to store all the messages for context
 
   system_prompt = f"""{system_prompt} \n.

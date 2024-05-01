@@ -55,10 +55,10 @@
             "justMyCode": false
         },
         {
-            "name": "Stremlit",
+            "name": "Full Flow",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/dump_json_to_latex.py",
+            "program": "terminal.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": false

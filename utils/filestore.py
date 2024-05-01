@@ -8,6 +8,14 @@ def get_cv_blueprint():
     with open("blueprints/cv.json", "r") as file:
         return json.load(file)
 
+def get_position_blueprint():
+    with open("blueprints/position.json", "r") as file:
+        return json.load(file)
+
+def get_expected_latex_format():
+    with open("blueprints/cv.tex", "r") as file:
+        return file.read()
+    
 
 def get_data_from_pdf(filename):
     from PyPDF2 import PdfReader
@@ -38,6 +46,9 @@ def set_user_extract_cv_data(user_cv_data):
     with open("user_data/user_extracted_cv.json", "w") as file:
         return json.dump(user_cv_data, file)
     
+def has_user_extract_cv_data():
+    return os.path.exists("user_data/user_extracted_cv.json")
+    
 def get_user_extract_cv_data():
     with open("user_data/user_extracted_cv.json", "r") as file:
         return json.load(file)
@@ -52,12 +63,16 @@ def set_completed_cv_data(user_cv_data):
     complete[get_datetime_str()] = user_cv_data
     with open("user_data/user_completed_cv.json", "w") as file:
         return json.dump(complete, file)
-    
+
+def has_completed_cv_data():
+    return os.path.exists("user_data/user_completed_cv.json")
+
 def get_completed_cv_data():
     with open("user_data/user_completed_cv.json", "r") as file:
         complete = json.load(file)
         return complete[max(complete.keys(),key=lambda x:str_to_datetime(x))]
 
+#
 def get_cache_key():
     from datetime import datetime
 
@@ -86,20 +101,18 @@ def set_drill_down_communiation(drill_down):
     with open("user_data/user_drill_down.json", "w") as file:
         return json.dump(drill_down, file)
     
-
-def get_position_blueprint():
-    with open("blueprints/position.json", "r") as file:
-        return json.load(file)
-    
-
+# 
 def set_position_data(user_position_data):
     with open("user_data/user_position.json", "w") as file:
         return json.dump(user_position_data, file)
     
+def has_position_data():
+    return os.path.exists("user_data/user_position.json")
+
 def get_position_data():
     with open("user_data/user_position.json", "r") as file:
         return json.load(file)
-
+#
 def set_position_cv_offers(list_of_cvs_options):
     with open(f"user_data/user_position_cv_offers.json", "w") as file:
             json.dump(list_of_cvs_options,file)
@@ -109,10 +122,7 @@ def get_all_position_cv_offers():
     with open(f"user_data/user_position_cv_offers.json", "r") as file:
         return json.load(file)
     
-    
-def get_expected_latex_format():
-    with open("cv.tex", "r") as file:
-        return file.read()
+
 
 def set_user_latex_file(user_latex,extract_latex=False):
 

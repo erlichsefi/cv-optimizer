@@ -11,6 +11,10 @@ class UserInterface(ABC):
     def get_user_input(cls):
         pass
 
+    @abstractmethod
+    def get_multiliner_user_input(cls):
+        pass
+
 
 class TerminalInterface(UserInterface):
 
@@ -22,7 +26,7 @@ class TerminalInterface(UserInterface):
     
 
     def get_multiliner_user_input(cls):
-        cls.send_user_message("Enter/Paste your content. Ctrl-D or Ctrl-Z ( windows ) to save it.")
+        cls.send_user_message("Enter/Paste your content. Ctrl-D or Ctrl-Z (windows) to save it.")
         contents = []
         while True:
             try:

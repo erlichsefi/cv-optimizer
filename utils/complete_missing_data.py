@@ -145,17 +145,12 @@ def chat_on_question(user_cv,terminal_interface:UserInterface):
 
 
 
-
-class How(Enum):
-    QNA = complete_by_qna
-    CHAT = chat_on_question
-
-def run(how):
+def run(terminal_interface):
     user_cv = get_user_extract_cv_data()
-    terminal_interface = TerminalInterface()
 
     # this is UI component.
-    emended_user_cv = how(user_cv,terminal_interface)
+    # complete_by_qna
+    emended_user_cv = chat_on_question(user_cv,terminal_interface)
 
     set_completed_cv_data(emended_user_cv)
 
@@ -163,4 +158,5 @@ def run(how):
 
 
 if __name__ == "__main__":
-    run(how=How.CHAT)
+    terminal_interface = TerminalInterface()
+    run(terminal_interface)

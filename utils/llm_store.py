@@ -31,6 +31,45 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
     return stream
 
 
+def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
+    import requests
+
+    def file_to_bytes(image_path):
+        import base64
+
+        """convert file to byte array"""
+
+        with open(image_path, "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode("utf-8")
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}",
+    }
+    base64_image = file_to_bytes(image_path)
+
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
+                    },
+                ],
+            }
+        ],
+        "max_tokens": 300,
+    }
+    response = requests.post(
+        "https://api.openai.com/v1/chat/completions", headers=headers, json=payload
+    ).json()
+
+    return response["choices"][0]["message"]["content"]
+
 
 def experience_chatbot(system_prompt,user_interface:UserInterface,topic):
   cache_key = get_cache_key()

@@ -1,5 +1,4 @@
 import json
-import os
 from filestore import get_data_from_pdf,get_cv_blueprint,set_user_extract_cv_data
 from llm_store import get_compliation
 

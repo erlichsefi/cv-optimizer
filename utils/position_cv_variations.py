@@ -1,6 +1,6 @@
 
 from llm_store import get_compliation,experience_chatbot
-from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_position_cv_offer,set_completed_cv_data
+from filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_completed_cv_data
 from interface import TerminalInterface
 import json
 import os
@@ -53,11 +53,10 @@ def single_prompt_call():
 
 
 
-def chat_loop():
+def chat_loop(terminal_interface):
     position_data = get_position_data()
     cv_data = get_completed_cv_data()
     cv_blueprint = get_cv_blueprint()
-    terminal_interface = TerminalInterface()
 
 
     def review_by_hiring_team(position_data,cv_data):
@@ -168,7 +167,7 @@ def chat_loop():
 
     # draft last version
     final_cv = optimize_and_wonder(gaps_to_adresss,cv_data)
-    set_position_cv_offer(final_cv,index="final_offer")
+    set_position_cv_offers([final_cv])
 
 
 def multi_agents():
@@ -259,7 +258,9 @@ def multi_agents():
 
     result
 if __name__ == "__main__":
-    chat_loop()
+
+    terminal_interface = TerminalInterface()
+    chat_loop(terminal_interface)
 
 
 

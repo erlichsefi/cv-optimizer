@@ -5,9 +5,10 @@ from llm_store import get_compliation
 from interface import TerminalInterface
 
 
-if __name__ == "__main__":
+def run(terminal):
+    contents = terminal.get_multiliner_user_input()
+
     expected_json = get_position_blueprint()
-    contents = TerminalInterface().get_multiliner_user_input()
     user_extracted_data = get_compliation(
         system_message=f"""
                 Extract the Position into the following format:
@@ -18,3 +19,10 @@ if __name__ == "__main__":
     )
 
     set_position_data(user_extracted_data)
+
+
+if __name__ == "__main__":
+    terminal = TerminalInterface()
+    run(terminal)
+
+    

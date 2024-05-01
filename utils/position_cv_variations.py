@@ -1,7 +1,7 @@
 
 from .llm_store import get_compliation,experience_chatbot
-from .filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_completed_cv_data
-from .interface import TerminalInterface
+from .filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_completed_cv_data,has_position_cv_offers
+from .interface import TerminalInterface,UserInterface
 import json
 import os
 import autogen
@@ -256,11 +256,21 @@ def multi_agents():
     autogen.runtime_logging.stop()
 
 
-    result
+    return result
+
+
+def run(user_interface:UserInterface):
+
+    if not has_position_cv_offers():
+        user_interface.send_user_message("Let's try find ways to overcome some gaps")
+        chat_loop(terminal_interface)
+        user_interface.send_user_message("Done.")
+
 if __name__ == "__main__":
 
     terminal_interface = TerminalInterface()
-    chat_loop(terminal_interface)
+    run(terminal_interface)
+    
 
 
 

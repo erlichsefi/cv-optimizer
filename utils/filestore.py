@@ -116,16 +116,16 @@ def get_position_data():
 def set_position_cv_offers(list_of_cvs_options):
     with open(f"user_data/user_position_cv_offers.json", "w") as file:
             json.dump(list_of_cvs_options,file)
-        
+
+def has_position_cv_offers():
+    return os.path.exists("user_data/user_position_cv_offers.json")
 
 def get_all_position_cv_offers():
     with open(f"user_data/user_position_cv_offers.json", "r") as file:
         return json.load(file)
-    
-
+#
 
 def set_user_latex_file(user_latex,extract_latex=False):
-
     if extract_latex:
         string = user_latex.choices[0].message.content
         user_latex = string.split("```latex")[1].split("```")[0]
@@ -136,21 +136,26 @@ def set_user_latex_file(user_latex,extract_latex=False):
 
 def compile_user_latex():
     tex_filename = "user_data/user_tex.tex"
+    tex_temp_folder = ".tex"
     filename, _ = os.path.splitext(tex_filename)
     # the corresponding PDF filename
-    pdf_filename = filename + ".pdf"
+    pdf_filename = os.path.join(tex_temp_folder,os.path.split(filename)[-1]) + ".pdf"
 
     # compile TeX file
     # brew install basictex
+    if os.path.exists(tex_temp_folder):
+        shutil.rmtree(tex_temp_folder)
+    os.mkdir(tex_temp_folder)
+
     result = subprocess.run(
-        ["pdflatex", "-interaction=nonstopmode", tex_filename],
+        ["pdflatex", "-interaction=nonstopmode","-output-directory=.tex",tex_filename],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
 
     # check if PDF is successfully generated
     if not os.path.exists(pdf_filename):
-        error_message  = "process output:" + result.stdout.decode().split("Runaway argument?")[1]
+        error_message  = "process output:" + result.stdout
         raise RuntimeError(f"PDF output not found. Error message: {error_message}")
     return pdf_filename
 
@@ -160,16 +165,17 @@ def get_user_latex_file():
     
 def move_pdf_to_created():
     # Copy source file to destination file
-    pdf_path = "user_data/user_tex.tex"
+    pdf_path = ".tex/user_tex.pdf"
 
+    # to where
     position_folder = "user_data/position_cv"
     if not os.path.exists(position_folder):
         os.makedirs(position_folder)
 
     index = len(os.listdir(position_folder))
-    pdf_path = "user_data/user_tex.pdf"
-    offer_path = f"{position_folder}/offer_{index}"
-    shutil.copy(pdf_path, offer_path)
+    
+    offer_path = os.path.join(position_folder,f"offer_{index}.pdf")
+    shutil.copy(pdf_path, os.path.join(position_folder,f"offer_{index}.pdf"))
 
     return offer_path
 

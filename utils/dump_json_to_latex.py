@@ -1,5 +1,6 @@
 import json
 
+from .interface import UserInterface,TerminalInterface
 from .llm_store import get_compliation
 from .filestore import get_all_position_cv_offers,get_expected_latex_format,set_user_latex_file,compile_user_latex,get_user_latex_file,move_pdf_to_created
 
@@ -84,7 +85,8 @@ def json_to_pdf(user_cv_data):
     
     
 
-def run():
+def run(user_interface:UserInterface):
+    user_interface.send_user_message("Processing...")
     cv_offers = get_all_position_cv_offers()
     pdfs = []
     for offer in cv_offers:
@@ -92,7 +94,9 @@ def run():
         pdf = json_to_pdf(offer)
         if pdf:
             pdfs.append(pdf)
-    return pdfs
+    
+    user_interface.send_user_message("Here are the revised CVs:")
+    user_interface.send_user_message("\n".join(pdfs))
 
     # pdf_filename = "user_tex.pdf"
     # if pdf_filename:

@@ -1,6 +1,7 @@
 
 from abc import ABC,abstractmethod
 from .llm_store import get_chat_compliation
+import json
 
 class UserInterface(ABC):
 
@@ -53,12 +54,20 @@ class TerminalInterface(UserInterface):
 
 class LLMTesting(UserInterface):
 
-
-    def __init__(self,system_message,cv_file,poistion_text) -> None:
+    def __init__(self,how_to_act,cv_file,poistion_text) -> None:
         super().__init__()
         self.cv_file = cv_file
         self.poistion_text = poistion_text
-        self.system_message = system_message
+        self.system_message = f"""
+        You are acting on behalf of a user interseted in the following position:
+        {poistion_text}
+
+        You are testing an LLM base application, answer in a short a concise manner.
+        follow those guidelines:
+
+        {"\n-".join(how_to_act)}
+
+        """
         self.messages = list()
 
     def get_pdf_file_from_user(self):

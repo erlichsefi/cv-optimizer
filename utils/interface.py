@@ -79,7 +79,13 @@ class LLMTesting(UserInterface):
         self.messages.append({"role":"user","content":message})
 
     def get_user_input(self):
-        return get_chat_compliation(messages=self.messages)
+        response  = get_chat_compliation(messages=self.messages)
+        self.messages.append({"role":"assistant","content":response})
+        return response
     
     def send_cv_files(self,file_paths):
         return file_paths
+    
+    def get_messages(self):
+        return self.messages
+

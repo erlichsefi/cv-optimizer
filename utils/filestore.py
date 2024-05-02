@@ -181,8 +181,9 @@ def move_pdf_to_created():
 
 
 
-def collect_all_user_data(complete_path):
+def wrap_up(complete_path,messages):
     complete_data = {
+        "message":messages,
         "extracted_cv":get_user_extract_cv_data(),
         "completed_cv":get_completed_cv_data(),
         "position_data":get_position_data(),
@@ -192,4 +193,5 @@ def collect_all_user_data(complete_path):
         json.dump(complete_data,file)
 
     shutil.rmtree("user_data")
+
 

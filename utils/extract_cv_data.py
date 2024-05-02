@@ -14,7 +14,7 @@ def run(user_interface:UserInterface):
             try:
                 # get user input
                 user_interface.send_user_message("Please upload and PDF file :)")
-                pdf_path = user_interface.get_user_input()
+                pdf_path = user_interface.get_pdf_file_from_user()
                 extracted_text = get_data_from_pdf(pdf_path)
                 expected_json = get_cv_blueprint()
 

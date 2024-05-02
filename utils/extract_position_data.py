@@ -9,7 +9,7 @@ def run(user_interface:UserInterface):
     if not has_position_data():
         user_interface.send_user_message("Moving on...")
         user_interface.send_user_message("Yalla, paste the position you would like to get interview for:")
-        contents = user_interface.get_multiliner_user_input()
+        contents = user_interface.get_position_snippet_data()
 
         user_interface.send_user_message("We got the position data, working on it...")
         expected_json = get_position_blueprint()

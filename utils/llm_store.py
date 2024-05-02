@@ -5,18 +5,24 @@ import retry
 from .filestore import cache_chat,get_cache_key
 from .interface import TerminalInterface,UserInterface
 
+
+def get_compliation(system_message, user_input,is_json_expected=False, api_key=None,num_of_gen=1,temperature=0)):
+    messages= [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_input},
+        ]
+    return get_chat_compliation(messages,is_json_expected=is_json_expected,api_key=api_key,num_of_gen=num_of_gen,temperature=temperature)
+
+
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
-def get_compliation(system_message, user_input, is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
+def get_chat_compliation(messages,is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
     if not api_key:
         api_key = os.environ['OPENAI_API_KEY']
 
     client = OpenAI(api_key=api_key)
     stream = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_input},
-        ],
+        messages=messages,
         stream=False,
         temperature=temperature,
         n=num_of_gen
@@ -29,7 +35,6 @@ def get_compliation(system_message, user_input, is_json_expected=False, api_key=
        else:
           return[json.loads(choice.message.content.replace("```json","").replace("```","")) for choice in stream.choices ]
     return stream
-
 
 def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
     import requests

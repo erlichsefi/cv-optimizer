@@ -181,3 +181,15 @@ def move_pdf_to_created():
 
 
 
+def collect_all_user_data(complete_path):
+    complete_data = {
+        "extracted_cv":get_user_extract_cv_data(),
+        "completed_cv":get_completed_cv_data(),
+        "position_data":get_position_data(),
+        "offers":get_all_position_cv_offers()
+    }
+    with open(complete_path, "w") as file:
+        json.dump(complete_data,file)
+
+    shutil.rmtree("user_data")
+

@@ -1,7 +1,6 @@
 
 from abc import ABC,abstractmethod
 from .llm_store import get_chat_compliation
-import json
 
 class UserInterface(ABC):
 

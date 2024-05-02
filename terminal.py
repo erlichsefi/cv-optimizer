@@ -17,10 +17,7 @@ if __name__ == "__main__":
     utils.overcome_gaps(termianl)
 
     # to pdfs
-    pdf_paths = utils.to_pdfs()
-
-    termianl.send_user_message(pdf_paths)
-
+    utils.to_pdfs()
 
 
 

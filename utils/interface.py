@@ -51,7 +51,7 @@ class TerminalInterface(UserInterface):
         self.send_user_message("\n".join(file_paths))
     
 
-class LLMTesting(UserInterface):
+class LLMTesting(TerminalInterface):
 
     def __init__(self,how_to_act,cv_file,poistion_text) -> None:
         super().__init__()
@@ -76,10 +76,13 @@ class LLMTesting(UserInterface):
         return self.poistion_text
     
     def send_user_message(self,message):
+        print(f"Bot:{message}")
         self.messages.append({"role":"user","content":message})
 
     def get_user_input(self):
         response  = get_chat_compliation(messages=self.messages)
+        print(f"User Agent:{response}")
+        
         self.messages.append({"role":"assistant","content":response})
         return response
     

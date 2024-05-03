@@ -1,6 +1,7 @@
 
 from abc import ABC,abstractmethod
 from uuid import uuid4
+import json
 from .llm_store import get_chat_compliation
 from .filestore import wrap_up
 
@@ -75,14 +76,20 @@ class TerminalInterface(UserInterface):
 
 class LLMTesting(TerminalInterface):
 
-    def __init__(self,how_to_act,cv_file,poistion_text) -> None:
+    def __init__(self,how_to_act,cv_file,poistion_text,profile_file) -> None:
         super(LLMTesting,self).__init__()
         self.cv_file = cv_file
         self.poistion_text = poistion_text
+        self.profile_file = profile_file
 
         guideline = '\n-'.join(how_to_act)
+        with open(profile_file,"r") as file:
+            profile_file_content = json.load(file)
         self.messages.append( {"role":"system","content":f"""
-        You are acting on behalf of a user interseted in the following position:
+        You are acting on behalf of a user:
+        {json.dumps(profile_file_content)}
+                                                      
+        interseted in the following position:
         {poistion_text}
 
         You are testing an LLM base application, answer in a short a concise manner.

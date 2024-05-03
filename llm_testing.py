@@ -6,6 +6,7 @@ if __name__ == "__main__":
 
     sample_uuid = "first_test"
     termianl = utils.LLMTesting(cv_file="Curriculum_Vitae_Jan24.pdf",
+                                profile_file="expected_cv.json",
                                 poistion_text="""
                                 Do you want to be a Data Scientist on an elite Data Science team? Do you want to build Data Analytics for a global Security Product? Do you want your work to be impactful on millions of users?
                                 Join us and become part of a winning Data Science team that builds the “brain” of one of Microsoft’s most exciting security products, Microsoft Defender for Endpoint (MDE). As cyber-attacks have become more sophisticated, MDE helps enterprises detect, investigate, and automatically disrupt advanced attacks and data breaches on their networks. Our team is responsible for developing and deploying Machine Learning (ML) models that protect organizations worldwide and owning Data Analytics systems that facilitate data-driven decisions and operational excellence.

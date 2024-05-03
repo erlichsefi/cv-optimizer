@@ -3,7 +3,7 @@ import json
 from openai import OpenAI
 import retry
 from .filestore import get_cache_key,presist_compliation
-from .interface import TerminalInterface,UserInterface
+
 
 
 def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expected=False,api_key=None,num_of_gen=1,temperature=0):
@@ -18,7 +18,7 @@ def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expe
     return generations
 
 
-@retry.retry(exceptions=(json.decoder.JSONDecodeError))
+@retry.retry(exceptions=(json.decoder.JSONDecodeError),logger=None)
 def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
     if not api_key:
         api_key = os.environ['OPENAI_API_KEY']
@@ -36,8 +36,12 @@ def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False,
        if num_of_gen == 1:
            return json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
        else:
-          return[json.loads(choice.message.content.replace("```json","").replace("```","")) for choice in stream.choices ]
-    return stream
+          return [json.loads(choice.message.content.replace("```json","").replace("```","")) for choice in stream.choices]
+       
+    if num_of_gen == 1:
+       return stream.choices[0]
+    else:
+       return [choice.message.content for choice in stream.choices]
 
 def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
     import requests
@@ -79,14 +83,14 @@ def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
     return response["choices"][0]["message"]["content"]
 
 
-def experience_chatbot(system_prompt,user_interface:UserInterface,topic,model="gpt-3.5-turbo"):
+def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo"):
   cache_key = get_cache_key()
 
   user_interface.send_user_message("--------------------------------------------------")
   user_interface.send_user_message("Start chatting with the bot (type 'quit' to stop)!")
   user_interface.send_user_message("--------------------------------------------------")
 
-  user_interface.send_user_message(f"Let's focus on {topic} ##")
+  user_interface.send_user_message(f"Let's focus on {topic}")
   # Create a list to store all the messages for context
 
   system_prompt = f"""{system_prompt} \n.
@@ -127,8 +131,8 @@ def experience_chatbot(system_prompt,user_interface:UserInterface,topic,model="g
                 messages=messages,
                 stream=False
             )
-            presist_compliation(messages,stream,model,cache_key=cache_key)
             chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
+            presist_compliation(messages,chat_message,model,cache_key=cache_key)
             break  # Break out of the loop if successful
         except json.JSONDecodeError as e:
             retry_count += 1
@@ -158,6 +162,8 @@ def experience_chatbot(system_prompt,user_interface:UserInterface,topic,model="g
     
 
 if __name__ == "__main__":
+  from .interface import TerminalInterface
+
   experience_test = {
          "title": "AI Researcher", 
         "company": "Ariel University", 

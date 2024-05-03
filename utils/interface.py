@@ -1,5 +1,6 @@
 
 from abc import ABC,abstractmethod
+from uuid import uuid4
 from .llm_store import get_chat_compliation
 from .filestore import wrap_up
 
@@ -31,6 +32,8 @@ class UserInterface(ABC):
 
     
     def wrap_up(self,uuid):
+        if not uuid:
+            uuid = str(uuid4())
         wrap_up(f"{uuid}.json",messages=self.messages)
 
 
@@ -76,6 +79,8 @@ class LLMTesting(TerminalInterface):
         super(LLMTesting,self).__init__()
         self.cv_file = cv_file
         self.poistion_text = poistion_text
+
+        guideline = '\n-'.join(how_to_act)
         self.system_message = f"""
         You are acting on behalf of a user interseted in the following position:
         {poistion_text}
@@ -83,7 +88,7 @@ class LLMTesting(TerminalInterface):
         You are testing an LLM base application, answer in a short a concise manner.
         follow those guidelines:
 
-        {"\n-".join(how_to_act)}
+        {guideline}
 
         """
 

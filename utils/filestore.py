@@ -53,21 +53,20 @@ def presist_compliation(messages,generations,model,cache_key=None):
     if  not cache_key:
         cache_key = get_cache_key()
 
-    with open("user_data/compliations.json", "a") as file:
-        try:
-            exsiting =  json.load(file)
-        except io.UnsupportedOperation:
-            exsiting = {}
+    exsiting = {}
+    if os.path.exists("user_data/compliations.json"):
+        with open("user_data/compliations.json", "r") as file:
+            exsiting = json.load(file)
 
-        exsiting[cache_key] = {
-            "messages":messages,
-            "generations":generations,
-            "model":model
-        }
+    exsiting[cache_key] = {
+        "messages":messages,
+        "generations":generations,
+        "model":model
+    }
   
-
-
-        json.dumps(exsiting)
+    # dump
+    with open("user_data/compliations.json", "w") as file:
+        json.dump(exsiting,file)
 
 def get_presist_compliation():
     with open("user_data/compliations.json", "r") as file:
@@ -147,11 +146,8 @@ def get_all_position_cv_offers():
         return json.load(file)
 #
 
-def set_user_latex_file(user_latex,extract_latex=False):
-    if extract_latex:
-        string = user_latex.choices[0].message.content
-        user_latex = string.split("```latex")[1].split("```")[0]
-
+def set_user_latex_file(user_latex):
+    user_latex = user_latex.split("```latex")[1].split("```")[0]
     with open("user_data/user_tex.tex", "w") as file:
         file.write(user_latex)
 

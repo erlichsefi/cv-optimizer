@@ -118,7 +118,7 @@ def chat_on_question(user_cv,terminal_interface:UserInterface):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    messages = experience_chatbot(system_prompt,terminal_interface, topic="validating what we got")
+    messages = experience_chatbot(system_prompt,terminal_interface, topic="validating what we got from your CV")
     
     expected = get_cv_blueprint()
     final_call = f"""

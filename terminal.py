@@ -17,7 +17,9 @@ if __name__ == "__main__":
     utils.overcome_gaps(termianl)
 
     # to pdfs
-    utils.to_pdfs()
+    utils.to_pdfs(termianl)
+
+    termianl.wrap_up()
 
 
 

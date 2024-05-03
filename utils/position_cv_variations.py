@@ -263,7 +263,7 @@ def run(user_interface:UserInterface):
 
     if not has_position_cv_offers():
         user_interface.send_user_message("Let's try find ways to overcome some gaps")
-        chat_loop(terminal_interface)
+        chat_loop(user_interface)
         user_interface.send_user_message("Done.")
 
 if __name__ == "__main__":

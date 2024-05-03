@@ -32,7 +32,7 @@ def run(user_interface:UserInterface):
                 # saving
                 set_user_extract_cv_data(user_extracted_data)
                 break
-            except Exception:
+            except Exception as e:
                 user_interface.send_user_message("Please add valid path")
 
         if user_extracted_data:

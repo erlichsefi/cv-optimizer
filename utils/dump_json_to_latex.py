@@ -46,7 +46,7 @@ def json_to_pdf(user_cv_data):
                     is_json_expected=False
                     
     )   
-    set_user_latex_file(generations,extract_latex=True)
+    set_user_latex_file(generations)
 
     
     pdf_filename = None
@@ -73,7 +73,7 @@ def json_to_pdf(user_cv_data):
                     File content to fix:
                     {latex_file_content}
                     """)
-            set_user_latex_file(generations,extract_latex=True)
+            set_user_latex_file(generations)
 
     if not pdf_filename:
         pdf_filename = compile_user_latex()

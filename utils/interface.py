@@ -1,8 +1,13 @@
 
 from abc import ABC,abstractmethod
 from .llm_store import get_chat_compliation
+from .filestore import wrap_up
 
 class UserInterface(ABC):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.messages = list()
 
     @abstractmethod
     def get_pdf_file_from_user(self):
@@ -24,17 +29,29 @@ class UserInterface(ABC):
     def send_cv_files(self,file_paths):
         pass
 
+    
+    def wrap_up(self,uuid):
+        wrap_up(f"{uuid}.json",messages=self.messages)
+
 
 class TerminalInterface(UserInterface):
 
+    def __init__(self) -> None:
+        super(TerminalInterface,self).__init__()
+
     def send_user_message(self,message):
+        self.messages.append({"role":"assistant","content":message})
         print(f"Bot: {message}")
 
     def get_user_input(self):
-        return input("User: ")
+        message =  input("User: ")
+        self.messages.append({"role":"user","content":message})
+        return message
     
     def get_pdf_file_from_user(self):
-        return input("CV path: ")
+        message = input("CV path: ")
+        self.messages.append({"role":"user","file":message})
+        return message
     
     def get_position_snippet_data(self):
         self.send_user_message("Enter/Paste your content. Ctrl-D or Ctrl-Z (windows) to save it.")
@@ -45,7 +62,9 @@ class TerminalInterface(UserInterface):
             except EOFError:
                 break
             contents.append(line)
-        return "\n".join(contents)
+        full_content =  "\n".join(contents)
+        self.messages.append({"role":"user","content":full_content})
+        return full_content
     
     def send_cv_files(self,file_paths):
         self.send_user_message("\n".join(file_paths))
@@ -54,7 +73,7 @@ class TerminalInterface(UserInterface):
 class LLMTesting(TerminalInterface):
 
     def __init__(self,how_to_act,cv_file,poistion_text) -> None:
-        super().__init__()
+        super(LLMTesting,self).__init__()
         self.cv_file = cv_file
         self.poistion_text = poistion_text
         self.system_message = f"""
@@ -67,7 +86,6 @@ class LLMTesting(TerminalInterface):
         {"\n-".join(how_to_act)}
 
         """
-        self.messages = list()
 
     def get_pdf_file_from_user(self):
         return self.cv_file
@@ -88,7 +106,4 @@ class LLMTesting(TerminalInterface):
     
     def send_cv_files(self,file_paths):
         return file_paths
-    
-    def get_messages(self):
-        return self.messages
 

@@ -6,7 +6,7 @@ from .filestore import cache_chat,get_cache_key
 from .interface import TerminalInterface,UserInterface
 
 
-def get_compliation(system_message, user_input,is_json_expected=False, api_key=None,num_of_gen=1,temperature=0)):
+def get_compliation(system_message, user_input,is_json_expected=False,api_key=None,num_of_gen=1,temperature=0):
     messages= [
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_input},

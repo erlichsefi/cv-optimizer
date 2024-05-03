@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # to pdfs
     utils.to_pdfs()
 
-    utils.wrap_up(complete_path=f"{sample_uuid}.json",messages=termianl.get_messages())
+    termianl.wrap_up(complete_path=f"{sample_uuid}.json",messages=termianl.get_messages())
 
 
 

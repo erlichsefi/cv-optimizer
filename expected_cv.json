@@ -127,8 +127,8 @@
         "AWS"
     ],
     "certifications": [
-        "Sequences, Time Series and Prediction,DeepLearning.AI",
-        "Applied Machine Learning in Python,University of Michigan"
+        "Sequences, Time Series and Prediction,DeepLearning.AI, Grade 98.06",
+        "Applied Machine Learning in Python,University of Michigan, Grade 84.78"
     ],
     "projects": [
           {
@@ -149,7 +149,9 @@
         "English"
     ],
     "summary": "Lead Applied Data Scientist with experience of over five years in the tech industry in Time Series, NLP, and Generative. Four years of experience in academic research: Two years of experience in ML and two years in algorithmic game theory research. Additionally, one year as DS Guild manager. Entrepreneur mindset.",
-    "achievements": [],
+    "achievements": [
+        "Two kids"
+    ],
     "publications": [
         {
             "title": "Negotiation Strategies for Agents with Ordinal Preferences: Theoretical Analysis and Human Study",

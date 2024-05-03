@@ -1,0 +1,183 @@
+{
+    "personal_info": {
+        "firstname": "Sefi",
+        "lastname": "Erlich",
+        "email": "Berlichse01@gmail.com",
+        "phone": "+972 524 307 093",
+        "address": "TLV, Israel - willing to relocate",
+        "linkedin": {
+            "link": "https://www.linkedin.com/in/erlichsefi/",
+            "username": [
+                "erlichsefi"
+            ]
+        },
+        "github": {
+            "link": "github.com/erlichse01",
+            "username": [
+                "erlichsefi"
+            ]
+        },
+        "additional_websites": []
+    },
+    "education": [
+        {
+            "degree": "M.Sc Computer Science",
+            "institution": "Ariel University",
+            "location": "Ariel",
+            "start_date": "2016",
+            "graduation_date": "2018",
+            "grade": "93"
+        },
+        {
+            "degree": "B.Sc Mathematics and Computer Science",
+            "institution": "Ariel University",
+            "location": "Ariel",
+            "start_date": "2013",
+            "graduation_date": "2016",
+            "grade": "92.7"
+        }
+    ],
+    "experience": [
+        {
+            "title": "Lead Data Scientist",
+            "company": "Salesforce",
+            "location": "Tel-Aviv/Remote",
+            "start_date": "Jan 2020",
+            "end_date": "Present",
+            "responsibilities": [
+                "Workforce Management: E2E Data Scientist (customers until back-end) Multivariate Time Series forecasting Service",
+                "Development for an E2E dockerized pipeline for Model Deployment and Serving",
+                "Deploying language models in production using tensorflow",
+                "Developing the first generative GA Salesforce application",
+                "Natual language to SOQL (Salesforce SQL)",
+                "Natual language to segmenation"
+
+            ],
+            "keywords": [
+                "Mongo",
+                "Docker",
+                "Python",
+                "Sklearn",
+                "Pandas",
+                "Numpy",
+                "Git",
+                "Tensorflow", 
+                "Keras", 
+                "Torch", 
+                "Huggingface",
+                "LLM", 
+                "Embedding", 
+                "Autonomous agents"
+            ]
+        },
+        {
+            "title": "Data Scientist",
+            "company": "ClickSoftware (Acquired by Salesforce)",
+            "location": "Petah Tikva",
+            "start_date": "Feb 2019",
+            "end_date": "Jan 2020",
+            "responsibilities": [
+                "Working on Multivariate Time Series forecasting in a Multi-tenant environment",
+                "Development of an e2e dockerized pipeline (periodic training, data processing, and serving)"
+            ],
+            "keywords": [
+                "AWS",
+                "Docker",
+                "Python",
+                "Keras",
+                "Tensorflow",
+                "Dask",
+                "Git"
+            ]
+        },
+        {
+            "title": "AI Researcher",
+            "company": "Ariel University",
+            "location": "Ariel",
+            "start_date": "Nov 2016",
+            "end_date": "Oct 2018",
+            "responsibilities": [
+                "Machine learning for football match violence prediction",
+                "Classification and enrichment of encrypted traffic Using Machine Learning algorithms"
+            ],
+            "keywords": ["Numpy","Pandas","Sklearn"]
+        },
+        {
+            "title": "Research Assistant",
+            "company": "Ariel University",
+            "location": "Ariel",
+            "start_date": "Oct 2014",
+            "end_date": "Jul 2016",
+            "responsibilities": [
+                "Researching Malware network behavior using Wireshark and Python",
+                "Design and development of a centered intrusion detection system in Java and Python"
+            ],
+            "keywords": [
+                "Wireshark",
+                "Python",
+                "Java",
+                "Multiparty Computation",
+                "Cybersecurity"
+            ]
+        }
+    ],
+    "skills": [
+        "Java",
+        "Python",
+        "AWS"
+    ],
+    "certifications": [
+        "Sequences, Time Series and Prediction,DeepLearning.AI",
+        "Applied Machine Learning in Python,University of Michigan"
+    ],
+    "projects": [
+          {
+            "title": "Israel Supermarket Scraper",
+            "description": "Clients to download the data published by the supermarkets.",
+            "technologies": ["Playwrite", "WebScraping", "OpenSource","Github Actions"],
+            "github_link": "https://github.com/erlichsefi/israeli-supermarket-scarpers"
+          },
+          {
+            "title": "AIWebAssist",
+            "description": "Chrome extension to control the broswer using LLM",
+            "technologies": ["Javascript", "Chrome", "Selenim", "LLM", "RAG"],
+            "github_link": "https://github.com/AIWebAssist"
+          }
+    ],
+    "languages": [
+        "Hebrew",
+        "English"
+    ],
+    "summary": "Lead Applied Data Scientist with experience of over five years in the tech industry in Time Series, NLP, and Generative. Four years of experience in academic research: Two years of experience in ML and two years in algorithmic game theory research. Additionally, one year as DS Guild manager. Entrepreneur mindset.",
+    "achievements": [],
+    "publications": [
+        {
+            "title": "Negotiation Strategies for Agents with Ordinal Preferences: Theoretical Analysis and Human Study",
+            "publish_date": "2024",
+            "description": "",
+            "publication": "Artificial Intelligence, Elsevier",
+            "link": "https://u.cs.biu.ac.il/~krauss/data/articles/AIJ-2024.pdf"
+        },
+        {
+            "title": "STWSN: A Novel Secure Distributed Transport Protocol for Wireless Sensor Networks",
+            "publish_date": "2018",
+            "description": "Dr. Amit Dvir",
+            "publication": "IJCS18",
+            "link": "https://onlinelibrary.wiley.com/doi/abs/10.1002/dac.3827"
+        },
+        {
+            "title": "Negotiation Strategies for Agents with Ordinal Preferences",
+            "publish_date": "2019",
+            "description": "Supervision of Prof. Sarit Krus and Dr. Noam Hazon",
+            "publication": "Thesis",
+            "link": "https://www.ijcai.org/proceedings/2018/0029.pdf"
+        },
+        {
+            "title": "Heterogeneous SDN controller placement problem—The Wi-Fi and 4G LTE-U case",
+            "publish_date": "2021",
+            "description": "",
+            "publication": "No",
+            "link": "https://www.researchgate.net/publication/353671072_Heterogeneous_SDN_controller_placement_problem-The_Wi-Fi_and_4G_LTE-U_case"
+        }
+    ]
+}

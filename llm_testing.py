@@ -38,10 +38,7 @@ if __name__ == "__main__":
                                 Azure Data Explorer, KQL
                                 C# 
                                 
-                                """,how_to_act=[
-                                    "don't add any new information",
-                                    "be in rush the answer without providing move information"
-                                ])
+                                """,how_to_act=[])
 
     utils.pdf_to_user_data(termianl)
 

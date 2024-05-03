@@ -86,9 +86,10 @@ class LLMTesting(TerminalInterface):
         {poistion_text}
 
         You are testing an LLM base application, answer in a short a concise manner.
-        follow those guidelines:
+        Follow those guidelines:
 
         {guideline}
+        - You must answer the user question like your are a humen being.
 
         """})
         self.current_message = ""

@@ -86,12 +86,14 @@
       "title": "[Publication Title]",
       "publish_date": "[Date]",
       "description": "[Publication Description]",
+      "publication": "[If published, where]",
       "link": "[Publication Link]"
     },
     {
       "title": "[Publication Title]",
       "publish_date": "[Date]",
       "description": "[Publication Description]",
+      "publication": "[If published, where]",
       "link": "[Publication Link]"
     }
   ]

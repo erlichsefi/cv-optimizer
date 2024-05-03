@@ -39,7 +39,7 @@ def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False,
           return [json.loads(choice.message.content.replace("```json","").replace("```","")) for choice in stream.choices]
        
     if num_of_gen == 1:
-       return stream.choices[0]
+       return stream.choices[0].message.content
     else:
        return [choice.message.content for choice in stream.choices]
 

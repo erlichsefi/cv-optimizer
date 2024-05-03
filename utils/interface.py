@@ -81,7 +81,7 @@ class LLMTesting(TerminalInterface):
         self.poistion_text = poistion_text
 
         guideline = '\n-'.join(how_to_act)
-        self.system_message = f"""
+        self.messages.append( {"role":"system","content":f"""
         You are acting on behalf of a user interseted in the following position:
         {poistion_text}
 
@@ -90,7 +90,8 @@ class LLMTesting(TerminalInterface):
 
         {guideline}
 
-        """
+        """})
+        self.current_message = ""
 
     def get_pdf_file_from_user(self):
         return self.cv_file
@@ -100,9 +101,11 @@ class LLMTesting(TerminalInterface):
     
     def send_user_message(self,message):
         print(f"Bot:{message}")
-        self.messages.append({"role":"user","content":message})
+        self.current_message += f"\n {message}"
 
     def get_user_input(self):
+        self.messages.append({"role":"user","content":self.current_message})
+        self.current_message = ""
         response = get_chat_compliation(messages=self.messages)
         print(f"User Agent:{response}")
         

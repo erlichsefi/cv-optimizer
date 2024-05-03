@@ -62,6 +62,15 @@
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": false
+        },
+        {
+            "name": "LLM Full Flow",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "llm_testing.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": false
         }
     ]
 }

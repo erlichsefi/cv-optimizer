@@ -69,6 +69,10 @@ def presist_compliation(messages,generations,model,cache_key=None):
 
         json.dumps(exsiting)
 
+def get_presist_compliation():
+    with open("user_data/compliations.json", "r") as file:
+        return json.load(file)
+
 #
 def set_user_extract_cv_data(user_cv_data):
     with open("user_data/user_extracted_cv.json", "w") as file:
@@ -205,7 +209,8 @@ def wrap_up(complete_path,messages):
         "extracted_cv":get_user_extract_cv_data(),
         "completed_cv":get_completed_cv_data(),
         "position_data":get_position_data(),
-        "offers":get_all_position_cv_offers()
+        "offers":get_all_position_cv_offers(),
+        "all_compliation":get_presist_compliation()
     }
     with open(complete_path, "w") as file:
         json.dump(complete_data,file)

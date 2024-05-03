@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import subprocess
+import io
 
 
 def get_cv_blueprint():
@@ -39,9 +40,36 @@ def get_data_from_pdf(filename):
                 for page in reader.pages:
                     text += page.extract_text()
             return text
-        
 
-    
+ #
+
+def get_cache_key():
+    from datetime import datetime
+
+    current_datetime = datetime.now()
+    return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+        
+def presist_compliation(messages,generations,model,cache_key=None):
+    if  not cache_key:
+        cache_key = get_cache_key()
+
+    with open("user_data/compliations.json", "a") as file:
+        try:
+            exsiting =  json.load(file)
+        except io.UnsupportedOperation:
+            exsiting = {}
+
+        exsiting[cache_key] = {
+            "messages":messages,
+            "generations":generations,
+            "model":model
+        }
+  
+
+
+        json.dumps(exsiting)
+
+#
 def set_user_extract_cv_data(user_cv_data):
     with open("user_data/user_extracted_cv.json", "w") as file:
         return json.dump(user_cv_data, file)
@@ -73,11 +101,6 @@ def get_completed_cv_data():
         return complete[max(complete.keys(),key=lambda x:str_to_datetime(x))]
 
 #
-def get_cache_key():
-    from datetime import datetime
-
-    current_datetime = datetime.now()
-    return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
 def get_datetime_str():
     from datetime import datetime
@@ -91,11 +114,6 @@ def str_to_datetime(date_string):
     return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
 
 
-
-
-def cache_chat(message,cache_key):
-    with open(f"user_data/cache_message_{cache_key}.json", "w") as file:
-        return json.dump(message, file)
     
 def set_drill_down_communiation(drill_down):
     with open("user_data/user_drill_down.json", "w") as file:

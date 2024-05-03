@@ -98,7 +98,7 @@ class LLMTesting(TerminalInterface):
         self.messages.append({"role":"user","content":message})
 
     def get_user_input(self):
-        response  = get_chat_compliation(messages=self.messages)
+        response = get_chat_compliation(messages=self.messages)
         print(f"User Agent:{response}")
         
         self.messages.append({"role":"assistant","content":response})

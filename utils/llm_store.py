@@ -2,26 +2,30 @@ import os
 import json
 from openai import OpenAI
 import retry
-from .filestore import cache_chat,get_cache_key
+from .filestore import get_cache_key,presist_compliation
 from .interface import TerminalInterface,UserInterface
 
 
-def get_compliation(system_message, user_input,is_json_expected=False,api_key=None,num_of_gen=1,temperature=0):
+def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expected=False,api_key=None,num_of_gen=1,temperature=0):
     messages= [
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_input},
         ]
-    return get_chat_compliation(messages,is_json_expected=is_json_expected,api_key=api_key,num_of_gen=num_of_gen,temperature=temperature)
+    
+    generations = get_chat_compliation(messages,model=model,is_json_expected=is_json_expected,api_key=api_key,num_of_gen=num_of_gen,temperature=temperature)
+
+    presist_compliation(messages,generations,model)
+    return generations
 
 
 @retry.retry(exceptions=(json.decoder.JSONDecodeError))
-def get_chat_compliation(messages,is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
+def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
     if not api_key:
         api_key = os.environ['OPENAI_API_KEY']
 
     client = OpenAI(api_key=api_key)
     stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model,
         messages=messages,
         stream=False,
         temperature=temperature,
@@ -29,7 +33,6 @@ def get_chat_compliation(messages,is_json_expected=False, api_key=None,num_of_ge
     )
 
     if is_json_expected:
-       
        if num_of_gen == 1:
            return json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
        else:
@@ -76,7 +79,7 @@ def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
     return response["choices"][0]["message"]["content"]
 
 
-def experience_chatbot(system_prompt,user_interface:UserInterface,topic):
+def experience_chatbot(system_prompt,user_interface:UserInterface,topic,model="gpt-3.5-turbo"):
   cache_key = get_cache_key()
 
   user_interface.send_user_message("--------------------------------------------------")
@@ -118,11 +121,13 @@ def experience_chatbot(system_prompt,user_interface:UserInterface,topic):
     
     while retry_count < max_retries:
         try:
-            cache_chat(messages,cache_key)
+            
             stream = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=messages
+                model=model,
+                messages=messages,
+                stream=False
             )
+            presist_compliation(messages,stream,model,cache_key=cache_key)
             chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
             break  # Break out of the loop if successful
         except json.JSONDecodeError as e:

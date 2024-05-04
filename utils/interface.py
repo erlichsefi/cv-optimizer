@@ -115,7 +115,8 @@ class LLMTesting(TerminalInterface):
         return self.cv_file
     
     def get_position_snippet_data(self):
-        return self.poistion_text
+        with open(self.poistion_file,"r") as file:
+            return file.readline()
     
     def send_user_message(self,message):
         print(f"Bot:{message}")

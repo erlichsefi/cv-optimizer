@@ -212,5 +212,6 @@ def wrap_up(complete_path,messages):
         json.dump(complete_data,file)
 
     shutil.rmtree("user_data")
+    os.mkdir("user_data")
 
 

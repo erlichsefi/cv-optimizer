@@ -18,30 +18,32 @@ def get_expected_latex_format():
         return file.read()
     
 
+def extract_1(filename):
+    from pdfminer.high_level import extract_text
+
+    return extract_text(filename)
+
+def extract_2(filename):
+    #from PyPDF2 import PdfReader
+    from pypdf import PdfReader
+    text = ""
+    with open(filename, "rb") as f:
+        reader = PdfReader(f)
+        for page in reader.pages:
+            text += page.extract_text()
+    return text
 def get_data_from_pdf(filename):
-    from PyPDF2 import PdfReader
+
+    extract_1(filename)
+
     if isinstance(filename,str):
-        text = ""
-        with open(filename, "rb") as f:
-            reader = PdfReader(f)
-            for page in reader.pages:
-                text += page.extract_text()
-        return text
+        return extract_1(filename)
     else:
         from tempfile import NamedTemporaryFile
-        from PyPDF2 import PdfReader
-
         with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
             f.write(filename.getbuffer())
+            return extract_1(f.name)
 
-            text = ""
-            with open(f.name, "rb") as f:
-                reader = PdfReader(f)
-                for page in reader.pages:
-                    text += page.extract_text()
-            return text
-
- #
 
 def get_cache_key():
     from datetime import datetime

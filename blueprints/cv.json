@@ -1,100 +1,149 @@
 {
   "personal_info": {
-    "firstname": "[First Name]",
-    "lastname": "[Last Name]",
-    "email": "[Email]",
-    "phone": "[Phone Number]",
-    "address": "[Address]",
+    "firstname": "[Your First Name]",
+    "lastname": "[Your Last Name]",
+    "email": "[Your Email Address]",
+    "phone": "[Your Phone Number]",
+    "address": "[Your Address]",
     "linkedin": {
-      "link": "[Linkedin link]",
-      "username": ["LinkedIn username"]
+      "link": "[Your LinkedIn Profile Link]",
+      "username": "[Your LinkedIn Username]"
     },
     "github": {
-      "link": "[Github link]",
-      "username": ["Github username"]
+      "link": "[Your GitHub Profile Link]",
+      "username": "[Your GitHub Username]"
     },
-    "additional_websites": ["[Website]", "[Website]"]
+    "additional_websites": ["[Additional Website]", "[Additional Website]"]
   },
   "education": [
     {
-      "degree": "[Degree]",
-      "institution": "[University Name]",
-      "location": "[Location]",
-      "start_date": "[The Start of the dgree]",
+      "degree": "[Degree Type]",
+      "institution": "[University or College Name]",
+      "location": "[City, Country]",
+      "start_date": "[Start Date]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade]"
+      "grade": "[Grade or GPA]"
     },
     {
-      "degree": "[Degree]",
-      "institution": "[University Name]",
-      "location": "[Location]",
-      "start_date": "[The Start of the dgree]",
+      "degree": "[Degree Type]",
+      "institution": "[University or College Name]",
+      "location": "[City, Country]",
+      "start_date": "[Start Date]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade]"
+      "grade": "[Grade or GPA]"
     }
   ],
   "experience": [
     {
       "title": "[Job Title]",
-      "company": "[Company]",
-      "location": "[Location]",
+      "company": "[Company Name]",
+      "location": "[City, Country]",
       "start_date": "[Start Date]",
-      "end_date": "[End Date or 'ongoing']",
+      "end_date": "[End Date or 'Ongoing']",
       "responsibilities": ["[Responsibility]", "[Responsibility]"],
-      "keywords": ["[Keyword]", "[Keyword]"]
+      "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"]
     },
     {
       "title": "[Job Title]",
-      "company": "[Company]",
-      "location": "[Location]",
+      "company": "[Company Name]",
+      "location": "[City, Country]",
       "start_date": "[Start Date]",
-      "end_date": "[End Date or 'ongoing']",
+      "end_date": "[End Date or 'Ongoing']",
       "responsibilities": ["[Responsibility]", "[Responsibility]"],
-      "keywords": ["[Keyword]", "[Keyword]"]
+      "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"]
     }
   ],
-  "skills": ["[Skill]", "[Skill]", "[Skill]", "[Skill]"],
-  "certifications": ["[Certification]", "[Certification]"],
+  "skills": [
+    {
+      "name": "[Skill]",
+      "level": "[Years]"
+    },
+    {
+      "name": "[Skill]",
+      "level": "[Years]"
+    }
+  ],
+  "certifications": ["[Certification Name]", "[Certification Name]"],
   "projects": [
     {
       "title": "[Project Title]",
       "description": "[Project Description]",
-      "technologies": ["[Technology]", "[Technology]", "[Technology]"],
-      "github_link": "[GitHub Link]"
+      "technologies": ["[Technology Used]", "[Technology Used]", "[Technology Used]"],
+      "github_link": "[GitHub Repository Link]"
     },
     {
       "title": "[Project Title]",
       "description": "[Project Description]",
-      "technologies": ["[Technology]", "[Technology]", "[Technology]"],
-      "github_link": "[GitHub Link]"
+      "technologies": ["[Technology Used]", "[Technology Used]", "[Technology Used]"],
+      "github_link": "[GitHub Repository Link]"
     }
   ],
-  "languages": ["[Language]", "[Language]", "[Language]"],
-  "summary": "[Summary]",
-  "achievements": [
+  "languages": [
     {
-      "achievement": "[Achievement]",
-      "date": "[Date]"
+      "language": "[Language]",
+      "level": "[Level of Proficiency (e.g., Native, Fluent, Intermediate, Basic)]"
     },
     {
-      "achievement": "[Achievement]",
-      "date": "[Date]"
+      "language": "[Language]",
+      "level": "[Level of Proficiency (e.g., Native, Fluent, Intermediate, Basic)]"
+    },
+    {
+      "language": "[Language]",
+      "level": "[Level of Proficiency (e.g., Native, Fluent, Intermediate, Basic)]"
+    }
+  ],
+  "achievements": [
+    {
+      "achievement": "[Achievement Description]",
+      "date": "[Date of Achievement]"
+    },
+    {
+      "achievement": "[Achievement Description]",
+      "date": "[Date of Achievement]"
     }
   ],
   "publications": [
     {
       "title": "[Publication Title]",
-      "publish_date": "[Date]",
+      "publish_date": "[Publication Date]",
+      "published_venue": "[Published Venue if published]",
+      "co_authors": "[ Co-Authors]",
       "description": "[Publication Description]",
-      "publication": "[If published, where]",
+      "publication": "[Where Published]",
       "link": "[Publication Link]"
     },
     {
       "title": "[Publication Title]",
-      "publish_date": "[Date]",
+      "publish_date": "[Publication Date]",
+      "published_venue": "[Published Venue if published]",
+      "co_authors": "[ Co-Authors]",
       "description": "[Publication Description]",
-      "publication": "[If published, where]",
+      "publication": "[Where Published]",
       "link": "[Publication Link]"
     }
-  ]
+  ],
+  "volunteer_experience": [
+    {
+      "organization": "[Organization Name]",
+      "role": "[Volunteer Role]",
+      "location": "[City, Country]",
+      "start_date": "[Start Date]",
+      "end_date": "[End Date or 'Ongoing']",
+      "description": "[Description of Volunteer Work]"
+    },
+    {
+      "organization": "[Organization Name]",
+      "role": "[Volunteer Role]",
+      "location": "[City, Country]",
+      "start_date": "[Start Date]",
+      "end_date": "[End Date or 'Ongoing']",
+      "description": "[Description of Volunteer Work]"
+    }
+  ],
+  "hobbies": [
+    "[Hobby]",
+    "[Hobby]",
+    "[Hobby]"
+  ],
+  "summary": "[Summary of Yourself]"
 }

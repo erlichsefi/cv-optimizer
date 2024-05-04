@@ -2,24 +2,24 @@ import os
 import json
 from openai import OpenAI
 import retry
-from .filestore import get_cache_key,presist_compliation
+from filestore import get_cache_key,presist_compliation
 
 
 
-def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expected=False,api_key=None,num_of_gen=1,temperature=0):
+def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expected=False,api_key=None,num_of_gen=1,temperature=0,top_p=0):
     messages= [
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_input},
         ]
     
-    generations = get_chat_compliation(messages,model=model,is_json_expected=is_json_expected,api_key=api_key,num_of_gen=num_of_gen,temperature=temperature)
+    generations = get_chat_compliation(messages,model=model,is_json_expected=is_json_expected,api_key=api_key,num_of_gen=num_of_gen,temperature=temperature,top_p=top_p)
 
     presist_compliation(messages,generations,model)
     return generations
 
 
-@retry.retry(exceptions=(json.decoder.JSONDecodeError),logger=None)
-def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False, api_key=None,num_of_gen=1,temperature=0):
+@retry.retry(exceptions=(json.decoder.JSONDecodeError),logger=None,tries=3)
+def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False, api_key=None,num_of_gen=1,temperature=0,top_p=0):
     if not api_key:
         api_key = os.environ['OPENAI_API_KEY']
 
@@ -29,6 +29,7 @@ def get_chat_compliation(messages,model="gpt-3.5-turbo", is_json_expected=False,
         messages=messages,
         stream=False,
         temperature=temperature,
+        top_p=top_p,
         n=num_of_gen
     )
 

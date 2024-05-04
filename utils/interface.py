@@ -2,8 +2,8 @@
 from abc import ABC,abstractmethod
 from uuid import uuid4
 import json
-from .llm_store import get_chat_compliation
-from .filestore import wrap_up
+from llm_store import get_chat_compliation
+from filestore import wrap_up
 
 class UserInterface(ABC):
 
@@ -73,6 +73,14 @@ class TerminalInterface(UserInterface):
     def send_files(self,file_paths):
         self.send_user_message("\n".join(file_paths))
     
+class Args(TerminalInterface):
+
+    def __init__(self,pdf_path=None) -> None:
+        super().__init__()
+        self.pdf_path = pdf_path
+
+    def get_pdf_file_from_user(self):
+        return self.pdf_path 
 
 class LLMTesting(TerminalInterface):
 

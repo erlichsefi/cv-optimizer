@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "utils/extract_cv_data.py",
             "console": "integratedTerminal",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
         },
         {
             "name": "2) Complete user data",

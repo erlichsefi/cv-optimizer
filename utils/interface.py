@@ -28,7 +28,7 @@ class UserInterface(ABC):
         pass
 
     @abstractmethod
-    def send_cv_files(self,file_paths):
+    def send_files(self,file_paths):
         pass
 
     
@@ -70,7 +70,7 @@ class TerminalInterface(UserInterface):
         self.messages.append({"role":"user","content":full_content})
         return full_content
     
-    def send_cv_files(self,file_paths):
+    def send_files(self,file_paths):
         self.send_user_message("\n".join(file_paths))
     
 
@@ -127,7 +127,4 @@ class LLMTesting(TerminalInterface):
         self.current_message = ""
         print(f"User Agent:{response}")
         return response
-    
-    def send_cv_files(self,file_paths):
-        return file_paths
 

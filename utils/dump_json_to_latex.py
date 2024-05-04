@@ -96,7 +96,7 @@ def run(user_interface:UserInterface):
             pdfs.append(pdf)
     
     user_interface.send_user_message("Here are the revised CVs:")
-    user_interface.send_cv_files("\n".join(pdfs))
+    user_interface.send_files(pdfs)
 
     # pdf_filename = "user_tex.pdf"
     # if pdf_filename:

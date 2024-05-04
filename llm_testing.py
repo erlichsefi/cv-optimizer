@@ -39,7 +39,9 @@ if __name__ == "__main__":
                                 Azure Data Explorer, KQL
                                 C# 
                                 
-                                """,how_to_act=[])
+                                """,how_to_act=[
+                                    "Be truthful, don't invent any information."
+                                ])
 
     utils.pdf_to_user_data(termianl)
 
@@ -53,9 +55,9 @@ if __name__ == "__main__":
     utils.overcome_gaps(termianl)
 
     # to pdfs
-    utils.to_pdfs()
+    utils.to_pdfs(termianl)
 
-    termianl.wrap_up(complete_path=f"{sample_uuid}.json")
+    termianl.wrap_up(uuid=sample_uuid)
 
 
 

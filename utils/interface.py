@@ -81,16 +81,23 @@ class LLMTesting(TerminalInterface):
         self.cv_file = cv_file
         self.poistion_text = poistion_text
         self.profile_file = profile_file
+        self.current_message = ""
+        self.how_to_act = how_to_act
+        self._start_session()
 
-        guideline = '\n-'.join(how_to_act)
-        with open(profile_file,"r") as file:
+    def _start_session(self):
+        self.messages = []
+
+        guideline = '\n-'.join(self.how_to_act)
+        with open(self.profile_file,"r") as file:
             profile_file_content = json.load(file)
+        
         self.messages.append( {"role":"system","content":f"""
         You are acting on behalf of a user:
         {json.dumps(profile_file_content)}
                                                       
-        interseted in the following position:
-        {poistion_text}
+        The user is interseted in the following position:
+        {self.poistion_text}
 
         You are testing an LLM base application, answer in a short a concise manner.
         Follow those guidelines:
@@ -99,7 +106,6 @@ class LLMTesting(TerminalInterface):
         - You must answer the user question like your are a humen being.
 
         """})
-        self.current_message = ""
 
     def get_pdf_file_from_user(self):
         return self.cv_file
@@ -113,11 +119,13 @@ class LLMTesting(TerminalInterface):
 
     def get_user_input(self):
         self.messages.append({"role":"user","content":self.current_message})
-        self.current_message = ""
+        
         response = get_chat_compliation(messages=self.messages)
-        print(f"User Agent:{response}")
         
         self.messages.append({"role":"assistant","content":response})
+
+        self.current_message = ""
+        print(f"User Agent:{response}")
         return response
     
     def send_cv_files(self,file_paths):

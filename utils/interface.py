@@ -76,10 +76,10 @@ class TerminalInterface(UserInterface):
 
 class LLMTesting(TerminalInterface):
 
-    def __init__(self,how_to_act,cv_file,poistion_text,profile_file) -> None:
+    def __init__(self,how_to_act,cv_file,poistion_file,profile_file) -> None:
         super(LLMTesting,self).__init__()
         self.cv_file = cv_file
-        self.poistion_text = poistion_text
+        self.poistion_file = poistion_file
         self.profile_file = profile_file
         self.current_message = ""
         self.how_to_act = how_to_act
@@ -91,13 +91,16 @@ class LLMTesting(TerminalInterface):
         guideline = '\n-'.join(self.how_to_act)
         with open(self.profile_file,"r") as file:
             profile_file_content = json.load(file)
+
+        with open(self.poistion_file,"r") as file:
+            poistion_text = file.readline()
         
         self.messages.append( {"role":"system","content":f"""
         You are acting on behalf of a user:
         {json.dumps(profile_file_content)}
                                                       
         The user is interseted in the following position:
-        {self.poistion_text}
+        {poistion_text}
 
         You are testing an LLM base application, answer in a short a concise manner.
         Follow those guidelines:

@@ -15,3 +15,4 @@
 
 ## improvments 
 - In chat, update the CV as we go.
+- fetch data from [linkedin](https://github.com/tomquirk/linkedin-api)

@@ -35,7 +35,7 @@ class UserInterface(ABC):
     def wrap_up(self,uuid):
         if not uuid:
             uuid = str(uuid4())
-        wrap_up(f"{uuid}.json",messages=self.messages)
+        wrap_up(f"data_set/predicted/{uuid}.json",messages=self.messages)
 
 
 class TerminalInterface(UserInterface):

@@ -10,6 +10,7 @@ if __name__ == "__main__":
     cv_file = "data_set/Curriculum_Vitae_Jan24.pdf"
     expected_cv = "data_set/expected_cv.json"
     
+    
     for position in os.listdir(poistion_folder):
         user_interface = utils.LLMTesting(cv_file=cv_file,
                                     profile_file=expected_cv,
@@ -20,7 +21,7 @@ if __name__ == "__main__":
 
         pipeline.execute(user_interface)
 
-        user_interface.wrap_up(uuid=position)
+        user_interface.wrap_up(uuid=position.split(".")[0])
 
 
 

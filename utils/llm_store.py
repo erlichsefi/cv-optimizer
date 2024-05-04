@@ -103,7 +103,7 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
         "information_gain": "<the information you would like to retrive>",
         "is_followup": "<is this message a followup to complted previous messages",
         "message": "<the message to send the user to obtain the information. be nice!>",
-        "is_all_issue_adressed": "<true if all the issues addressed and this is a goodbye message>",
+        "is_all_issue_addressed": "<true if all the issues addressed and this is a goodbye message>",
         "expectation": "<what you expected to learn from the user answer>"
         
     }}
@@ -144,7 +144,7 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
 
     # Print the response and add it to the messages list
     user_interface.send_user_message(f"{chat_message['message']}")
-    if str(chat_message['is_all_issue_adressed']).lower() == "true":
+    if str(chat_message['is_all_issue_addressed']).lower() == "true":
       break
     
 

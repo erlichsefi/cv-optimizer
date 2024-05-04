@@ -88,14 +88,15 @@ class LLMTesting(TerminalInterface):
     def _start_session(self):
         self.messages = []
 
-        guideline = '\n-'.join(self.how_to_act)
+        guideline = "- " + '\n -'.join(self.how_to_act)
         with open(self.profile_file,"r") as file:
             profile_file_content = json.load(file)
 
         with open(self.poistion_file,"r") as file:
             poistion_text = file.readline()
         
-        self.messages.append( {"role":"system","content":f"""
+        self.messages.append( {"role":"system",
+                               "content":f"""
         You are acting on behalf of a user:
         {json.dumps(profile_file_content)}
                                                       
@@ -103,8 +104,8 @@ class LLMTesting(TerminalInterface):
         {poistion_text}
 
         You are testing an LLM base application, answer in a short a concise manner.
+        
         Follow those guidelines:
-
         {guideline}
         - You must answer the user question like your are a humen being.
 

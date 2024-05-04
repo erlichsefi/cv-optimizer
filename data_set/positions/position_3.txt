@@ -1,0 +1,40 @@
+At Ecoplant we're on a mission to Revolutionize Tomorrow's Infrastructure, Today.
+
+
+Ecoplant is Revolutionizing manufacturing by solving challenges in air compressor systems. Through cutting-edge AI SAAS solutions, creating a green industrial world by minimizing energy waste, CO2, and downtime to industrial plants. We aim to inspire efficiency, simplify operations, and drive positive industry change for a more sustainable and efficient future.
+Our global team consists of passionate, adaptable technologists, and problem solvers dedicated to making a positive impact on the manufacturing world.
+
+
+We are seeking a highly skilled and motivated data scientist with expertise in time series data to join our dynamic team at Ecoplant. As a data scientist, you will play a key role in researching and developing algorithms and models for real-world problems based on time series data and deploying them to a production environment. You will work alongside a talented group of professionals to disrupt the infrastructure world.
+
+
+Join us in transforming the way we power production for a brighter future.
+
+
+A day in your life 
+
+Research and Development: Lead research initiatives to explore and implement cutting-edge techniques in time series analysis both classic algorithm and machine / deep learning models. Stay abreast of the latest academic and industry developments to apply innovative solutions to our challenges.
+Data Manipulation and Analysis: Expertly manipulate and analyze complex time series data from sensor inputs, extracting meaningful insights to inform model development and business decisions.
+Deep Domain Knowledge Application: Apply comprehensive knowledge of the manufacturing and energy sectors to tailor predictive models to specific operational challenges, enhancing efficiency and sustainability.
+Production Code Development: Write clean, maintainable, and robust code for deploying models into production environments. Ensure code quality and reliability to support scalable AI solutions.
+End-to-End Ownership: Work closely with product managers and domain experts to understand their needs and challenges. Develop custom data-driven solutions and actively guide stakeholders through the implementation process, ensuring solutions are seamlessly integrated and fully meet or exceed customer satisfaction.
+Cross-Functional Team Collaboration: Facilitate knowledge sharing and collaboration across engineering, product, domain experts, and operations teams to drive the successful integration of AI solutions.
+
+
+What it takes to succeed
+
+Advanced Degree in a Relevant Field: A master’s in Computer Science, Data Science, Statistics, or a related field, with a strong focus on time series analysis.
+Proven Experience: 3+ years of experience in research, development, and deployment of models based on time series data to production and in scale. 
+Industrial or manufacturing contexts - advantage.
+Expertise in Python: Deep knowledge of Python and data science libraries (e.g., pandas, NumPy, scikit-learn, TensorFlow, or PyTorch) for sophisticated data manipulation and model development.
+Passion for the Domain: A genuine interest and passion for learning the complexities of the air compressor domain, understanding its challenges, and applying this knowledge to develop innovative solutions that drive efficiency and sustainability.
+
+
+
+
+Why Ecoplant 
+
+Be part of a cutting-edge technology company that is revolutionizing the manufacturing industry
+Contribute to a green industrial revolution with global recognition
+A friendly and inclusive workplace culture that fosters collaboration and innovation
+Enjoy a supportive work environment that values and promotes a healthy work-life balance

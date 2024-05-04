@@ -1,0 +1,40 @@
+Are you passionate about cloud technology? Do you master the core of what matters in building a cloud service? Do you want to learn more from the best people in the industry?
+
+The PowerBI group is building a leading Analytics and business intelligence web service that delivers insights to enable fast, informed decisions.
+
+Our code is in the bleeding edge of cloud technology, leveraging Azure capabilities like no other place.
+
+Rapid improvement in an agile environment is in the heart of our culture, and it gets faster and better every day.
+
+Come join the Power BI team! We are creating and delivering exciting experiences to enable everyone to use Business Intelligence to help realize their potential.
+
+Responsibilities
+
+Our team has taken on the challenge to meet and exceed customer expectations for quality, trust, and beautiful experiences for BI users.
+
+Here Are Some Details Around How We Work
+
+ Design and build a fast and highly interactive data visualization stack.
+ Take an active part in a fast moving team focused on building robust and innovative software.
+ Work closely with experienced engineers and be part of an agile and fast moving development team.
+
+We roll out improvements and new experiences weekly to the service.
+
+Our team owns and delivers end to end experiences in Power BI and through web user interface.
+
+We use customer feedback and usage to help us learn and adapt in order to grow and improve the service, and experiences Familiarity with Microsoft stack and BI technologies is beneficial.
+
+Our challenges are around big data scale, real time and mission critical data. We are looking for brilliant engineers, to join our team and make our world-class cloud infrastructure even better.
+
+Embody our culture and values
+
+Qualifications
+
+ BSc or MSc in Software Eng. or Computer Eng.
+ Experience building products with Angular, Angular JS, TypeScript, JavaScript, HTML/CSS.
+ Experience in server side development, preferably C#
+ 5+ years of programming experience.
+ Strong design, coding, debugging, and problem solving skills.
+ High potential to grow and evolve
+ Team player, confident, and enthusiastic
+ Self-learner with passion for technologies.

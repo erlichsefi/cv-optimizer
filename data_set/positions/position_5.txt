@@ -1,0 +1,33 @@
+Come join the company that is reinventing cloud security and empowering businesses to thrive in the cloud. As the fastest-growing startup ever, Wiz is on a mission to help organizations secure cloud environments that will accelerate their businesses. Trusted by security teams all over the world, we have a proven track record of success and a culture that values world-class talent.
+
+Our Wizards from over 13 countries work together to protect the infrastructure of our hundreds of customers, including over 40% of the Fortune 100, who trust us to scan and secure over 230 billion files daily. We’re the leading player in a massive and growing market, but it’s still early enough for you to make a significant impact. At Wiz, you’ll have the freedom to think creatively, dream big, and use your full range of skills to contribute to our record growth. Come join our team and help us create secure cloud environments that allow the best companies to move faster.
+
+Summary
+
+We’re looking for a Data scientist Expert to join us in spreading the magic of Wiz. As a Data scientist Expert, you will be responsible for driving research and development initiatives to advance Artificial Intelligence and technologies at Wiz. You will work closely with cross-functional teams to explore, innovate, and implement AI-driven solutions to tackle emerging threats, examine cloud security features, and enhance the company’s security posture.
+
+What You’ll Do
+
+Lead an applied research for AI-driven features in the Wiz platform
+Cover a range of features - from leveraging LLMs to enhance customer investigation experience to novel usage of AI for cloud security
+Collaborate with engineering teams to design, build, and maintain production pipelines
+Work closely with the Security Research and Product teams to define research goals
+Conduct experiments and evaluate the performance of AI models, algorithms, and techniques using real-world datasets and simulated environments
+Stay abreast of cutting-edge AI methodologies, frameworks, and tools and apply them to improve security solutions' accuracy, efficiency, and scalability
+
+What You’ll Bring
+
+An M.S. or Ph.D. degree in computer science, statistics, or related field OR equivalent work experience
+5+ years of experience in leading and managing data science and machine learning projects, preferably in the intersection of AI and cybersecurity
+Experience with distributed cloud systems - Hands-on familiarity with cloud systems that are distributed
+Strong knowledge of deep learning models and common model architecture such as transformer models, CNNs, RNNs
+Knowledge of programming languages that are used in AI research, such as Python, and experience with AI frameworks (e.g., Hugging Face, LangChain, OpenAI, scikit-learn, TensorFlow, PyTorch)
+Ability to work independently in a fast-paced, and come up with creative solutions to challenging problems
+Excellent communication (both written and verbal) and presentation skills
+Advantage: Knowledge of cybersecurity principles, attack vectors, and defense mechanisms
+
+If your experience is close but doesn’t fulfill all requirements, please apply. Wiz is on a mission to build a special company. To achieve our goal, we are focused on hiring Wizards with different backgrounds, perspectives, and experiences.
+
+Wiz is an equal opportunity employer. We do not discriminate based upon race, religion, color, national origin, sex (including pregnancy, childbirth, reproductive health decisions, or related medical conditions), sexual orientation, gender identity, gender expression, age, status as a protected veteran, status as an individual with a disability, genetic information, political views or activity, or other applicable legally protected characteristics. We also consider qualified applicants with criminal histories, consistent with applicable federal, state and local law.
+
+By submitting your application, you acknowledge that Wiz will process your personal data in accordance with Wiz's Privacy Policy.

@@ -1,0 +1,22 @@
+As an MLOps Engineer at Sleek, you will work closely with data scientists and engineers to deploy, scale and optimize our machine learning solutions. You will be responsible for building tools and services for developing, deploying, monitoring and maintaining models in production.
+ 
+What will your job look like?
+
+
+Lead the MLOps domain and define the MLOps roadmap and strategy. Explore new technologies to keep the AI group updated with cutting-edge technologies suited for on-prem use.
+Integrate pipelines and workflows into the overall CI/CD process, ensuring flawless deployments and rollbacks.
+Collaborate with data scientists and software engineers to automate model training and retraining processes, ensuring regular model updates and improvements based on new data and performance feedback.
+Monitor and maintain alerting systems to proactively identify and resolve issues related to model performance, data quality, and infrastructure.
+
+
+Your knowledge & skills:
+
+
+3+ years of hands-on experience as a DevOps, MLOps, or similar - a must.
+Proven experience with containerized environments and microservices such as Docker, Kubernetes and OpenShift - a must.
+Experience with CI/CD tools and methodologies such as Jenkins - a must.
+Ability to move independently and lead large initiatives E2E.
+Deep and demonstrable knowledge of Machine Learning pipelines, including feature stores, experiment tracking, model deployment, feedback loop, etc.
+Proficiency in Python.
+Excellent communication skills with the ability to proactively lead the day-to-day communication with data engineering and data science teams.
+Experience with large language models and/or in the cybersecurity sector - an advantage.

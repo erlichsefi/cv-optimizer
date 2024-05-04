@@ -1,0 +1,18 @@
+We are looking for a Decision Scientist to join our team.
+What You&#39;ll Do:
+
+Designing data-driven products and algorithms within the company’s core acquisition engine and deploying them end-to-end
+Hypothesize theories and prove them in production within hours (instant data gratification!)
+Bring huge and immediate impact by beating the market and directly affecting the company’s financial performance
+Work with fellow Data Scientists, Researchers, BI to help prove/disprove theories and dive into the root cause of anomalies
+Enjoy a high level of autonomy in a fast-paced business and work environment within an organization in the hyper-growth stage
+Collaborate with a team of A-player researchers and engineers to solve complex data and market problems
+Requirements:
+3+ years experience as a Data Analyst / Data Scientist / BI Developer
+Strong expertise with complex SQL queries
+Experience with Python or R
+B.A/B.Sc or equivalent, related to Mathematics, Statistics, Data Science, Engineering, Artificial Intelligence, or another related field with a strong emphasis on quantitative analysis
+Independent. Self-starter. Accountable
+Familiarity with statistical modeling and machine learning algorithms- an advantage
+Basic web infrastructure knowledge (DNS, Iframe, IP, Referrer, Cookies, UserAgents)- an advantage
+Experience in data-rich companies Ad-tech/e-commerce/internet companies/large user-base companies- an advantage

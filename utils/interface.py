@@ -4,9 +4,9 @@ from uuid import uuid4
 import json
 import streamlit as st
 from .llm_store import get_chat_compliation
-from .filestore import wrap_up
+from .filestore import StateStore,FileStateStore
 
-class UserInterface(ABC):
+class UserInterface(StateStore,ABC):
 
     def __init__(self) -> None:
         super().__init__()
@@ -36,10 +36,10 @@ class UserInterface(ABC):
     def wrap_up(self,uuid):
         if not uuid:
             uuid = str(uuid4())
-        wrap_up(f"data_set/predicted/{uuid}.json",messages=self.messages)
+        self.wrap_up(f"data_set/predicted/{uuid}.json",messages=self.messages)
 
 
-class TerminalInterface(UserInterface):
+class TerminalInterface(UserInterface,FileStateStore):
 
     def __init__(self) -> None:
         super(TerminalInterface,self).__init__()
@@ -83,7 +83,7 @@ class Args(TerminalInterface):
     def get_pdf_file_from_user(self):
         return self.pdf_path 
 
-class LLMTesting(TerminalInterface):
+class LLMTesting(TerminalInterface,FileStateStore):
 
     def __init__(self,how_to_act,cv_file,poistion_file,profile_file) -> None:
         super(LLMTesting,self).__init__()

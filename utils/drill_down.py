@@ -1,6 +1,5 @@
 import json
 import retry
-from .filestore import get_completed_cv_data,set_drill_down_communiation
 from .llm_store import get_compliation,experience_chatbot
 from .interface import TerminalInterface
 
@@ -56,8 +55,8 @@ def chat_on_section(section,terminal_interface, section_title):
 
 
 
-def run():
-    user_cv = get_completed_cv_data()
+def run(user_interface):
+    user_cv = user_interface.get_completed_cv_data()
 
     # this is UI component.
     drill_down_sections = {
@@ -80,7 +79,7 @@ def run():
 
         user_cv_message[section] = section_message
 
-    set_drill_down_communiation(user_cv_message)
+    user_interface.set_drill_down_communiation(user_cv_message)
 
 
     

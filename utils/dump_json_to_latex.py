@@ -1,8 +1,7 @@
 import json
 
-from .interface import UserInterface,TerminalInterface
+from .interface import UserInterface
 from .llm_store import get_compliation
-from .filestore import get_all_position_cv_offers,get_expected_latex_format,set_user_latex_file,compile_user_latex,get_user_latex_file,move_pdf_to_created
 
 
 def pdf_to_image(pdf_file, output_folder=None, output_format="png", dpi=200):
@@ -25,8 +24,8 @@ def pdf_to_image(pdf_file, output_folder=None, output_format="png", dpi=200):
 
     
 
-def json_to_pdf(user_cv_data):
-    expected_format = get_expected_latex_format()
+def json_to_pdf(user_cv_data,user_interface):
+    expected_format = user_interface.get_expected_latex_format()
     generations = get_compliation(system_message=f"""
                     Given the user data, fill the latex format with the user details.
                                   
@@ -46,16 +45,16 @@ def json_to_pdf(user_cv_data):
                     is_json_expected=False
                     
     )   
-    set_user_latex_file(generations)
+    user_interface.set_user_latex_file(generations)
 
     
     pdf_filename = None
     for _ in range(3):
         try:
-            pdf_filename = compile_user_latex()
+            pdf_filename = user_interface.compile_user_latex()
             break
         except RuntimeError as e:
-            latex_file_content = get_user_latex_file() #assert latex_file_content == extract_response(generations)
+            latex_file_content = user_interface.get_user_latex_file() #assert latex_file_content == extract_response(generations)
             generations = get_compliation(system_message=f"""
                     You are trying to compile a latex file.
                     You need to fix the issues raised by the compiling process.
@@ -73,13 +72,13 @@ def json_to_pdf(user_cv_data):
                     File content to fix:
                     {latex_file_content}
                     """)
-            set_user_latex_file(generations)
+            user_interface.set_user_latex_file(generations)
 
     if not pdf_filename:
-        pdf_filename = compile_user_latex()
+        pdf_filename = user_interface.compile_user_latex()
 
     if pdf_filename:
-        return move_pdf_to_created()
+        return user_interface.move_pdf_to_created()
     return None
     
     
@@ -87,11 +86,11 @@ def json_to_pdf(user_cv_data):
 
 def run(user_interface:UserInterface):
     user_interface.send_user_message("Processing...")
-    cv_offers = get_all_position_cv_offers()
+    cv_offers = user_interface.get_all_position_cv_offers()
     pdfs = []
     for offer in cv_offers:
 
-        pdf = json_to_pdf(offer)
+        pdf = json_to_pdf(offer,user_interface)
         if pdf:
             pdfs.append(pdf)
     

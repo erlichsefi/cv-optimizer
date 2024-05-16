@@ -1,5 +1,4 @@
 import json
-from .filestore import get_data_from_pdf,get_cv_blueprint,set_user_extract_cv_data,has_user_extract_cv_data,get_user_extract_cv_data
 from .llm_store import get_compliation
 from .interface import UserInterface,Args
 
@@ -19,9 +18,9 @@ def dict_diff(dict1, dict2):
             diff[key] = (dict1[key], dict2[key])
     return diff
 
-def core_run(user_interface,pdf_path):
-    extracted_text = get_data_from_pdf(pdf_path)
-    expected_json = get_cv_blueprint()
+def core_run(user_interface, pdf_path):
+    extracted_text = user_interface.get_data_from_pdf(pdf_path)
+    expected_json = user_interface.get_cv_blueprint()
 
     # procrssing
     user_interface.send_user_message("We see the file, We are on it!")
@@ -70,7 +69,7 @@ def core_run(user_interface,pdf_path):
 def run(user_interface:UserInterface):
 
     # if the user already have extracted cv data
-    if not has_user_extract_cv_data():
+    if not user_interface.has_user_extract_cv_data():
         user_extracted_data = None
         for _ in range(3):
             try:
@@ -80,7 +79,7 @@ def run(user_interface:UserInterface):
                 # core logic
                 user_extracted_data = core_run(user_interface,pdf_path)
                 # saving
-                set_user_extract_cv_data(user_extracted_data)
+                user_interface.set_user_extract_cv_data(user_extracted_data)
                 break
             except Exception as e:
                 user_interface.send_user_message("Please add valid path")

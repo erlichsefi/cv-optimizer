@@ -2,9 +2,10 @@ import os
 import json
 from openai import OpenAI
 import retry
-from .filestore import get_cache_key,presist_compliation
+#from filestore import FileStoreState
 
 
+#state = FileStoreState()
 
 def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expected=False,api_key=None,num_of_gen=1,temperature=0,top_p=0):
     messages= [
@@ -14,7 +15,8 @@ def get_compliation(system_message,user_input,model="gpt-3.5-turbo",is_json_expe
     
     generations = get_chat_compliation(messages,model=model,is_json_expected=is_json_expected,api_key=api_key,num_of_gen=num_of_gen,temperature=temperature,top_p=top_p)
 
-    presist_compliation(messages,generations,model)
+    
+    #state.presist_compliation(messages,generations,model)
     return generations
 
 
@@ -85,7 +87,7 @@ def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
 
 
 def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo"):
-  cache_key = get_cache_key()
+  #cache_key = state.get_cache_key()
 
   user_interface.send_user_message("--------------------------------------------------")
   user_interface.send_user_message("Start chatting with the bot (type 'quit' to stop)!")
@@ -133,7 +135,7 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
                 stream=False
             )
             chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
-            presist_compliation(messages,chat_message,model,cache_key=cache_key)
+            #state.presist_compliation(messages,chat_message,model,cache_key=cache_key)
             break  # Break out of the loop if successful
         except json.JSONDecodeError as e:
             retry_count += 1

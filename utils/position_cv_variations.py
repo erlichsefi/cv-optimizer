@@ -1,6 +1,5 @@
 
 from .llm_store import get_compliation,experience_chatbot
-from .filestore import get_completed_cv_data,get_cv_blueprint,get_position_data,set_position_cv_offers,set_completed_cv_data,has_position_cv_offers
 from .interface import TerminalInterface,UserInterface
 import json
 import os
@@ -8,10 +7,10 @@ import autogen
 
 
 
-def single_prompt_call():
-    position_data = get_position_data()
-    cv_data = get_completed_cv_data()
-    cv_blueprint = get_cv_blueprint()
+def single_prompt_call(user_interface):
+    position_data = user_interface.get_position_data()
+    cv_data = user_interface.get_completed_cv_data()
+    cv_blueprint = user_interface.get_cv_blueprint()
 
     offers = get_compliation(system_message="",user_input=f"""Task Description:
     You are tasked with optimizing a user's CV based on a given position description without revealing that the CV has been optimized or inventing information not present in the original CV.
@@ -49,14 +48,14 @@ def single_prompt_call():
     num_of_gen=2,
     temperature=0.1
     )
-    set_position_cv_offers(offers)
+    user_interface.set_position_cv_offers(offers)
 
 
 
-def chat_loop(terminal_interface):
-    position_data = get_position_data()
-    cv_data = get_completed_cv_data()
-    cv_blueprint = get_cv_blueprint()
+def chat_loop(user_interface):
+    position_data = user_interface.get_position_data()
+    cv_data = user_interface.get_completed_cv_data()
+    cv_blueprint = user_interface.get_cv_blueprint()
 
 
     def review_by_hiring_team(position_data,cv_data):
@@ -163,19 +162,19 @@ def chat_loop(terminal_interface):
     # update the global CV object
     cv_data = enrich_from_chat(current_cv,messages,cv_blueprint)
     # write it down
-    set_completed_cv_data(cv_data)
+    user_interface.set_completed_cv_data(cv_data)
 
     # draft last version
     final_cv = optimize_and_wonder(gaps_to_adresss,cv_data)
-    set_position_cv_offers([final_cv['user_cv']])
+    user_interface.set_position_cv_offers([final_cv['user_cv']])
 
 
-def multi_agents():
+def multi_agents(user_interface):
     logging_session_id = autogen.runtime_logging.start(config={"dbname": "logs.db"})
 
-    position_data = get_position_data()
-    cv_data = get_completed_cv_data()
-    cv_blueprint = get_cv_blueprint()
+    position_data = user_interface.get_position_data()
+    cv_data = user_interface.get_completed_cv_data()
+    cv_blueprint = user_interface.get_cv_blueprint()
     llm_config = {
             "config_list": [{"model": "gpt-3.5-turbo", "api_key": os.environ['OPENAI_API_KEY'], "cache_seed": 42}]
         }
@@ -261,7 +260,7 @@ def multi_agents():
 
 def run(user_interface:UserInterface):
 
-    if not has_position_cv_offers():
+    if not user_interface.has_position_cv_offers():
         user_interface.send_user_message("Let's try find ways to overcome some gaps")
         chat_loop(user_interface)
         user_interface.send_user_message("Done.")

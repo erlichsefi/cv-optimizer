@@ -2,26 +2,14 @@ import json
 import os
 import shutil
 import subprocess
-import io
+from abc import ABC, abstractmethod
 
-
-def get_cv_blueprint():
-    with open("blueprints/cv.json", "r") as file:
-        return json.load(file)
-
-def get_position_blueprint():
-    with open("blueprints/position.json", "r") as file:
-        return json.load(file)
-
-def get_expected_latex_format():
-    with open("blueprints/cv.tex", "r") as file:
-        return file.read()
-    
 
 def extract_1(filename):
     from pdfminer.high_level import extract_text
 
     return extract_text(filename)
+
 
 def extract_2(filename):
     #from PyPDF2 import PdfReader
@@ -32,6 +20,8 @@ def extract_2(filename):
         for page in reader.pages:
             text += page.extract_text()
     return text
+
+
 def get_data_from_pdf(filename):
 
     extract_1(filename)
@@ -43,177 +33,349 @@ def get_data_from_pdf(filename):
         with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
             f.write(filename.getbuffer())
             return extract_1(f.name)
-
-
-def get_cache_key():
-    from datetime import datetime
-
-    current_datetime = datetime.now()
-    return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
         
-def presist_compliation(messages,generations,model,cache_key=None):
-    if  not cache_key:
-        cache_key = get_cache_key()
 
-    exsiting = {}
-    if os.path.exists("user_data/compliations.json"):
+class StateStore(ABC):
+
+    @classmethod
+    @abstractmethod
+    def get_cv_blueprint(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_position_blueprint(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_expected_latex_format(cls):
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_cache_key(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def presist_compliation(cls, messages, generations, model, cache_key=None):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_presist_compliation(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def set_user_extract_cv_data(cls, user_cv_data):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def has_user_extract_cv_data(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_user_extract_cv_data(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def set_completed_cv_data(cls, user_cv_data):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def has_completed_cv_data(cls):
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_completed_cv_data(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_datetime_str(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def str_to_datetime(cls, date_string):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def set_drill_down_communiation(cls, drill_down):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def set_position_data(cls, user_position_data):
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def has_position_data(cls):
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_position_data(cls):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def set_position_cv_offers(cls, list_of_cvs_options):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def has_position_cv_offers(cls):
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_all_position_cv_offers(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def set_user_latex_file(cls, user_latex):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def compile_user_latex(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_user_latex_file(cls):
+        pass
+    
+    @classmethod       
+    @abstractmethod
+    def move_pdf_to_created(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def wrap_up(cls, complete_path, messages):
+        pass
+
+
+
+class FileStateStore(StateStore):
+
+    @classmethod
+    def get_cv_blueprint(cls):
+        with open("blueprints/cv.json", "r") as file:
+            return json.load(file)
+
+    @classmethod
+    def get_position_blueprint(cls):
+        with open("blueprints/position.json", "r") as file:
+            return json.load(file)
+
+    @classmethod
+    def get_expected_latex_format(cls):
+        with open("blueprints/cv.tex", "r") as file:
+            return file.read()
+    
+    @classmethod
+    def get_cache_key(cls):
+        from datetime import datetime
+
+        current_datetime = datetime.now()
+        return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+        
+
+    @classmethod
+    def presist_compliation(cls,messages,generations,model,cache_key=None):
+        if  not cache_key:
+            cache_key = cls.get_cache_key()
+
+        exsiting = {}
+        if os.path.exists("user_data/compliations.json"):
+            with open("user_data/compliations.json", "r") as file:
+                exsiting = json.load(file)
+
+        exsiting[cache_key] = {
+            "messages":messages,
+            "generations":generations,
+            "model":model
+        }
+    
+        # dump
+        with open("user_data/compliations.json", "w") as file:
+            json.dump(exsiting,file)
+
+    
+    @classmethod
+    def get_presist_compliation(cls):
         with open("user_data/compliations.json", "r") as file:
-            exsiting = json.load(file)
+            return json.load(file)
 
-    exsiting[cache_key] = {
-        "messages":messages,
-        "generations":generations,
-        "model":model
-    }
-  
-    # dump
-    with open("user_data/compliations.json", "w") as file:
-        json.dump(exsiting,file)
+    #
+    @classmethod
+    def set_user_extract_cv_data(cls,user_cv_data):
+        with open("user_data/user_extracted_cv.json", "w") as file:
+            return json.dump(user_cv_data, file)
 
-def get_presist_compliation():
-    with open("user_data/compliations.json", "r") as file:
-        return json.load(file)
+    @classmethod  
+    def has_user_extract_cv_data(cls):
+        return os.path.exists("user_data/user_extracted_cv.json")
 
-#
-def set_user_extract_cv_data(user_cv_data):
-    with open("user_data/user_extracted_cv.json", "w") as file:
-        return json.dump(user_cv_data, file)
+    @classmethod 
+    def get_user_extract_cv_data(cls):
+        with open("user_data/user_extracted_cv.json", "r") as file:
+            return json.load(file)
+
+    # 
+    @classmethod
+    def set_completed_cv_data(cls,user_cv_data):
+        if os.path.exists("user_data/user_completed_cv.json"):
+            with open("user_data/user_completed_cv.json", "r") as file:
+                complete = json.load(file)
+        else:
+            complete = {}
+        complete[cls.get_datetime_str()] = user_cv_data
+        with open("user_data/user_completed_cv.json", "w") as file:
+            return json.dump(complete, file)
+
+    @classmethod
+    def has_completed_cv_data(cls):
+        return os.path.exists("user_data/user_completed_cv.json")
     
-def has_user_extract_cv_data():
-    return os.path.exists("user_data/user_extracted_cv.json")
-    
-def get_user_extract_cv_data():
-    with open("user_data/user_extracted_cv.json", "r") as file:
-        return json.load(file)
-
-# 
-def set_completed_cv_data(user_cv_data):
-    if os.path.exists("user_data/user_completed_cv.json"):
+    @classmethod
+    def get_completed_cv_data(cls):
         with open("user_data/user_completed_cv.json", "r") as file:
             complete = json.load(file)
-    else:
-        complete = {}
-    complete[get_datetime_str()] = user_cv_data
-    with open("user_data/user_completed_cv.json", "w") as file:
-        return json.dump(complete, file)
+            return complete[max(complete.keys(),key=lambda x:cls.str_to_datetime(x))]
 
-def has_completed_cv_data():
-    return os.path.exists("user_data/user_completed_cv.json")
+    #
+    @classmethod
+    def get_datetime_str(cls):
+        from datetime import datetime
 
-def get_completed_cv_data():
-    with open("user_data/user_completed_cv.json", "r") as file:
-        complete = json.load(file)
-        return complete[max(complete.keys(),key=lambda x:str_to_datetime(x))]
+        current_datetime = datetime.now()
+        return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
 
-#
+    @classmethod
+    def str_to_datetime(cls,date_string):
+        from datetime import datetime
 
-def get_datetime_str():
-    from datetime import datetime
-
-    current_datetime = datetime.now()
-    return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
-
-def str_to_datetime(date_string):
-    from datetime import datetime
-
-    return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
+        return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
 
 
+    @classmethod
+    def set_drill_down_communiation(cls,drill_down):
+        with open("user_data/user_drill_down.json", "w") as file:
+            return json.dump(drill_down, file)
+        
+    # 
+    @classmethod
+    def set_position_data(cls,user_position_data):
+        with open("user_data/user_position.json", "w") as file:
+            return json.dump(user_position_data, file)
+        
+    @classmethod
+    def has_position_data(cls):
+        return os.path.exists("user_data/user_position.json")
     
-def set_drill_down_communiation(drill_down):
-    with open("user_data/user_drill_down.json", "w") as file:
-        return json.dump(drill_down, file)
+    @classmethod
+    def get_position_data(cls):
+        with open("user_data/user_position.json", "r") as file:
+            return json.load(file)
+    #
+    @classmethod    
+    def set_position_cv_offers(cls,list_of_cvs_options):
+        with open(f"user_data/user_position_cv_offers.json", "w") as file:
+                json.dump(list_of_cvs_options,file)
+
+    @classmethod
+    def has_position_cv_offers(cls):
+        return os.path.exists("user_data/user_position_cv_offers.json")
     
-# 
-def set_position_data(user_position_data):
-    with open("user_data/user_position.json", "w") as file:
-        return json.dump(user_position_data, file)
+    @classmethod
+    def get_all_position_cv_offers(cls):
+        with open(f"user_data/user_position_cv_offers.json", "r") as file:
+            return json.load(file)
+    #
+
+    @classmethod
+    def set_user_latex_file(cls,user_latex):
+        user_latex = user_latex.split("```latex")[1].split("```")[0]
+        with open("user_data/user_tex.tex", "w") as file:
+            file.write(user_latex)
+
+    @classmethod
+    def compile_user_latex(cls):
+        tex_filename = "user_data/user_tex.tex"
+        tex_temp_folder = ".tex"
+        filename, _ = os.path.splitext(tex_filename)
+        # the corresponding PDF filename
+        pdf_filename = os.path.join(tex_temp_folder,os.path.split(filename)[-1]) + ".pdf"
+
+        # compile TeX file
+        # brew install basictex
+        if os.path.exists(tex_temp_folder):
+            shutil.rmtree(tex_temp_folder)
+        os.mkdir(tex_temp_folder)
+
+        result = subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode","-output-directory=.tex",tex_filename],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
+        # check if PDF is successfully generated
+        if not os.path.exists(pdf_filename):
+            error_message  = "process output:" + result.stdout
+            raise RuntimeError(f"PDF output not found. Error message: {error_message}")
+        return pdf_filename
+
+    @classmethod
+    def get_user_latex_file(cls):
+        with open("user_data/user_tex.tex", "r") as file:
+            return file.read()
     
-def has_position_data():
-    return os.path.exists("user_data/user_position.json")
+    @classmethod       
+    def move_pdf_to_created(cls):
+        # Copy source file to destination file
+        pdf_path = ".tex/user_tex.pdf"
 
-def get_position_data():
-    with open("user_data/user_position.json", "r") as file:
-        return json.load(file)
-#
-def set_position_cv_offers(list_of_cvs_options):
-    with open(f"user_data/user_position_cv_offers.json", "w") as file:
-            json.dump(list_of_cvs_options,file)
+        # to where
+        position_folder = "user_data/position_cv"
+        if not os.path.exists(position_folder):
+            os.makedirs(position_folder)
 
-def has_position_cv_offers():
-    return os.path.exists("user_data/user_position_cv_offers.json")
+        index = len(os.listdir(position_folder))
+        
+        offer_path = os.path.join(position_folder,f"offer_{index}.pdf")
+        shutil.copy(pdf_path, os.path.join(position_folder,f"offer_{index}.pdf"))
 
-def get_all_position_cv_offers():
-    with open(f"user_data/user_position_cv_offers.json", "r") as file:
-        return json.load(file)
-#
-
-def set_user_latex_file(user_latex):
-    user_latex = user_latex.split("```latex")[1].split("```")[0]
-    with open("user_data/user_tex.tex", "w") as file:
-        file.write(user_latex)
+        return offer_path
 
 
-def compile_user_latex():
-    tex_filename = "user_data/user_tex.tex"
-    tex_temp_folder = ".tex"
-    filename, _ = os.path.splitext(tex_filename)
-    # the corresponding PDF filename
-    pdf_filename = os.path.join(tex_temp_folder,os.path.split(filename)[-1]) + ".pdf"
+    @classmethod
+    def wrap_up(cls,complete_path,messages):
+        complete_data = {
+            "message":messages,
+            "extracted_cv":cls.get_user_extract_cv_data(),
+            "completed_cv":cls.get_completed_cv_data(),
+            "position_data":cls.get_position_data(),
+            "offers":cls.get_all_position_cv_offers(),
+            "all_compliation":cls.get_presist_compliation()
+        }
+        with open(complete_path, "w") as file:
+            json.dump(complete_data,file)
 
-    # compile TeX file
-    # brew install basictex
-    if os.path.exists(tex_temp_folder):
-        shutil.rmtree(tex_temp_folder)
-    os.mkdir(tex_temp_folder)
-
-    result = subprocess.run(
-        ["pdflatex", "-interaction=nonstopmode","-output-directory=.tex",tex_filename],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-
-    # check if PDF is successfully generated
-    if not os.path.exists(pdf_filename):
-        error_message  = "process output:" + result.stdout
-        raise RuntimeError(f"PDF output not found. Error message: {error_message}")
-    return pdf_filename
-
-def get_user_latex_file():
-    with open("user_data/user_tex.tex", "r") as file:
-        return file.read()
-    
-def move_pdf_to_created():
-    # Copy source file to destination file
-    pdf_path = ".tex/user_tex.pdf"
-
-    # to where
-    position_folder = "user_data/position_cv"
-    if not os.path.exists(position_folder):
-        os.makedirs(position_folder)
-
-    index = len(os.listdir(position_folder))
-    
-    offer_path = os.path.join(position_folder,f"offer_{index}.pdf")
-    shutil.copy(pdf_path, os.path.join(position_folder,f"offer_{index}.pdf"))
-
-    return offer_path
-
-
-
-def wrap_up(complete_path,messages):
-    complete_data = {
-        "message":messages,
-        "extracted_cv":get_user_extract_cv_data(),
-        "completed_cv":get_completed_cv_data(),
-        "position_data":get_position_data(),
-        "offers":get_all_position_cv_offers(),
-        "all_compliation":get_presist_compliation()
-    }
-    with open(complete_path, "w") as file:
-        json.dump(complete_data,file)
-
-    shutil.rmtree("user_data")
-    os.mkdir("user_data")
+        shutil.rmtree("user_data")
+        os.mkdir("user_data")
 
 

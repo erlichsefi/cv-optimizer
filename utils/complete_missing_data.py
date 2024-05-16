@@ -2,7 +2,6 @@ import json
 import re
 from .interface import TerminalInterface,UserInterface
 from .llm_store import experience_chatbot,get_compliation
-from .filestore import get_user_extract_cv_data,set_completed_cv_data,get_cv_blueprint,has_completed_cv_data
 
 
 
@@ -105,7 +104,7 @@ def complete_by_qna(user_cv,user_interface:UserInterface):
                 print(entry['regex_fail_message'])
 
 
-def chat_on_question(user_cv,terminal_interface:UserInterface):
+def chat_on_question(user_cv,user_interface:UserInterface):
     issues_to_adresss = get_issues_need_to_be_adressed(user_cv)
 
     system_prompt = f"""
@@ -118,9 +117,9 @@ def chat_on_question(user_cv,terminal_interface:UserInterface):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    messages = experience_chatbot(system_prompt,terminal_interface, topic="validating what we got from your CV")
+    messages = experience_chatbot(system_prompt,user_interface, topic="validating what we got from your CV")
     
-    expected = get_cv_blueprint()
+    expected = user_interface.get_cv_blueprint()
     final_call = f"""
     You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
 
@@ -142,14 +141,14 @@ def chat_on_question(user_cv,terminal_interface:UserInterface):
 
 
 
-def run(terminal_interface:UserInterface):
-    if not has_completed_cv_data():
-        user_cv = get_user_extract_cv_data()
+def run(user_interface:UserInterface):
+    if not user_interface.has_completed_cv_data():
+        user_cv = user_interface.get_user_extract_cv_data()
 
         # complete_by_qna
-        emended_user_cv = chat_on_question(user_cv,terminal_interface)
+        emended_user_cv = chat_on_question(user_cv,terminal_interface,user_interface)
 
-        set_completed_cv_data(emended_user_cv)
+        user_interface.set_completed_cv_data(emended_user_cv)
 
         terminal_interface.send_user_message("We got it! Thanks!")
         terminal_interface.send_user_message("Moving on...")

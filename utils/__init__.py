@@ -1,4 +1,4 @@
-from utils.interface import TerminalInterface,LLMTesting
+from utils.interface import TerminalInterface,LLMTesting,SteamlitInterface
 from utils.extract_cv_data import run as pdf_to_user_data
 from utils.complete_missing_data import run as verify_user_data
 from utils.extract_position_data import run as position_snippet_to_position_data

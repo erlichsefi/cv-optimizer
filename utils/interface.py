@@ -2,8 +2,9 @@
 from abc import ABC,abstractmethod
 from uuid import uuid4
 import json
-from llm_store import get_chat_compliation
-from filestore import wrap_up
+import streamlit as st
+from .llm_store import get_chat_compliation
+from .filestore import wrap_up
 
 class UserInterface(ABC):
 
@@ -140,4 +141,49 @@ class LLMTesting(TerminalInterface):
         self.current_message = ""
         print(f"User Agent:{response}")
         return response
+    
 
+class SteamlitInterface(UserInterface):
+
+    def __init__(self) -> None:
+        super(SteamlitInterface,self).__init__()
+
+    def send_user_message(self,message):
+        for _,msg_dict in enumerate(self.messages):
+            msg = msg_dict['content']
+            if msg_dict['role'] == "user":
+                st.markdown(f"**You:** {msg}")
+            else:
+                st.markdown(f"**Bot:** {msg}")
+
+        self.messages.append({"role":"assistant","content":message})
+        st.markdown(f"**Bot:** {message}")
+
+    def get_user_input(self):
+        message = st.text_input("User:")
+        self.messages.append({"role":"user","content":message})
+        return message
+    
+    def get_pdf_file_from_user(self):
+        uploaded_file = st.file_uploader("Choose a file", type=["pdf"])
+        if uploaded_file is not None:
+            # Process the uploaded file if needed
+            st.session_state.show_upload_popup = False  # Close the popup after uploading
+            st.success("CV uploaded successfully!")
+        return uploaded_file
+    
+    def get_position_snippet_data(self):
+        self.send_user_message("Enter/Paste your content. Ctrl-D or Ctrl-Z (windows) to save it.")
+        contents = []
+        while True:
+            try:
+                line = input()
+            except EOFError:
+                break
+            contents.append(line)
+        full_content =  "\n".join(contents)
+        self.messages.append({"role":"user","content":full_content})
+        return full_content
+    
+    def send_files(self,file_paths):
+        self.send_user_message("\n".join(file_paths))

@@ -1,9 +1,23 @@
 import json
-from filestore import get_data_from_pdf,get_cv_blueprint,set_user_extract_cv_data,has_user_extract_cv_data,get_user_extract_cv_data
-from llm_store import get_compliation
-from interface import UserInterface,Args
+from .filestore import get_data_from_pdf,get_cv_blueprint,set_user_extract_cv_data,has_user_extract_cv_data,get_user_extract_cv_data
+from .llm_store import get_compliation
+from .interface import UserInterface,Args
 
-
+def dict_diff(dict1, dict2):
+    diff = {}
+    all_keys = set(dict1.keys()) | set(dict2.keys())
+    for key in all_keys:
+        if key not in dict2:
+            diff[key] = (dict1[key], None)
+        elif key not in dict1:
+            diff[key] = (None, dict2[key])
+        elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+            nested_diff = dict_diff(dict1[key], dict2[key])
+            if nested_diff:
+                diff[key] = nested_diff
+        elif dict1[key] != dict2[key]:
+            diff[key] = (dict1[key], dict2[key])
+    return diff
 
 def core_run(user_interface,pdf_path):
     extracted_text = get_data_from_pdf(pdf_path)
@@ -22,12 +36,13 @@ def core_run(user_interface,pdf_path):
                 - Be sure in every value you include.
                 """,
         model="gpt-3.5-turbo-1106",
-        temperature=0.1,
+        temperature=0.2,
         top_p=0,
         user_input=extracted_text,
         is_json_expected=True,
         num_of_gen=2
     )
+
     return get_compliation(
         system_message="",
         user_input=f"""
@@ -78,12 +93,17 @@ def run(user_interface:UserInterface):
 
 if __name__ == "__main__":
 
-        
+
     collection = list()
     for _ in range(3):
         
         response = core_run(Args(), "data_set/Curriculum_Vitae_Jan24.pdf")
 
         collection.append(response)
+    
+    diff = dict_diff(collection[2],collection[1])
+    for entry in diff:
+        for index in range(len(collection[2][entry])):
+            print(dict_diff(collection[2][entry][index],collection[1][entry][index]))
 
     assert len(set(collection)) == 1

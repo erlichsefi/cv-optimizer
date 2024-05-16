@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 from abc import ABC, abstractmethod
-
+import streamlit as st
 
 def extract_1(filename):
     from pdfminer.high_level import extract_text
@@ -53,9 +53,11 @@ class StateStore(ABC):
         pass
     
     @classmethod
-    @abstractmethod
     def get_cache_key(cls):
-        pass
+        from datetime import datetime
+
+        current_datetime = datetime.now()
+        return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
     @classmethod
     @abstractmethod
@@ -98,15 +100,17 @@ class StateStore(ABC):
         pass
 
     @classmethod
-    @abstractmethod
     def get_datetime_str(cls):
-        pass
+        from datetime import datetime
+
+        current_datetime = datetime.now()
+        return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
 
     @classmethod
-    @abstractmethod
-    def str_to_datetime(cls, date_string):
-        pass
+    def str_to_datetime(cls,date_string):
+        from datetime import datetime
 
+        return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
     @classmethod
     @abstractmethod
     def set_drill_down_communiation(cls, drill_down):
@@ -169,6 +173,188 @@ class StateStore(ABC):
 
 
 
+class  StermlitStateStore(StateStore):
+
+    @classmethod
+    def get_cv_blueprint(cls):
+        with open("blueprints/cv.json", "r") as file:
+            return json.load(file)
+
+    @classmethod
+    def get_position_blueprint(cls):
+        with open("blueprints/position.json", "r") as file:
+            return json.load(file)
+
+    @classmethod
+    def get_expected_latex_format(cls):
+        with open("blueprints/cv.tex", "r") as file:
+            return file.read() 
+
+    @classmethod
+    def presist_compliation(cls,messages,generations,model,cache_key=None):
+        if  not cache_key:
+            cache_key = cls.get_cache_key()
+
+        exsiting = {}
+        if os.path.exists("user_data/compliations.json"):
+            with open("user_data/compliations.json", "r") as file:
+                exsiting = json.load(file)
+
+        exsiting[cache_key] = {
+            "messages":messages,
+            "generations":generations,
+            "model":model
+        }
+    
+        # dump
+        with open("user_data/compliations.json", "w") as file:
+            json.dump(exsiting,file)
+
+    
+    @classmethod
+    def get_presist_compliation(cls):
+        with open("user_data/compliations.json", "r") as file:
+            return json.load(file)
+
+    #
+    @classmethod
+    def set_user_extract_cv_data(cls,user_cv_data):
+        st.session_state["user_extracted_cv"] = user_cv_data
+
+    @classmethod  
+    def has_user_extract_cv_data(cls):
+        return "user_extracted_cv" in st.session_state
+
+        
+    @classmethod 
+    def get_user_extract_cv_data(cls):
+        if cls.has_user_extract_cv_data():
+            return st.session_state["user_extracted_cv"]
+
+    # 
+    @classmethod
+    def set_completed_cv_data(cls,user_cv_data):
+        if "user_completed_cv" in st.session_state:
+            complete = st.session_state["user_completed_cv"] 
+        else:
+            complete = {}
+        complete[cls.get_datetime_str()] = user_cv_data
+        st.session_state["user_completed_cv"] = complete
+
+    @classmethod
+    def has_completed_cv_data(cls):
+        return "user_completed_cv" in st.session_state
+    
+    @classmethod
+    def get_completed_cv_data(cls):
+        complete = st.session_state["user_completed_cv"] 
+        return complete[max(complete.keys(),key=lambda x:cls.str_to_datetime(x))]
+
+    #
+    @classmethod
+    def set_drill_down_communiation(cls,drill_down):
+        st.session_state["user_drill_down"] = drill_down
+        
+    # 
+    @classmethod
+    def set_position_data(cls,user_position_data):
+        st.session_state["user_drill_down"] = user_position_data
+
+        
+    @classmethod
+    def has_position_data(cls):
+        return "user_position" in st.session_state
+    
+    @classmethod
+    def get_position_data(cls):
+        return st.session_state['user_position']
+    #
+    @classmethod    
+    def set_position_cv_offers(cls,list_of_cvs_options):
+        st.session_state['user_position_cv_offers'] = list_of_cvs_options
+
+    @classmethod
+    def has_position_cv_offers(cls):
+        return "user_position_cv_offers" in st.session_state
+    
+    @classmethod
+    def get_all_position_cv_offers(cls):
+        return st.session_state['user_position_cv_offers']
+    #
+
+    @classmethod
+    def set_user_latex_file(cls,user_latex):
+        user_latex = user_latex.split("```latex")[1].split("```")[0]
+        with open("user_data/user_tex.tex", "w") as file:
+            file.write(user_latex)
+
+    @classmethod
+    def compile_user_latex(cls):
+        tex_filename = "user_data/user_tex.tex"
+        tex_temp_folder = ".tex"
+        filename, _ = os.path.splitext(tex_filename)
+        # the corresponding PDF filename
+        pdf_filename = os.path.join(tex_temp_folder,os.path.split(filename)[-1]) + ".pdf"
+
+        # compile TeX file
+        # brew install basictex
+        if os.path.exists(tex_temp_folder):
+            shutil.rmtree(tex_temp_folder)
+        os.mkdir(tex_temp_folder)
+
+        result = subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode","-output-directory=.tex",tex_filename],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
+        # check if PDF is successfully generated
+        if not os.path.exists(pdf_filename):
+            error_message  = "process output:" + result.stdout
+            raise RuntimeError(f"PDF output not found. Error message: {error_message}")
+        return pdf_filename
+
+    @classmethod
+    def get_user_latex_file(cls):
+        with open("user_data/user_tex.tex", "r") as file:
+            return file.read()
+    
+    @classmethod       
+    def move_pdf_to_created(cls):
+        # Copy source file to destination file
+        pdf_path = ".tex/user_tex.pdf"
+
+        # to where
+        position_folder = "user_data/position_cv"
+        if not os.path.exists(position_folder):
+            os.makedirs(position_folder)
+
+        index = len(os.listdir(position_folder))
+        
+        offer_path = os.path.join(position_folder,f"offer_{index}.pdf")
+        shutil.copy(pdf_path, os.path.join(position_folder,f"offer_{index}.pdf"))
+
+        return offer_path
+
+
+    @classmethod
+    def wrap_up(cls,complete_path,messages):
+        complete_data = {
+            "message":messages,
+            "extracted_cv":cls.get_user_extract_cv_data(),
+            "completed_cv":cls.get_completed_cv_data(),
+            "position_data":cls.get_position_data(),
+            "offers":cls.get_all_position_cv_offers(),
+            "all_compliation":cls.get_presist_compliation()
+        }
+        with open(complete_path, "w") as file:
+            json.dump(complete_data,file)
+
+        shutil.rmtree("user_data")
+        os.mkdir("user_data")
+
+
+
 class FileStateStore(StateStore):
 
     @classmethod
@@ -186,14 +372,7 @@ class FileStateStore(StateStore):
         with open("blueprints/cv.tex", "r") as file:
             return file.read()
     
-    @classmethod
-    def get_cache_key(cls):
-        from datetime import datetime
-
-        current_datetime = datetime.now()
-        return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
         
-
     @classmethod
     def presist_compliation(cls,messages,generations,model,cache_key=None):
         if  not cache_key:
@@ -258,18 +437,6 @@ class FileStateStore(StateStore):
             return complete[max(complete.keys(),key=lambda x:cls.str_to_datetime(x))]
 
     #
-    @classmethod
-    def get_datetime_str(cls):
-        from datetime import datetime
-
-        current_datetime = datetime.now()
-        return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
-
-    @classmethod
-    def str_to_datetime(cls,date_string):
-        from datetime import datetime
-
-        return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
 
 
     @classmethod

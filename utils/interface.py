@@ -4,7 +4,7 @@ from uuid import uuid4
 import json
 import streamlit as st
 from .llm_store import get_chat_compliation
-from .filestore import StateStore,FileStateStore
+from .filestore import StateStore,FileStateStore,StermlitStateStore
 
 class UserInterface(StateStore,ABC):
 
@@ -143,7 +143,7 @@ class LLMTesting(TerminalInterface,FileStateStore):
         return response
     
 
-class SteamlitInterface(UserInterface):
+class SteamlitInterface(UserInterface,StermlitStateStore):
 
     def __init__(self) -> None:
         super(SteamlitInterface,self).__init__()

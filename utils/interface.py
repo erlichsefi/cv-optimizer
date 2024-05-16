@@ -29,9 +29,20 @@ class UserInterface(StateStore,ABC):
         pass
 
     @abstractmethod
+    def on_cv_file_received(self):
+        self.send_user_message("We see the file, We are on it!")
+
+    @abstractmethod
     def send_files(self,file_paths):
         pass
 
+    @abstractmethod
+    def start_bot_session(self,topic):
+        pass
+
+    @abstractmethod
+    def end_bot_session(self):
+        pass
     
     def wrap_up(self,uuid):
         if not uuid:
@@ -73,6 +84,15 @@ class TerminalInterface(UserInterface,FileStateStore):
     
     def send_files(self,file_paths):
         self.send_user_message("\n".join(file_paths))
+
+    def start_bot_session(self,topic):
+        self.send_user_message("--------------------------------------------------")
+        self.send_user_message("Start chatting with the bot (type 'quit' to stop)!")
+        self.send_user_message("--------------------------------------------------")
+        self.send_user_message(f"Let's focus on {topic}")
+
+    def end_bot_session(self):
+        pass
     
 class Args(TerminalInterface):
 
@@ -167,6 +187,9 @@ class SteamlitInterface(UserInterface,StermlitStateStore):
     def get_pdf_file_from_user(self):
         return st.file_uploader("Choose a file", type=["pdf"],accept_multiple_files=False)
     
+    def on_cv_file_received(self):
+        pass
+
     def get_position_snippet_data(self):
         contents = st.text_input(label="Position")
         if st.button("Go"):

@@ -117,7 +117,7 @@ def chat_on_question(user_cv,user_interface:UserInterface):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    messages = experience_chatbot(system_prompt,user_interface, topic="validating what we got from your CV")
+    messages = experience_chatbot(system_prompt,user_interface,topic="validating what we got from your CV")
     
     expected = user_interface.get_cv_blueprint()
     final_call = f"""
@@ -145,7 +145,7 @@ def run(user_interface:UserInterface):
     user_cv = user_interface.get_user_extract_cv_data()
 
     # complete_by_qna
-    emended_user_cv = chat_on_question(user_cv,user_interface,user_interface)
+    emended_user_cv = chat_on_question(user_cv,user_interface)
 
     user_interface.set_completed_cv_data(emended_user_cv)
 

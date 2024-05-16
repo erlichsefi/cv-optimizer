@@ -18,12 +18,18 @@ def upload_cv():
     pdf_path = st.session_state.application_session.get_pdf_file_from_user()
     if pdf_path is not None:
         with st.spinner('Processing the file...'):
-            utils.pdf_to_user_data(st.session_state.application_session ,pdf_path)
+            utils.pdf_to_user_data(st.session_state.application_session,pdf_path)
         # Process the uploaded file if needed
         st.session_state.show_upload_popup = False  # Close the popup after uploading
         st.success("CV uploaded successfully!")
+        #
+        #
+        st.write("Couple of question:")  
+        utils.verify_user_data(st.session_state.application_session)
+        
         st.rerun()
 
+st.sidebar.title("Profile")
 # Button to show the upload popup
 if st.sidebar.button("Upload CV"):
     upload_cv()

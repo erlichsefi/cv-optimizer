@@ -23,7 +23,7 @@ def core_run(user_interface, pdf_path):
     expected_json = user_interface.get_cv_blueprint()
 
     # procrssing
-    user_interface.send_user_message("We see the file, We are on it!")
+    user_interface.on_cv_file_received()
     response =  get_compliation(
         system_message=f"""
                 Extract the CV into the following format:

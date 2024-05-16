@@ -87,13 +87,10 @@ def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
 
 
 def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo"):
-  #cache_key = state.get_cache_key()
+  cache_key = user_interface.get_cache_key()
 
-  user_interface.send_user_message("--------------------------------------------------")
-  user_interface.send_user_message("Start chatting with the bot (type 'quit' to stop)!")
-  user_interface.send_user_message("--------------------------------------------------")
+  user_interface.start_bot_session(topic)
 
-  user_interface.send_user_message(f"Let's focus on {topic}")
   # Create a list to store all the messages for context
 
   system_prompt = f"""{system_prompt} \n.
@@ -116,7 +113,6 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
   ]
 
   
-
   # Keep repeating the following
   while True:
 
@@ -135,7 +131,7 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
                 stream=False
             )
             chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
-            #state.presist_compliation(messages,chat_message,model,cache_key=cache_key)
+            user_interface.presist_compliation(messages,chat_message,model,cache_key=cache_key)
             break  # Break out of the loop if successful
         except json.JSONDecodeError as e:
             retry_count += 1
@@ -161,6 +157,8 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
     # Add each new message to the list
     messages.append({"role": "assistant", "content": json.dumps(chat_message,indent=4)})
     messages.append({"role": "user", "content": message})
+
+  user_interface.end_bot_session()
   return messages
     
 

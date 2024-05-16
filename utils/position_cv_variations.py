@@ -258,12 +258,10 @@ def multi_agents(user_interface):
     return result
 
 
-def run(user_interface:UserInterface):
-
-    if not user_interface.has_position_cv_offers():
-        user_interface.send_user_message("Let's try find ways to overcome some gaps")
-        chat_loop(user_interface)
-        user_interface.send_user_message("Done.")
+def run(user_interface:UserInterface):    
+    user_interface.send_user_message("Let's try find ways to overcome some gaps")
+    chat_loop(user_interface)
+    user_interface.send_user_message("Done.")
 
 if __name__ == "__main__":
 

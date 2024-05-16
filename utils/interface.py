@@ -165,25 +165,14 @@ class SteamlitInterface(UserInterface,StermlitStateStore):
         return message
     
     def get_pdf_file_from_user(self):
-        uploaded_file = st.file_uploader("Choose a file", type=["pdf"])
-        if uploaded_file is not None:
-            # Process the uploaded file if needed
-            st.session_state.show_upload_popup = False  # Close the popup after uploading
-            st.success("CV uploaded successfully!")
-        return uploaded_file
+        return st.file_uploader("Choose a file", type=["pdf"],accept_multiple_files=False)
     
     def get_position_snippet_data(self):
-        self.send_user_message("Enter/Paste your content. Ctrl-D or Ctrl-Z (windows) to save it.")
-        contents = []
-        while True:
-            try:
-                line = input()
-            except EOFError:
-                break
-            contents.append(line)
-        full_content =  "\n".join(contents)
-        self.messages.append({"role":"user","content":full_content})
-        return full_content
+        contents = st.text_input(label="Position")
+        if st.button("Go"):
+            full_content =  "\n".join(contents)
+            self.messages.append({"role":"user","content":full_content})
+            return full_content
     
     def send_files(self,file_paths):
         self.send_user_message("\n".join(file_paths))

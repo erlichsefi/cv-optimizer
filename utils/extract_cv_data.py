@@ -65,29 +65,6 @@ def core_run(user_interface, pdf_path):
         top_p=0,
         is_json_expected=True
     )
-
-def run(user_interface:UserInterface):
-
-    # if the user already have extracted cv data
-    if not user_interface.has_user_extract_cv_data():
-        user_extracted_data = None
-        for _ in range(3):
-            try:
-                # get user input
-                user_interface.send_user_message("Please upload and PDF file :)")
-                pdf_path = user_interface.get_pdf_file_from_user()
-                # core logic
-                user_extracted_data = core_run(user_interface,pdf_path)
-                # saving
-                user_interface.set_user_extract_cv_data(user_extracted_data)
-                break
-            except Exception as e:
-                user_interface.send_user_message("Please add valid path")
-
-        if user_extracted_data:
-            user_interface.send_user_message("We got it!")
-        else:
-            raise ValueError("Try again")
     
 
 if __name__ == "__main__":

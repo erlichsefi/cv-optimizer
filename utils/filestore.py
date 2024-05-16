@@ -22,21 +22,24 @@ def extract_2(filename):
     return text
 
 
-def get_data_from_pdf(filename):
 
-    extract_1(filename)
-
-    if isinstance(filename,str):
-        return extract_1(filename)
-    else:
-        from tempfile import NamedTemporaryFile
-        with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
-            f.write(filename.getbuffer())
-            return extract_1(f.name)
         
 
 class StateStore(ABC):
 
+    @classmethod
+    def get_data_from_pdf(cls,filename):
+
+        extract_1(filename)
+
+        if isinstance(filename,str):
+            return extract_1(filename)
+        else:
+            from tempfile import NamedTemporaryFile
+            with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
+                f.write(filename.getbuffer())
+                return extract_1(f.name)
+            
     @classmethod
     @abstractmethod
     def get_cv_blueprint(cls):
@@ -258,7 +261,7 @@ class  StermlitStateStore(StateStore):
     # 
     @classmethod
     def set_position_data(cls,user_position_data):
-        st.session_state["user_drill_down"] = user_position_data
+        st.session_state["user_position"] = user_position_data
 
         
     @classmethod

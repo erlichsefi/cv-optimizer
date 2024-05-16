@@ -142,16 +142,13 @@ def chat_on_question(user_cv,user_interface:UserInterface):
 
 
 def run(user_interface:UserInterface):
-    if not user_interface.has_completed_cv_data():
-        user_cv = user_interface.get_user_extract_cv_data()
+    user_cv = user_interface.get_user_extract_cv_data()
 
-        # complete_by_qna
-        emended_user_cv = chat_on_question(user_cv,terminal_interface,user_interface)
+    # complete_by_qna
+    emended_user_cv = chat_on_question(user_cv,user_interface,user_interface)
 
-        user_interface.set_completed_cv_data(emended_user_cv)
+    user_interface.set_completed_cv_data(emended_user_cv)
 
-        terminal_interface.send_user_message("We got it! Thanks!")
-        terminal_interface.send_user_message("Moving on...")
 
     
 

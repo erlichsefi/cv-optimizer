@@ -288,11 +288,11 @@ class  StermlitStateStore(StateStore):
             "closed":closed
         }
     @classmethod
-    def has_chain_message_on_extracted_cv(cls,id,closed=False,**kwrg):
+    def has_chain_messages(cls,id,closed=False,**kwrg):
         return f'chain_message_on_{id}' in st.session_state and  st.session_state[f'chain_message_on_{id}']['closed'] == closed
 
     @classmethod
-    def get_chain_message_on_extracted_cv(cls,id):
+    def get_chain_messages(cls,id):
         if cls.has_chain_message_on_extracted_cv(id):
             return st.session_state[f"chain_message_on_{id}"]['data']
     # 
@@ -511,7 +511,7 @@ class FileStateStore(StateStore):
             return json.load(file)['closed'] == closed
 
     @classmethod
-    def get_chain_message(cls,id):
+    def get_chain_messages(cls,id):
         if cls.has_chain_message_on_extracted_cv(id):
             with open(f"user_data/chain_message_on_{id}.json", "r") as file:
                 return json.load(file)['data']

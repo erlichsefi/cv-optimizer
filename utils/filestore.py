@@ -504,16 +504,20 @@ class FileStateStore(StateStore):
 
     @classmethod
     def has_chain_message_on_extracted_cv(cls,closed=False,**kwrg):
-        if not os.path.exists("chain_message_on_extracted_cv"):
+        if not os.path.exists("user_data/chain_message_on_extracted_cv.json"):
             return False
         
         with open("user_data/chain_message_on_extracted_cv.json", "r") as file:
-            return json.load(file)['data']['closed'] == closed
+            return json.load(file)['closed'] == closed
 
     @classmethod
     def get_chain_message_on_extracted_cv(cls):
-        with open("user_data/chain_message_on_extracted_cv.json", "r") as file:
-            return json.load(file)['data']
+        if cls.has_chain_message_on_extracted_cv():
+            with open("user_data/chain_message_on_extracted_cv.json", "r") as file:
+                return json.load(file)['data']
+        else:
+            return []
+        
         
     @classmethod
     def set_completed_cv_data(cls,user_cv_data):

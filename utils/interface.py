@@ -69,6 +69,9 @@ class TerminalInterface(UserInterface,FileStateStore):
         self.messages.append({"role":"user","file":message})
         return message
     
+    def on_cv_file_received(self):
+        self.send_user_message("Thanks!")
+
     def get_position_snippet_data(self):
         self.send_user_message("Enter/Paste your content. Ctrl-D or Ctrl-Z (windows) to save it.")
         contents = []

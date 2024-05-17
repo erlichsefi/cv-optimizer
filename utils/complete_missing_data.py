@@ -85,11 +85,10 @@ def chat_on_question(user_interface:UserInterface):
         closed , messages = chat_to_validate_extracted_cv(user_interface)
         user_interface.set_chain_message_on_extracted_cv(messages,closed=closed)
     #
-    if user_interface.has_completed_cv_data():
+    if user_interface.has_chain_message_on_extracted_cv(closed=True) and not user_interface.has_completed_cv_data():
         completed_cv = summarize_chat_into_cv(user_interface)
         user_interface.set_completed_cv_data(completed_cv)
 
-    return completed_cv
 
 
 

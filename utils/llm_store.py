@@ -110,49 +110,49 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
     ```"""
   messages = [
     {"role": "system", "content": system_prompt},
-  ]
+  ] + user_interface.get_chain_message_on_extracted_cv()[1:]
 
   
   # Keep repeating the following
-  while True:
+  #   while True:
 
     # Request gpt-3.5-turbo for chat completion
-    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-    
-    max_retries = 3
-    retry_count = 0
-    
-    while retry_count < max_retries:
-        try:
+  client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+
+  max_retries = 3
+  retry_count = 0
+
+  while retry_count < max_retries:
+    try:
             
-            stream = client.chat.completions.create(
+        stream = client.chat.completions.create(
                 model=model,
                 messages=messages,
                 stream=False
-            )
-            chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
-            user_interface.presist_compliation(messages,chat_message,model,cache_key=cache_key)
-            break  # Break out of the loop if successful
-        except json.JSONDecodeError as e:
-            retry_count += 1
-            if retry_count == max_retries:
-                raise e
-            else:
-                user_interface.send_user_message("Bot: ....")
+        )
+        chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
+        user_interface.presist_compliation(messages,chat_message,model,cache_key=cache_key)
+        break  # Break out of the loop if successful
+    except json.JSONDecodeError as e:
+        retry_count += 1
+        if retry_count == max_retries:
+            raise e
+        else:
+            user_interface.send_user_message("Bot: ....")
                 
 
     # Print the response and add it to the messages list
     user_interface.send_user_message(f"{chat_message['message']}")
     if str(chat_message['is_all_issue_addressed']).lower() == "true":
-      break
-    
+        break
+
 
     # Prompt user for input
     message = user_interface.get_user_input()
 
     # Exit program if user inputs "quit"
     if message.lower() == "quit":
-      break
+        break
 
     # Add each new message to the list
     messages.append({"role": "assistant", "content": json.dumps(chat_message,indent=4)})

@@ -28,7 +28,8 @@ def execute(user_interface:utils.UserInterface):
     # ask the user about the data
     if not user_interface.has_completed_cv_data():
         
-        utils.verify_user_data(user_interface)
+        while not user_interface.set_chain_message_on_extracted_cv(closed=False):
+            utils.verify_user_data(user_interface)
 
         user_interface.send_user_message("We got it! Thanks!")
         user_interface.send_user_message("Moving on...")

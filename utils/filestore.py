@@ -89,6 +89,38 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
+    def set_issues_to_overcome(cls, issues_found):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def has_issues_to_overcome(cls):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_issues_to_overcome(cls):
+        pass
+
+
+    @classmethod
+    @abstractmethod
+    def set_chain_message_on_extracted_cv(cls, chat_about_extracted_cv):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def has_chain_message_on_extracted_cv(cls,**kwrg):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def get_chain_message_on_extracted_cv(cls):
+        pass
+    
+    
+    @classmethod
+    @abstractmethod
     def set_completed_cv_data(cls, user_cv_data):
         pass
 

@@ -5,37 +5,9 @@ from .llm_store import experience_chatbot,get_compliation
 
 
 
-
-def get_questions(user_cv):
-
-    prompt = f"""
-    Your goal is to complete the information missing or corrupted user data.
-    For each entry in the user data, make sure the value stored make sense, or not missing, if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
-
-    - resolve any unicode issue
-
-    user data:
-    {json.dumps(user_cv,indent=4)}
-
-    Provide all questions in the following format:
-
-    ```json
-    [{{
-        "question":"<the question to the user>",
-        "regex":"<a python regex to validate the user input>",
-        "regex_fail_message":"<the message if the regex fail>",
-        "target_missing": [a list of path 'key' and indexies only from the root of the json to the place to put the value]
-    }},
-    // more if you have
-    ]
-    ```
-    When you don't have any other question respond with 'quit'.
-    """
-
-    return get_compliation("",prompt,is_json_expected=True)
     
-def get_issues_need_to_be_adressed(user_cv):
-
+def get_issues_need_to_be_adressed(user_interface:UserInterface):
+    user_cv = user_interface.get_user_extract_cv_data()
     prompt = f"""
     Your goal is to complete the information missing or corrupted in the user data.
     For all values (included nested ones) in the user data:
@@ -60,66 +32,11 @@ def get_issues_need_to_be_adressed(user_cv):
     return get_compliation("",prompt,is_json_expected=True)
 
 
-def complete_by_qna(user_cv,user_interface:UserInterface):
-    def set_value_at_xpath(current, xpath, value):
-        for step in xpath[:-1]:
-            if isinstance(current, list):
-                current = current[step]
-            elif isinstance(current, dict):
-                current = current.get(step)
-                if current is None:
-                    return
-            else:
-                return
-        if isinstance(current, list):
-            try:
-                current[xpath[-1]] = value
-            except IndexError:
-                return
-        elif isinstance(current, dict):
-            current[xpath[-1]] = value
-
-
-
-    def validate_regex(regex, string):
-        try:
-            re.compile(regex)
-            match = re.search(regex, string)
-            if match:
-                return True
-            else:
-                return False
-        except re.error:
-            return False
-    
-    question_to_ask = get_questions(user_cv)
-    for entry in question_to_ask:
-        while True:
-            user_interface.send_user_message(f"{entry['question']}")
-            answer = user_interface.get_user_input()
-            if validate_regex(entry['regex'],answer):
-                set_value_at_xpath(user_cv,entry['target_missing'],answer)
-                break
-            else:
-                print(entry['regex_fail_message'])
-
-
-def chat_on_question(user_cv,user_interface:UserInterface):
-    issues_to_adresss = get_issues_need_to_be_adressed(user_cv)
-
-    system_prompt = f"""
-        Your goal is to complete the information missing or corrupted user data.
-
-        user data:
-        {json.dumps(user_cv,indent=4)}
-
-        issues to address:
-        {json.dumps(issues_to_adresss,indent=4)}
-    """
-
-    messages = experience_chatbot(system_prompt,user_interface,topic="validating what we got from your CV")
-    
+def summarize_chat_into_cv(user_interface:UserInterface):
+    messages = user_interface.get_chain_message_on_extracted_cv()
     expected = user_interface.get_cv_blueprint()
+    user_cv = user_interface.get_user_extract_cv_data()
+
     final_call = f"""
     You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
 
@@ -141,13 +58,48 @@ def chat_on_question(user_cv,user_interface:UserInterface):
 
 
 
-def run(user_interface:UserInterface):
-    user_cv = user_interface.get_user_extract_cv_data()
+def chat_to_validate_extracted_cv(user_interface:UserInterface):
+    issues_to_adresss = user_interface.get_issues_to_overcome()
+    user_cv = user_interface.has_user_extract_cv_data()
+    system_prompt = f"""
+        Your goal is to complete the information missing or corrupted user data.
 
-    # complete_by_qna
-    emended_user_cv = chat_on_question(user_cv,user_interface)
+        user data:
+        {json.dumps(user_cv,indent=4)}
 
-    user_interface.set_completed_cv_data(emended_user_cv)
+        issues to address:
+        {json.dumps(issues_to_adresss,indent=4)}
+    """
+
+    return False, experience_chatbot(system_prompt,user_interface,topic="validating what we got from your CV")
+
+    
+
+def chat_on_question(user_interface:UserInterface):
+    """ completed the user infomration by chat """
+    if not user_interface.has_issues_to_overcome():
+        issues_to_adresss = get_issues_need_to_be_adressed(user_interface)
+        user_interface.set_issues_to_overcome(issues_to_adresss)
+    #
+    if not user_interface.has_chain_message_on_extracted_cv() or user_interface.has_chain_message_on_extracted_cv(closed=False):
+        closed , messages = chat_to_validate_extracted_cv(user_interface)
+        user_interface.set_chain_message_on_extracted_cv(messages,closed=closed)
+    #
+    if user_interface.has_completed_cv_data():
+        completed_cv = summarize_chat_into_cv(user_interface)
+        user_interface.set_completed_cv_data(completed_cv)
+
+    return completed_cv
+
+
+
+
+# def run(user_interface:UserInterface):
+#     user_cv = user_interface.get_user_extract_cv_data()
+
+#     emended_user_cv = chat_on_question(user_cv,user_interface)
+
+#     user_interface.set_completed_cv_data(emended_user_cv)
 
 
     
@@ -155,4 +107,4 @@ def run(user_interface:UserInterface):
 
 if __name__ == "__main__":
     terminal_interface = TerminalInterface()
-    run(terminal_interface)
+    chat_on_question(terminal_interface)

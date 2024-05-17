@@ -86,8 +86,7 @@ def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
     return response["choices"][0]["message"]["content"]
 
 
-def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo"):
-  cache_key = user_interface.get_cache_key()
+def experience_chatbot(system_prompt,user_interface,id,topic,model="gpt-3.5-turbo"):
 
   #user_interface.start_bot_session(topic)
 
@@ -110,7 +109,7 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
     ```"""
   messages = [
     {"role": "system", "content": system_prompt},
-  ] + user_interface.get_chain_message_on_extracted_cv()[1:]
+  ] + user_interface.get_chain_messages(id)[1:]
 
 
   # Request gpt-3.5-turbo for chat completion
@@ -140,11 +139,11 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
   # Add each new message to the list
   messages.append({"role": "assistant", "content": json.dumps(chat_message,indent=4)})
   messages.append({"role": "user", "content": message})
-  
+
   # Print the response and add it to the messages list
   user_interface.send_user_message(f"{chat_message['message']}")
   if str(chat_message['is_all_issue_addressed']).lower() == "true":
-      user_interface.set_chain_message_on_extracted_cv(messages,closed=True,reason="GPT")
+      user_interface.set_chain_messages(id,messages,closed=True,reason="GPT")
 
 
   # Prompt user for input
@@ -152,7 +151,7 @@ def experience_chatbot(system_prompt,user_interface,topic,model="gpt-3.5-turbo")
 
   # Exit program if user inputs "quit"
   if message.lower() == "quit":
-      user_interface.set_chain_message_on_extracted_cv(messages,closed=True,reason="quit")
+      user_interface.set_chain_messages(id,messages,closed=True,reason="quit")
 
 
 

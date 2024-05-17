@@ -71,7 +71,7 @@ def chat_to_validate_extracted_cv(user_interface:UserInterface):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    return False, experience_chatbot(system_prompt,user_interface,topic="validating what we got from your CV")
+    return False, experience_chatbot(system_prompt,"extracted_cv",user_interface,topic="validating what we got from your CV")
 
     
 

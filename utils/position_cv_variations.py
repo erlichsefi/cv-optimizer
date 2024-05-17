@@ -157,7 +157,7 @@ def chat_loop(user_interface):
     {json.dumps(cv_and_wondering['missing_information'],indent=4)}
 
     """
-    messages = experience_chatbot(system_prompt,terminal_interface,topic="overcoming the gaps between the cv and the position")
+    messages = experience_chatbot(system_prompt,"poisition_var",terminal_interface,topic="overcoming the gaps between the cv and the position")
     
     # update the global CV object
     cv_data = enrich_from_chat(current_cv,messages,cv_blueprint)

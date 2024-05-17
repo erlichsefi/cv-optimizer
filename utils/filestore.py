@@ -105,17 +105,17 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def set_chain_message_on_extracted_cv(cls, chat_about_extracted_cv):
+    def set_chain_messages(cls, id, chat_about_extracted_cv):
         pass
 
     @classmethod
     @abstractmethod
-    def has_chain_message_on_extracted_cv(cls,**kwrg):
+    def has_chain_messages(cls,id, **kwrg):
         pass
 
     @classmethod
     @abstractmethod
-    def get_chain_message_on_extracted_cv(cls):
+    def get_chain_messages(cls,id):
         pass
     
     
@@ -282,19 +282,19 @@ class  StermlitStateStore(StateStore):
 
 
     @classmethod
-    def set_chain_message_on_extracted_cv(cls, chat_about_extracted_cv,closed=False,**kwarg):
-        st.session_state["chain_message_on_extracted_cv"] = {
+    def set_chain_messages(cls, id, chat_about_extracted_cv,closed=False,**kwarg):
+        st.session_state[f"chain_message_on_{id}"] = {
             "data":chat_about_extracted_cv,
             "closed":closed
         }
     @classmethod
-    def has_chain_message_on_extracted_cv(cls,closed=False,**kwrg):
-        return 'chain_message_on_extracted_cv' in st.session_state and  st.session_state['chain_message_on_extracted_cv']['closed'] == closed
+    def has_chain_message_on_extracted_cv(cls,id,closed=False,**kwrg):
+        return f'chain_message_on_{id}' in st.session_state and  st.session_state[f'chain_message_on_{id}']['closed'] == closed
 
     @classmethod
-    def get_chain_message_on_extracted_cv(cls):
-        if cls.has_chain_message_on_extracted_cv():
-            return st.session_state["chain_message_on_extracted_cv"]['data']
+    def get_chain_message_on_extracted_cv(cls,id):
+        if cls.has_chain_message_on_extracted_cv(id):
+            return st.session_state[f"chain_message_on_{id}"]['data']
     # 
     @classmethod
     def set_completed_cv_data(cls,user_cv_data):
@@ -495,25 +495,25 @@ class FileStateStore(StateStore):
             return json.load(file)
 
     @classmethod
-    def set_chain_message_on_extracted_cv(cls, chat_about_extracted_cv,closed=False,**kwarg):
-        with open("user_data/chain_message_on_extracted_cv.json", "w") as file:
+    def set_chain_messages(cls,id, chat_about_extracted_cv,closed=False,**kwarg):
+        with open(f"user_data/chain_message_on_{id}.json", "w") as file:
             json.dump({
             "data":chat_about_extracted_cv,
             "closed":closed
         }, file)
 
     @classmethod
-    def has_chain_message_on_extracted_cv(cls,closed=False,**kwrg):
-        if not os.path.exists("user_data/chain_message_on_extracted_cv.json"):
+    def has_chain_messages(cls,id,closed=False,**kwrg):
+        if not os.path.exists(f"user_data/chain_message_on_{id}.json"):
             return False
         
-        with open("user_data/chain_message_on_extracted_cv.json", "r") as file:
+        with open(f"user_data/chain_message_on_{id}.json", "r") as file:
             return json.load(file)['closed'] == closed
 
     @classmethod
-    def get_chain_message_on_extracted_cv(cls):
-        if cls.has_chain_message_on_extracted_cv():
-            with open("user_data/chain_message_on_extracted_cv.json", "r") as file:
+    def get_chain_message(cls,id):
+        if cls.has_chain_message_on_extracted_cv(id):
+            with open(f"user_data/chain_message_on_{id}.json", "r") as file:
                 return json.load(file)['data']
         else:
             return []

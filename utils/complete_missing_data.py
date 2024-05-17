@@ -81,7 +81,7 @@ def chat_on_question(user_interface:UserInterface):
         issues_to_adresss = get_issues_need_to_be_adressed(user_interface)
         user_interface.set_issues_to_overcome(issues_to_adresss)
     #
-    if not user_interface.has_chain_message_on_extracted_cv() or user_interface.has_chain_message_on_extracted_cv(closed=False):
+    if not user_interface.has_chain_message_on_extracted_cv(closed=True):
         closed , messages = chat_to_validate_extracted_cv(user_interface)
         user_interface.set_chain_message_on_extracted_cv(messages,closed=closed)
     #

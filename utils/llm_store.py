@@ -127,7 +127,7 @@ def experience_chatbot(system_prompt,user_interface,id,topic,model="gpt-3.5-turb
                 stream=False
         )
         chat_message = json.loads(stream.choices[0].message.content.replace("```json","").replace("```",""))
-        user_interface.presist_compliation(messages,chat_message,model,cache_key=cache_key)
+        user_interface.presist_compliation(messages,chat_message,model,cache_key=id)
         break  # Break out of the loop if successful
     except json.JSONDecodeError as e:
         retry_count += 1
@@ -136,27 +136,26 @@ def experience_chatbot(system_prompt,user_interface,id,topic,model="gpt-3.5-turb
         else:
             user_interface.send_user_message("Bot: ....")
                 
-  # Add each new message to the list
-  messages.append({"role": "assistant", "content": json.dumps(chat_message,indent=4)})
-  messages.append({"role": "user", "content": message})
+
 
   # Print the response and add it to the messages list
   user_interface.send_user_message(f"{chat_message['message']}")
-  if str(chat_message['is_all_issue_addressed']).lower() == "true":
-      user_interface.set_chain_messages(id,messages,closed=True,reason="GPT")
-
-
   # Prompt user for input
   message = user_interface.get_user_input()
+  closed = False
+  if str(chat_message['is_all_issue_addressed']).lower() == "true":
+      closed = True
 
   # Exit program if user inputs "quit"
   if message.lower() == "quit":
-      user_interface.set_chain_messages(id,messages,closed=True,reason="quit")
+      closed = True
+      
 
-
-
+  # Add each new message to the list
+  messages.append({"role": "assistant", "content": json.dumps(chat_message,indent=4)})
+  messages.append({"role": "user", "content": message})
  #user_interface.end_bot_session()
-  return messages
+  user_interface.set_chain_messages(id,messages,closed=closed,reason="quit")
     
 
 if __name__ == "__main__":

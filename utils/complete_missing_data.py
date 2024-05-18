@@ -29,7 +29,8 @@ def get_issues_need_to_be_adressed(user_interface:UserInterface):
     ```
     """
 
-    return get_compliation("",prompt,is_json_expected=True)
+    issues_to_adresss = get_compliation("",prompt,is_json_expected=True)
+    user_interface.set_issues_to_overcome(issues_to_adresss)
 
 
 def summarize_chat_into_cv(user_interface:UserInterface):
@@ -54,11 +55,12 @@ def summarize_chat_into_cv(user_interface:UserInterface):
     {json.dumps(expected,indent=4)}
     ```
     """
-    return get_compliation("",final_call,is_json_expected=True)
+    completed_cv = get_compliation("",final_call,is_json_expected=True)
+    user_interface.set_completed_cv_data(completed_cv)
 
 
 
-def chat_to_validate_extracted_cv(user_interface:UserInterface):
+def chat_to_validate_extracted_cv(user_interface:UserInterface,id):
     issues_to_adresss = user_interface.get_issues_to_overcome()
     user_cv = user_interface.has_user_extract_cv_data()
     system_prompt = f"""
@@ -71,23 +73,22 @@ def chat_to_validate_extracted_cv(user_interface:UserInterface):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    return False, experience_chatbot(system_prompt,"extracted_cv",user_interface,topic="validating what we got from your CV")
+    experience_chatbot(system_prompt,id,user_interface,topic="validating what we got from your CV")
 
     
 
 def chat_on_question(user_interface:UserInterface):
     """ completed the user infomration by chat """
     if not user_interface.has_issues_to_overcome():
-        issues_to_adresss = get_issues_need_to_be_adressed(user_interface)
-        user_interface.set_issues_to_overcome(issues_to_adresss)
+        get_issues_need_to_be_adressed(user_interface) 
     #
-    if not user_interface.has_chain_message_on_extracted_cv(closed=True):
-        closed , messages = chat_to_validate_extracted_cv(user_interface)
-        user_interface.set_chain_message_on_extracted_cv(messages,closed=closed)
+    chat_id = "extracted_cv"
+    if not user_interface.has_chain_messages(chat_id,closed=True):
+        chat_to_validate_extracted_cv(user_interface,chat_id)
     #
-    if user_interface.has_chain_message_on_extracted_cv(closed=True) and not user_interface.has_completed_cv_data():
-        completed_cv = summarize_chat_into_cv(user_interface)
-        user_interface.set_completed_cv_data(completed_cv)
+    if user_interface.has_chain_messages(chat_id,closed=True) and not user_interface.has_completed_cv_data():
+        summarize_chat_into_cv(user_interface)
+    #
 
 
 

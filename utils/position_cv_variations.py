@@ -51,102 +51,130 @@ def single_prompt_call(user_interface):
     user_interface.set_position_cv_offers(offers)
 
 
-
-def chat_loop(user_interface):
+def review_by_hiring_team(user_interface):
     position_data = user_interface.get_position_data()
     cv_data = user_interface.get_completed_cv_data()
+
+    prompt = f"""
+    You are an experienced technical recruiter tasked with filling an open position in a leading tech company. 
+    Your goal is to find the best candidate who not only possesses the necessary technical skills but 
+    also fits well with the company culture.  Your Job is to give critical feedback on the CV you receive to the position.
+    Be concise, professional, compare the lastast CV to the poisition and give feedback if something missing.
+
+    The position you are hiring is:
+    {json.dumps(position_data,indent=4)}
+
+    The user CV:
+    {json.dumps(cv_data,indent=4)}
+    
+    Provide all questions in the following format:
+
+    ```json
+    [
+        {{
+            "missmatch": "<the missmatch betwen the candiate CV and the the position>",
+            "critical_level": "<HIGH,MID,LOW>",
+            "question": "<the question to the user to learn if has an experince>",
+        }}
+        
+        // more if you have
+    ]
+    ```
+    """
+
+    gaps_to_adresss = get_compliation("",prompt,is_json_expected=True)
+    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team(gaps_to_adresss)
+
+
+def optimize_and_wonder(user_interface,gen_id):
+    cv_data = user_interface.get_completed_cv_data()
+    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
 
+    prompt = f"""
+    You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
+    You help candidates to optimize the CV for the position, optimize the CV.
+    I've found the following mismatch:
+    {json.dumps(gaps_to_adresss,indent=4)}
 
-    def review_by_hiring_team(position_data,cv_data):
+    user CV:
+    {json.dumps(cv_data,indent=4)}
+    
+    - emend the user cv so it may overcome those gaps.
+    - be truthful.
 
-        prompt = f"""
-        You are an experienced technical recruiter tasked with filling an open position in a leading tech company. 
-        Your goal is to find the best candidate who not only possesses the necessary technical skills but 
-        also fits well with the company culture.  Your Job is to give critical feedback on the CV you receive to the position.
-        Be concise, professional, compare the lastast CV to the poisition and give feedback if something missing.
-
-        The position you are hiring is:
-        {json.dumps(position_data,indent=4)}
-
-        The user CV:
-        {json.dumps(cv_data,indent=4)}
-        
-        Provide all questions in the following format:
-
-        ```json
-        [
-            {{
-                "missmatch": "<the missmatch betwen the candiate CV and the the position>",
-                "critical_level": "<HIGH,MID,LOW>",
-                "question": "<the question to the user to learn if has an experince>",
-            }}
-            
-            // more if you have
+    reponse foramt:
+    ```json
+    {{
+        "user_cv": {json.dumps(cv_blueprint,indent=4)}
+        "missing_information": [
+            // questions to ask to minimize the gap between the position requirement and the CV
         ]
-        ```
-        """
+    }}
+    ```
+    """
+    cv_and_wondering = get_compliation("",prompt,is_json_expected=True)
+    user_interface.set_base_optimized(cv_and_wondering['user_cv'],gen_id)
+    user_interface.set_issues_to_solve_in_chat(cv_and_wondering['missing_information'])
 
-        return get_compliation("",prompt,is_json_expected=True)
+
+def create_n_optimzied_variation(user_interface,n=1):
+    cv_data = user_interface.get_completed_cv_data()
+    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team()
+    cv_blueprint = user_interface.get_cv_blueprint()
+
+    prompt = f"""
+    You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
+    You help candidates to optimize the CV for the position, optimize the CV.
+    I've found the following mismatch:
+    {json.dumps(gaps_to_adresss,indent=4)}
+
+    user CV:
+    {json.dumps(cv_data,indent=4)}
+    
+    - emend the user cv so it may overcome those gaps.
+    - be truthful.
+
+    reponse foramt:
+    ```json
+    {json.dumps(cv_blueprint,indent=4)}
+    ```
+    """
+    variations = get_compliation("",prompt,is_json_expected=True,num_of_gen=n)
+    user_interface.set_position_cv_offers(variations)
+
+def enrich_from_chat(user_interface,chat_id,gen_id):
+    cv_blueprint = user_interface.get_cv_blueprint()
+    current_cv = user_interface.get_base_optimized(gen_id)
+    messages = user_interface.get_chain_messages(chat_id,closed=True)
+
+    final_call = f"""
+        You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
+
+        iterview:
+        {json.dumps(messages,indent=4)}
+
+        user existing CV:
+        {json.dumps(current_cv,indent=4)}
+
+        emend the user data according to the information in the interview:
+        1. include all the information from the user data.
+        2. emend the infromation according to the information provided in the interview.
+        3. try to include has much infromation that is valueable.
 
 
-    def optimize_and_wonder(gaps_to_adresss,user_cv):
-        prompt = f"""
-        You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
-        You help candidates to optimize the CV for the position, optimize the CV.
-        I've found the following mismatch:
-        {json.dumps(gaps_to_adresss,indent=4)}
-
-        user CV:
-        {json.dumps(user_cv,indent=4)}
-        
-        - emend the user cv so it may overcome those gaps.
-        - be truthful.
-
-        reponse foramt:
+        expected format:
         ```json
-        {{
-            "user_cv": {json.dumps(cv_blueprint,indent=4)}
-            "missing_information": [
-                // questions to ask to minimize the gap between the position requirement and the CV
-            ]
-        }}
+        {json.dumps(cv_blueprint,indent=4)}
         ```
         """
-        return get_compliation("",prompt,is_json_expected=True)
-
-    def enrich_from_chat(user_cv,messages,expected):
-        final_call = f"""
-            You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
-
-            iterview:
-            {json.dumps(messages,indent=4)}
-
-            user existing CV:
-            {json.dumps(user_cv,indent=4)}
-
-            emend the user data according to the information in the interview:
-            1. include all the information from the user data.
-            2. emend the infromation according to the information provided in the interview.
-            3. try to include has much infromation that is valueable.
-
-
-            expected format:
-            ```json
-            {json.dumps(expected,indent=4)}
-            ```
-            """
-        return get_compliation("",final_call,is_json_expected=True)
+    cv_data = get_compliation("",final_call,is_json_expected=True)
+    user_interface.set_completed_cv_data(cv_data)
     
-    # define the gaps between the position and the CV
-    gaps_to_adresss = review_by_hiring_team(position_data,cv_data)
+def chat_with_agent_to_fill_gaps(user_interface,id,gen_id):
+    current_cv = user_interface.get_base_optimized(gen_id)
+    cv_and_wondering = user_interface.get_issues_to_solve_in_chat()
 
-    # optimize what you can optimize and find what not
-    cv_and_wondering = optimize_and_wonder(gaps_to_adresss,cv_data)
-
-    
-    # drill with the agent
-    current_cv = cv_and_wondering['user_cv']
     system_prompt = f"""
     You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
     You help candidates to optimize the CV for the position, optimize the CV.
@@ -157,16 +185,30 @@ def chat_loop(user_interface):
     {json.dumps(cv_and_wondering['missing_information'],indent=4)}
 
     """
-    messages = experience_chatbot(system_prompt,"poisition_var",terminal_interface,topic="overcoming the gaps between the cv and the position")
+    experience_chatbot(system_prompt,id,terminal_interface,topic="overcoming the gaps between the cv and the position")
     
-    # update the global CV object
-    cv_data = enrich_from_chat(current_cv,messages,cv_blueprint)
-    # write it down
-    user_interface.set_completed_cv_data(cv_data)
-
-    # draft last version
-    final_cv = optimize_and_wonder(gaps_to_adresss,cv_data)
-    user_interface.set_position_cv_offers([final_cv['user_cv']])
+def chat_loop(user_interface:UserInterface):
+    
+    # define the gaps between the position and the CV
+    if not user_interface.has_identified_gap_from_hiring_team():
+        review_by_hiring_team(user_interface)
+    #
+    # optimize what you can optimize and find what not
+    gen_id = "first_call"
+    if not user_interface.has_optimized_cv(gen_id):
+        optimize_and_wonder(user_interface,gen_id)   
+    #
+    # drill with the agent
+    chat_id = "extracted_cv"
+    if not user_interface.has_chain_messages(chat_id,closed=True):
+        chat_with_agent_to_fill_gaps(user_interface,chat_id)
+        
+    if not user_interface.has_completed_cv_data() and user_interface.has_chain_messages(chat_id,closed=True):
+        # update the global CV object
+        enrich_from_chat(user_interface,chat_id=chat_id,gen_id=gen_id)
+    
+    
+    create_n_optimzied_variation(user_interface,n=1)
 
 
 def multi_agents(user_interface):

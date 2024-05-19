@@ -176,6 +176,46 @@ class StateStore(ABC):
     def has_position_cv_offers(cls):
         pass
     
+    @classmethod    
+    @abstractmethod
+    def has_identified_gap_from_hiring_team(cls):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def has_optimized_cv(cls,en_id):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def set_identified_gap_from_hiring_team(cls,gaps_to_adresss):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def get_identified_gap_from_hiring_team(cls):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def set_base_optimized(cls,user_cv,gen_id):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def get_base_optimized(cls,gen_id):
+        pass
+
+    @classmethod    
+    @abstractmethod
+    def set_issues_to_solve_in_chat(cls,issues_to_solve,gen_id):
+        pass
+    
+    @classmethod    
+    @abstractmethod
+    def get_issues_to_solve_in_chat(cls,gen_id):
+        pass
+    
     @classmethod
     @abstractmethod
     def get_all_position_cv_offers(cls):
@@ -518,7 +558,7 @@ class FileStateStore(StateStore):
         else:
             return []
         
-        
+    
     @classmethod
     def set_completed_cv_data(cls,user_cv_data):
         if os.path.exists("user_data/user_completed_cv.json"):
@@ -577,7 +617,69 @@ class FileStateStore(StateStore):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
             return json.load(file)
     #
+    @classmethod    
+    def set_identified_gap_from_hiring_team(cls,gaps_to_adresss):
+        with open(f"user_data/identified_gap_from_hiring_team.json", "w") as file:
+                json.dump(gaps_to_adresss,file)
 
+    @classmethod    
+    def has_identified_gap_from_hiring_team(cls):
+        return os.path.exists("user_data/identified_gap_from_hiring_team.json")
+
+    @classmethod    
+    def get_identified_gap_from_hiring_team(cls):
+        with open(f"user_data/identified_gap_from_hiring_team.json", "r") as file:
+            return json.load(file)
+
+    #
+        
+    @classmethod    
+    @abstractmethod
+    def set_base_optimized(cls,user_cv,gen_id):
+        if os.path.exists("user_data/base_optimized.json"):
+             with open(f"user_data/base_optimized.json", "r") as file:
+                 content = json.load(file)
+        else:
+            content = {}
+
+        content[gen_id] = user_cv
+        with open(f"user_data/base_optimized.json", "w") as file:
+                json.dump(content,file)
+
+
+    @classmethod    
+    def has_optimized_cv(cls,gen_id):
+        if not os.path.exists("user_data/base_optimized.json"):
+            return False
+        with open(f"user_data/base_optimized.json", "r") as file:
+            return gen_id in json.load(file)
+
+
+
+    @classmethod    
+    def get_base_optimized(cls,gen_id):
+        with open(f"user_data/base_optimized.json", "r") as file:
+            return json.load(file)[gen_id]
+
+
+    @classmethod    
+    def set_issues_to_solve_in_chat(cls,issues_to_solve,gen_id):
+        if os.path.exists("user_data/issues_to_solve_in_chat.json"):
+             with open(f"user_data/issues_to_solve_in_chat.json", "r") as file:
+                 content = json.load(file)
+        else:
+            content = {}
+
+        content[gen_id] = issues_to_solve
+        with open(f"user_data/issues_to_solve_in_chat.json", "w") as file:
+                json.dump(content,file)
+    
+    @classmethod    
+    def get_issues_to_solve_in_chat(cls,gen_id):
+        with open(f"user_data/issues_to_solve_in_chat.json", "r") as file:
+            return json.load(file)[gen_id]
+
+    #
     @classmethod
     def set_user_latex_file(cls,user_latex):
         user_latex = user_latex.split("```latex")[1].split("```")[0]

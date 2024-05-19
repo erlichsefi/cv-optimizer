@@ -51,7 +51,7 @@ def single_prompt_call(user_interface):
     user_interface.set_position_cv_offers(offers)
 
 
-def review_by_hiring_team(user_interface):
+def review_by_hiring_team(user_interface:UserInterface):
     position_data = user_interface.get_position_data()
     cv_data = user_interface.get_completed_cv_data()
 
@@ -86,9 +86,9 @@ def review_by_hiring_team(user_interface):
     gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team(gaps_to_adresss)
 
 
-def optimize_and_wonder(user_interface,gen_id):
+def optimize_and_wonder(user_interface:UserInterface,gen_id):
     cv_data = user_interface.get_completed_cv_data()
-    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team()
+    gaps_to_adresss = user_interface.get_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
 
     prompt = f"""
@@ -115,10 +115,10 @@ def optimize_and_wonder(user_interface,gen_id):
     """
     cv_and_wondering = get_compliation("",prompt,is_json_expected=True)
     user_interface.set_base_optimized(cv_and_wondering['user_cv'],gen_id)
-    user_interface.set_issues_to_solve_in_chat(cv_and_wondering['missing_information'])
+    user_interface.set_issues_to_solve_in_chat(cv_and_wondering['missing_information'],gen_id)
 
 
-def create_n_optimzied_variation(user_interface,n=1):
+def create_n_optimzied_variation(user_interface:UserInterface,n=1):
     cv_data = user_interface.get_completed_cv_data()
     gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
@@ -143,7 +143,7 @@ def create_n_optimzied_variation(user_interface,n=1):
     variations = get_compliation("",prompt,is_json_expected=True,num_of_gen=n)
     user_interface.set_position_cv_offers(variations)
 
-def enrich_from_chat(user_interface,chat_id,gen_id):
+def enrich_from_chat(user_interface:UserInterface,chat_id,gen_id):
     cv_blueprint = user_interface.get_cv_blueprint()
     current_cv = user_interface.get_base_optimized(gen_id)
     messages = user_interface.get_chain_messages(chat_id,closed=True)
@@ -171,9 +171,9 @@ def enrich_from_chat(user_interface,chat_id,gen_id):
     cv_data = get_compliation("",final_call,is_json_expected=True)
     user_interface.set_completed_cv_data(cv_data)
     
-def chat_with_agent_to_fill_gaps(user_interface,id,gen_id):
+def chat_with_agent_to_fill_gaps(user_interface:UserInterface,id,gen_id):
     current_cv = user_interface.get_base_optimized(gen_id)
-    cv_and_wondering = user_interface.get_issues_to_solve_in_chat()
+    cv_and_wondering = user_interface.get_issues_to_solve_in_chat(gen_id)
 
     system_prompt = f"""
     You are an independent HR recruiter, committed to referring the perfect candidate for the job. 

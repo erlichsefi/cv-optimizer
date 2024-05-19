@@ -33,8 +33,8 @@ def get_issues_need_to_be_adressed(user_interface:UserInterface):
     user_interface.set_issues_to_overcome(issues_to_adresss)
 
 
-def summarize_chat_into_cv(user_interface:UserInterface):
-    messages = user_interface.get_chain_message_on_extracted_cv()
+def summarize_chat_into_cv(user_interface:UserInterface,chat_id):
+    messages = user_interface.get_chain_messages(chat_id)
     expected = user_interface.get_cv_blueprint()
     user_cv = user_interface.get_user_extract_cv_data()
 
@@ -73,7 +73,7 @@ def chat_to_validate_extracted_cv(user_interface:UserInterface,id):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    experience_chatbot(system_prompt,id,user_interface,topic="validating what we got from your CV")
+    experience_chatbot(system_prompt,user_interface,id,topic="validating what we got from your CV")
 
     
 
@@ -87,7 +87,7 @@ def chat_on_question(user_interface:UserInterface):
         chat_to_validate_extracted_cv(user_interface,chat_id)
     #
     if user_interface.has_chain_messages(chat_id,closed=True) and not user_interface.has_completed_cv_data():
-        summarize_chat_into_cv(user_interface)
+        summarize_chat_into_cv(user_interface,chat_id)
     #
 
 

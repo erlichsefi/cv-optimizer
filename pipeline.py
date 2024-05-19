@@ -44,7 +44,7 @@ def execute(user_interface:utils.UserInterface):
         user_interface.send_user_message("Done! :)")
 
     # overcome gaps
-    if not user_interface.has_position_cv_offers():
+    while not user_interface.has_position_cv_offers():
         utils.overcome_gaps(user_interface)
 
     # to pdfs

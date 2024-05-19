@@ -120,7 +120,7 @@ def optimize_and_wonder(user_interface:UserInterface,gen_id):
 
 def create_n_optimzied_variation(user_interface:UserInterface,n=1):
     cv_data = user_interface.get_completed_cv_data()
-    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team()
+    gaps_to_adresss = user_interface.get_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
 
     prompt = f"""
@@ -173,7 +173,7 @@ def enrich_from_chat(user_interface:UserInterface,chat_id,gen_id):
     
 def chat_with_agent_to_fill_gaps(user_interface:UserInterface,id,gen_id):
     current_cv = user_interface.get_base_optimized(gen_id)
-    cv_and_wondering = user_interface.get_issues_to_solve_in_chat(gen_id)
+    issues_to_solve = user_interface.get_issues_to_solve_in_chat(gen_id)
 
     system_prompt = f"""
     You are an independent HR recruiter, committed to referring the perfect candidate for the job. 
@@ -182,10 +182,10 @@ def chat_with_agent_to_fill_gaps(user_interface:UserInterface,id,gen_id):
     {json.dumps(current_cv,indent=4)} 
 
     and have some question to adress:
-    {json.dumps(cv_and_wondering['missing_information'],indent=4)}
+    {json.dumps(issues_to_solve,indent=4)}
 
     """
-    experience_chatbot(system_prompt,id,terminal_interface,topic="overcoming the gaps between the cv and the position")
+    experience_chatbot(system_prompt,user_interface,id,topic="overcoming the gaps between the cv and the position")
     
 def chat_loop(user_interface:UserInterface):
     
@@ -199,9 +199,9 @@ def chat_loop(user_interface:UserInterface):
         optimize_and_wonder(user_interface,gen_id)   
     #
     # drill with the agent
-    chat_id = "extracted_cv"
+    chat_id = "overcome_gaps_cv"
     if not user_interface.has_chain_messages(chat_id,closed=True):
-        chat_with_agent_to_fill_gaps(user_interface,chat_id)
+        chat_with_agent_to_fill_gaps(user_interface,chat_id,gen_id)
         
     if not user_interface.has_completed_cv_data() and user_interface.has_chain_messages(chat_id,closed=True):
         # update the global CV object

@@ -552,7 +552,7 @@ class FileStateStore(StateStore):
 
     @classmethod
     def get_chain_messages(cls,id):
-        if cls.has_chain_message_on_extracted_cv(id):
+        if cls.has_chain_messages(id):
             with open(f"user_data/chain_message_on_{id}.json", "r") as file:
                 return json.load(file)['data']
         else:
@@ -634,7 +634,6 @@ class FileStateStore(StateStore):
     #
         
     @classmethod    
-    @abstractmethod
     def set_base_optimized(cls,user_cv,gen_id):
         if os.path.exists("user_data/base_optimized.json"):
              with open(f"user_data/base_optimized.json", "r") as file:
@@ -708,7 +707,7 @@ class FileStateStore(StateStore):
 
         # check if PDF is successfully generated
         if not os.path.exists(pdf_filename):
-            error_message  = "process output:" + result.stdout
+            error_message  = "process output:" + result.stdout.decode()
             raise RuntimeError(f"PDF output not found. Error message: {error_message}")
         return pdf_filename
 

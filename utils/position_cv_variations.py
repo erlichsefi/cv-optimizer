@@ -1,10 +1,8 @@
-
-from .llm_store import get_compliation,experience_chatbot
-from .interface import TerminalInterface,UserInterface
+from .llm_store import get_compliation, experience_chatbot
+from .interface import TerminalInterface, UserInterface
 import json
 import os
 import autogen
-
 
 
 def single_prompt_call(user_interface):
@@ -12,7 +10,9 @@ def single_prompt_call(user_interface):
     cv_data = user_interface.get_completed_cv_data()
     cv_blueprint = user_interface.get_cv_blueprint()
 
-    offers = get_compliation(system_message="",user_input=f"""Task Description:
+    offers = get_compliation(
+        system_message="",
+        user_input=f"""Task Description:
     You are tasked with optimizing a user's CV based on a given position description without revealing that the CV has been optimized or inventing information not present in the original CV.
 
     User CV:
@@ -44,14 +44,14 @@ def single_prompt_call(user_interface):
     {json.dumps(cv_blueprint,indent=4)}
     ```
     """,
-    is_json_expected=True,
-    num_of_gen=2,
-    temperature=0.1
+        is_json_expected=True,
+        num_of_gen=2,
+        temperature=0.1,
     )
     user_interface.set_position_cv_offers(offers)
 
 
-def review_by_hiring_team(user_interface:UserInterface):
+def review_by_hiring_team(user_interface: UserInterface):
     position_data = user_interface.get_position_data()
     cv_data = user_interface.get_completed_cv_data()
 
@@ -82,11 +82,13 @@ def review_by_hiring_team(user_interface:UserInterface):
     ```
     """
 
-    gaps_to_adresss = get_compliation("",prompt,is_json_expected=True)
-    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team(gaps_to_adresss)
+    gaps_to_adresss = get_compliation("", prompt, is_json_expected=True)
+    gaps_to_adresss = user_interface.set_identified_gap_from_hiring_team(
+        gaps_to_adresss
+    )
 
 
-def optimize_and_wonder(user_interface:UserInterface,gen_id):
+def optimize_and_wonder(user_interface: UserInterface, gen_id):
     cv_data = user_interface.get_completed_cv_data()
     gaps_to_adresss = user_interface.get_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
@@ -113,12 +115,14 @@ def optimize_and_wonder(user_interface:UserInterface,gen_id):
     }}
     ```
     """
-    cv_and_wondering = get_compliation("",prompt,is_json_expected=True)
-    user_interface.set_base_optimized(cv_and_wondering['user_cv'],gen_id)
-    user_interface.set_issues_to_solve_in_chat(cv_and_wondering['missing_information'],gen_id)
+    cv_and_wondering = get_compliation("", prompt, is_json_expected=True)
+    user_interface.set_base_optimized(cv_and_wondering["user_cv"], gen_id)
+    user_interface.set_issues_to_solve_in_chat(
+        cv_and_wondering["missing_information"], gen_id
+    )
 
 
-def create_n_optimzied_variation(user_interface:UserInterface,n=1):
+def create_n_optimzied_variation(user_interface: UserInterface, n=1):
     cv_data = user_interface.get_completed_cv_data()
     gaps_to_adresss = user_interface.get_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
@@ -140,13 +144,14 @@ def create_n_optimzied_variation(user_interface:UserInterface,n=1):
     {json.dumps(cv_blueprint,indent=4)}
     ```
     """
-    variations = get_compliation("",prompt,is_json_expected=True,num_of_gen=n)
+    variations = get_compliation("", prompt, is_json_expected=True, num_of_gen=n)
     user_interface.set_position_cv_offers(variations)
 
-def enrich_from_chat(user_interface:UserInterface,chat_id,gen_id):
+
+def enrich_from_chat(user_interface: UserInterface, chat_id, gen_id):
     cv_blueprint = user_interface.get_cv_blueprint()
     current_cv = user_interface.get_base_optimized(gen_id)
-    messages = user_interface.get_chain_messages(chat_id,closed=True)
+    messages = user_interface.get_chain_messages(chat_id, closed=True)
 
     final_call = f"""
         You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
@@ -168,10 +173,11 @@ def enrich_from_chat(user_interface:UserInterface,chat_id,gen_id):
         {json.dumps(cv_blueprint,indent=4)}
         ```
         """
-    cv_data = get_compliation("",final_call,is_json_expected=True)
+    cv_data = get_compliation("", final_call, is_json_expected=True)
     user_interface.set_completed_cv_data(cv_data)
-    
-def chat_with_agent_to_fill_gaps(user_interface:UserInterface,id,gen_id):
+
+
+def chat_with_agent_to_fill_gaps(user_interface: UserInterface, id, gen_id):
     current_cv = user_interface.get_base_optimized(gen_id)
     issues_to_solve = user_interface.get_issues_to_solve_in_chat(gen_id)
 
@@ -185,10 +191,16 @@ def chat_with_agent_to_fill_gaps(user_interface:UserInterface,id,gen_id):
     {json.dumps(issues_to_solve,indent=4)}
 
     """
-    experience_chatbot(system_prompt,user_interface,id,topic="overcoming the gaps between the cv and the position")
-    
-def chat_loop(user_interface:UserInterface):
-    
+    experience_chatbot(
+        system_prompt,
+        user_interface,
+        id,
+        topic="overcoming the gaps between the cv and the position",
+    )
+
+
+def chat_loop(user_interface: UserInterface):
+
     # define the gaps between the position and the CV
     if not user_interface.has_identified_gap_from_hiring_team():
         review_by_hiring_team(user_interface)
@@ -196,19 +208,20 @@ def chat_loop(user_interface:UserInterface):
     # optimize what you can optimize and find what not
     gen_id = "first_call"
     if not user_interface.has_optimized_cv(gen_id):
-        optimize_and_wonder(user_interface,gen_id)   
+        optimize_and_wonder(user_interface, gen_id)
     #
     # drill with the agent
     chat_id = "overcome_gaps_cv"
-    if not user_interface.has_chain_messages(chat_id,closed=True):
-        chat_with_agent_to_fill_gaps(user_interface,chat_id,gen_id)
-        
-    if not user_interface.has_completed_cv_data() and user_interface.has_chain_messages(chat_id,closed=True):
+    if not user_interface.has_chain_messages(chat_id, closed=True):
+        chat_with_agent_to_fill_gaps(user_interface, chat_id, gen_id)
+
+    if not user_interface.has_completed_cv_data() and user_interface.has_chain_messages(
+        chat_id, closed=True
+    ):
         # update the global CV object
-        enrich_from_chat(user_interface,chat_id=chat_id,gen_id=gen_id)
-    
-    
-    create_n_optimzied_variation(user_interface,n=1)
+        enrich_from_chat(user_interface, chat_id=chat_id, gen_id=gen_id)
+
+    create_n_optimzied_variation(user_interface, n=1)
 
 
 def multi_agents(user_interface):
@@ -218,15 +231,21 @@ def multi_agents(user_interface):
     cv_data = user_interface.get_completed_cv_data()
     cv_blueprint = user_interface.get_cv_blueprint()
     llm_config = {
-            "config_list": [{"model": "gpt-3.5-turbo", "api_key": os.environ['OPENAI_API_KEY'], "cache_seed": 42}]
-        }
+        "config_list": [
+            {
+                "model": "gpt-3.5-turbo",
+                "api_key": os.environ["OPENAI_API_KEY"],
+                "cache_seed": 42,
+            }
+        ]
+    }
     user_proxy = autogen.UserProxyAgent(
         name="User_proxy",
         description="The User that would like to submit it's CV",
         system_message=f"""You are looking to get an interview, your CV is:
         {json.dumps(cv_data,indent=4)}
         """,
-        human_input_mode="ALWAYS"
+        human_input_mode="ALWAYS",
     )
     recriter = autogen.AssistantAgent(
         name="Hiring_technical_recruiter",
@@ -240,7 +259,7 @@ def multi_agents(user_interface):
         The position your are hiring is:
         {json.dumps(position_data,indent=4)}
         """,
-        llm_config=llm_config
+        llm_config=llm_config,
     )
     technical_recriter = autogen.AssistantAgent(
         name="External_recruiter",
@@ -256,28 +275,45 @@ def multi_agents(user_interface):
         CV must be in the following format:
         {json.dumps(cv_blueprint,indent=4)}
         """,
-        llm_config=llm_config
+        llm_config=llm_config,
     )
-    os.environ['WAY'] = "Hiring_technical_recruiter"
+    os.environ["WAY"] = "Hiring_technical_recruiter"
+
     def allowlist(last_speaker: autogen.Agent, groupchat: autogen.GroupChat):
         if last_speaker.name == "User_proxy":
-            return list(filter(lambda x: x.name == "External_recruiter",groupchat.agents))[0]
+            return list(
+                filter(lambda x: x.name == "External_recruiter", groupchat.agents)
+            )[0]
         elif last_speaker.name == "Hiring_technical_recruiter":
-            return list(filter(lambda x: x.name == "External_recruiter",groupchat.agents))[0]
+            return list(
+                filter(lambda x: x.name == "External_recruiter", groupchat.agents)
+            )[0]
         elif last_speaker.name == "External_recruiter":
-            agent =  list(filter(lambda x: x.name == os.environ['WAY'],groupchat.agents))[0]
-            os.environ['WAY'] = "User_proxy" if os.environ['WAY'] == "Hiring_technical_recruiter" else "External_recruiter"
+            agent = list(
+                filter(lambda x: x.name == os.environ["WAY"], groupchat.agents)
+            )[0]
+            os.environ["WAY"] = (
+                "User_proxy"
+                if os.environ["WAY"] == "Hiring_technical_recruiter"
+                else "External_recruiter"
+            )
             return agent
         else:
             raise ValueError()
 
+    recriter_groupchat = autogen.GroupChat(
+        agents=[user_proxy, recriter, technical_recriter],
+        messages=[],
+        max_round=12,
+        speaker_selection_method=allowlist,
+    )
+    manager = autogen.GroupChatManager(
+        groupchat=recriter_groupchat, llm_config=llm_config
+    )
 
-    recriter_groupchat = autogen.GroupChat(agents=[user_proxy, recriter, technical_recriter], messages=[], max_round=12,
-                                       speaker_selection_method=allowlist)
-    manager = autogen.GroupChatManager(groupchat=recriter_groupchat, llm_config=llm_config)
-    
     result = user_proxy.initiate_chat(
-    manager, message=f"""Hey there,
+        manager,
+        message=f"""Hey there,
     I've come across this amazing job opportunity that I'm really excited about, and I want to make sure my CV is perfectly tailored to it. I've attached the job description below so you can get a sense of what they're looking for.
 
     Could you please review my CV and make any necessary adjustments to better align it with the job description? I want to make sure I highlight the relevant skills and experiences without making it obvious that I've optimized it. 
@@ -291,38 +327,21 @@ def multi_agents(user_interface):
     {json.dumps(position_data,indent=4)}
 
         
-    """
+    """,
     )
 
     autogen.runtime_logging.stop()
 
-
     return result
 
 
-def run(user_interface:UserInterface):    
+def run(user_interface: UserInterface):
     user_interface.send_user_message("Let's try find ways to overcome some gaps")
     chat_loop(user_interface)
     user_interface.send_user_message("Done.")
+
 
 if __name__ == "__main__":
 
     terminal_interface = TerminalInterface()
     run(terminal_interface)
-    
-
-
-
-
-   
-
-
-
-
-
-
-
-
-
-
-

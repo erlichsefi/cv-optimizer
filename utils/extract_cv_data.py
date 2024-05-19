@@ -1,6 +1,7 @@
 import json
 from .llm_store import get_compliation
-from .interface import UserInterface,Args
+from .interface import UserInterface, Args
+
 
 def dict_diff(dict1, dict2):
     diff = {}
@@ -18,13 +19,14 @@ def dict_diff(dict1, dict2):
             diff[key] = (dict1[key], dict2[key])
     return diff
 
+
 def core_run(user_interface, pdf_path):
     extracted_text = user_interface.get_data_from_pdf(pdf_path)
     expected_json = user_interface.get_cv_blueprint()
 
     # procrssing
     user_interface.on_cv_file_received()
-    response =  get_compliation(
+    response = get_compliation(
         system_message=f"""
                 Extract the CV into the following format:
                 {json.dumps(expected_json,indent=4)}
@@ -39,7 +41,7 @@ def core_run(user_interface, pdf_path):
         top_p=0,
         user_input=extracted_text,
         is_json_expected=True,
-        num_of_gen=2
+        num_of_gen=2,
     )
 
     return get_compliation(
@@ -63,23 +65,22 @@ def core_run(user_interface, pdf_path):
         model="gpt-3.5-turbo-1106",
         temperature=0,
         top_p=0,
-        is_json_expected=True
+        is_json_expected=True,
     )
-    
+
 
 if __name__ == "__main__":
 
-
     collection = list()
     for _ in range(3):
-        
+
         response = core_run(Args(), "data_set/Curriculum_Vitae_Jan24.pdf")
 
         collection.append(response)
-    
-    diff = dict_diff(collection[2],collection[1])
+
+    diff = dict_diff(collection[2], collection[1])
     for entry in diff:
         for index in range(len(collection[2][entry])):
-            print(dict_diff(collection[2][entry][index],collection[1][entry][index]))
+            print(dict_diff(collection[2][entry][index], collection[1][entry][index]))
 
     assert len(set(collection)) == 1

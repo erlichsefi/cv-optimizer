@@ -5,6 +5,7 @@ import subprocess
 from abc import ABC, abstractmethod
 import streamlit as st
 
+
 def extract_1(filename):
     from pdfminer.high_level import extract_text
 
@@ -12,8 +13,9 @@ def extract_1(filename):
 
 
 def extract_2(filename):
-    #from PyPDF2 import PdfReader
+    # from PyPDF2 import PdfReader
     from pypdf import PdfReader
+
     text = ""
     with open(filename, "rb") as f:
         reader = PdfReader(f)
@@ -22,24 +24,22 @@ def extract_2(filename):
     return text
 
 
-
-        
-
 class StateStore(ABC):
 
     @classmethod
-    def get_data_from_pdf(cls,filename):
+    def get_data_from_pdf(cls, filename):
 
         extract_1(filename)
 
-        if isinstance(filename,str):
+        if isinstance(filename, str):
             return extract_1(filename)
         else:
             from tempfile import NamedTemporaryFile
+
             with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
                 f.write(filename.getbuffer())
                 return extract_1(f.name)
-            
+
     @classmethod
     @abstractmethod
     def get_cv_blueprint(cls):
@@ -54,7 +54,7 @@ class StateStore(ABC):
     @abstractmethod
     def get_expected_latex_format(cls):
         pass
-    
+
     @classmethod
     def get_cache_key(cls):
         from datetime import datetime
@@ -102,7 +102,6 @@ class StateStore(ABC):
     def get_issues_to_overcome(cls):
         pass
 
-
     @classmethod
     @abstractmethod
     def set_chain_messages(cls, id, chat_about_extracted_cv):
@@ -110,15 +109,14 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def has_chain_messages(cls,id, **kwrg):
+    def has_chain_messages(cls, id, **kwrg):
         pass
 
     @classmethod
     @abstractmethod
-    def get_chain_messages(cls,id):
+    def get_chain_messages(cls, id):
         pass
-    
-    
+
     @classmethod
     @abstractmethod
     def set_completed_cv_data(cls, user_cv_data):
@@ -128,7 +126,7 @@ class StateStore(ABC):
     @abstractmethod
     def has_completed_cv_data(cls):
         pass
-    
+
     @classmethod
     @abstractmethod
     def get_completed_cv_data(cls):
@@ -142,10 +140,11 @@ class StateStore(ABC):
         return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
 
     @classmethod
-    def str_to_datetime(cls,date_string):
+    def str_to_datetime(cls, date_string):
         from datetime import datetime
 
         return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
+
     @classmethod
     @abstractmethod
     def set_drill_down_communiation(cls, drill_down):
@@ -155,18 +154,18 @@ class StateStore(ABC):
     @abstractmethod
     def set_position_data(cls, user_position_data):
         pass
-    
+
     @classmethod
     @abstractmethod
     def has_position_data(cls):
         pass
-    
+
     @classmethod
     @abstractmethod
     def get_position_data(cls):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
     def set_position_cv_offers(cls, list_of_cvs_options):
         pass
@@ -175,47 +174,47 @@ class StateStore(ABC):
     @abstractmethod
     def has_position_cv_offers(cls):
         pass
-    
-    @classmethod    
+
+    @classmethod
     @abstractmethod
     def has_identified_gap_from_hiring_team(cls):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
-    def has_optimized_cv(cls,en_id):
+    def has_optimized_cv(cls, en_id):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
-    def set_identified_gap_from_hiring_team(cls,gaps_to_adresss):
+    def set_identified_gap_from_hiring_team(cls, gaps_to_adresss):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
     def get_identified_gap_from_hiring_team(cls):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
-    def set_base_optimized(cls,user_cv,gen_id):
+    def set_base_optimized(cls, user_cv, gen_id):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
-    def get_base_optimized(cls,gen_id):
+    def get_base_optimized(cls, gen_id):
         pass
 
-    @classmethod    
+    @classmethod
     @abstractmethod
-    def set_issues_to_solve_in_chat(cls,issues_to_solve,gen_id):
+    def set_issues_to_solve_in_chat(cls, issues_to_solve, gen_id):
         pass
-    
-    @classmethod    
+
+    @classmethod
     @abstractmethod
-    def get_issues_to_solve_in_chat(cls,gen_id):
+    def get_issues_to_solve_in_chat(cls, gen_id):
         pass
-    
+
     @classmethod
     @abstractmethod
     def get_all_position_cv_offers(cls):
@@ -235,8 +234,8 @@ class StateStore(ABC):
     @abstractmethod
     def get_user_latex_file(cls):
         pass
-    
-    @classmethod       
+
+    @classmethod
     @abstractmethod
     def move_pdf_to_created(cls):
         pass
@@ -247,8 +246,7 @@ class StateStore(ABC):
         pass
 
 
-
-class  StermlitStateStore(StateStore):
+class StermlitStateStore(StateStore):
 
     @classmethod
     def get_cv_blueprint(cls):
@@ -263,11 +261,11 @@ class  StermlitStateStore(StateStore):
     @classmethod
     def get_expected_latex_format(cls):
         with open("blueprints/cv.tex", "r") as file:
-            return file.read() 
+            return file.read()
 
     @classmethod
-    def presist_compliation(cls,messages,generations,model,cache_key=None):
-        if  not cache_key:
+    def presist_compliation(cls, messages, generations, model, cache_key=None):
+        if not cache_key:
             cache_key = cls.get_cache_key()
 
         exsiting = {}
@@ -276,16 +274,15 @@ class  StermlitStateStore(StateStore):
                 exsiting = json.load(file)
 
         exsiting[cache_key] = {
-            "messages":messages,
-            "generations":generations,
-            "model":model
+            "messages": messages,
+            "generations": generations,
+            "model": model,
         }
-    
+
         # dump
         with open("user_data/compliations.json", "w") as file:
-            json.dump(exsiting,file)
+            json.dump(exsiting, file)
 
-    
     @classmethod
     def get_presist_compliation(cls):
         with open("user_data/compliations.json", "r") as file:
@@ -293,20 +290,20 @@ class  StermlitStateStore(StateStore):
 
     #
     @classmethod
-    def set_user_extract_cv_data(cls,user_cv_data):
+    def set_user_extract_cv_data(cls, user_cv_data):
         st.session_state["user_extracted_cv"] = user_cv_data
 
-    @classmethod  
+    @classmethod
     def has_user_extract_cv_data(cls):
         return "user_extracted_cv" in st.session_state
 
-        
-    @classmethod 
+    @classmethod
     def get_user_extract_cv_data(cls):
         if cls.has_user_extract_cv_data():
             return st.session_state["user_extracted_cv"]
+
     #
-        
+
     @classmethod
     def set_issues_to_overcome(cls, issues_found):
         st.session_state["issues_to_overcome"] = issues_found
@@ -320,26 +317,30 @@ class  StermlitStateStore(StateStore):
         if cls.has_issues_to_overcome():
             return st.session_state["issues_to_overcome"]
 
-
     @classmethod
-    def set_chain_messages(cls, id, chat_about_extracted_cv,closed=False,**kwarg):
+    def set_chain_messages(cls, id, chat_about_extracted_cv, closed=False, **kwarg):
         st.session_state[f"chain_message_on_{id}"] = {
-            "data":chat_about_extracted_cv,
-            "closed":closed
+            "data": chat_about_extracted_cv,
+            "closed": closed,
         }
-    @classmethod
-    def has_chain_messages(cls,id,closed=False,**kwrg):
-        return f'chain_message_on_{id}' in st.session_state and  st.session_state[f'chain_message_on_{id}']['closed'] == closed
 
     @classmethod
-    def get_chain_messages(cls,id):
-        if cls.has_chain_message_on_extracted_cv(id):
-            return st.session_state[f"chain_message_on_{id}"]['data']
-    # 
+    def has_chain_messages(cls, id, closed=False, **kwrg):
+        return (
+            f"chain_message_on_{id}" in st.session_state
+            and st.session_state[f"chain_message_on_{id}"]["closed"] == closed
+        )
+
     @classmethod
-    def set_completed_cv_data(cls,user_cv_data):
+    def get_chain_messages(cls, id):
+        if cls.has_chain_message_on_extracted_cv(id):
+            return st.session_state[f"chain_message_on_{id}"]["data"]
+
+    #
+    @classmethod
+    def set_completed_cv_data(cls, user_cv_data):
         if "user_completed_cv" in st.session_state:
-            complete = st.session_state["user_completed_cv"] 
+            complete = st.session_state["user_completed_cv"]
         else:
             complete = {}
         complete[cls.get_datetime_str()] = user_cv_data
@@ -348,46 +349,47 @@ class  StermlitStateStore(StateStore):
     @classmethod
     def has_completed_cv_data(cls):
         return "user_completed_cv" in st.session_state
-    
+
     @classmethod
     def get_completed_cv_data(cls):
-        complete = st.session_state["user_completed_cv"] 
-        return complete[max(complete.keys(),key=lambda x:cls.str_to_datetime(x))]
+        complete = st.session_state["user_completed_cv"]
+        return complete[max(complete.keys(), key=lambda x: cls.str_to_datetime(x))]
 
     #
     @classmethod
-    def set_drill_down_communiation(cls,drill_down):
+    def set_drill_down_communiation(cls, drill_down):
         st.session_state["user_drill_down"] = drill_down
-        
-    # 
+
+    #
     @classmethod
-    def set_position_data(cls,user_position_data):
+    def set_position_data(cls, user_position_data):
         st.session_state["user_position"] = user_position_data
 
-        
     @classmethod
     def has_position_data(cls):
         return "user_position" in st.session_state
-    
+
     @classmethod
     def get_position_data(cls):
-        return st.session_state['user_position']
+        return st.session_state["user_position"]
+
     #
-    @classmethod    
-    def set_position_cv_offers(cls,list_of_cvs_options):
-        st.session_state['user_position_cv_offers'] = list_of_cvs_options
+    @classmethod
+    def set_position_cv_offers(cls, list_of_cvs_options):
+        st.session_state["user_position_cv_offers"] = list_of_cvs_options
 
     @classmethod
     def has_position_cv_offers(cls):
         return "user_position_cv_offers" in st.session_state
-    
+
     @classmethod
     def get_all_position_cv_offers(cls):
-        return st.session_state['user_position_cv_offers']
+        return st.session_state["user_position_cv_offers"]
+
     #
 
     @classmethod
-    def set_user_latex_file(cls,user_latex):
+    def set_user_latex_file(cls, user_latex):
         user_latex = user_latex.split("```latex")[1].split("```")[0]
         with open("user_data/user_tex.tex", "w") as file:
             file.write(user_latex)
@@ -398,7 +400,9 @@ class  StermlitStateStore(StateStore):
         tex_temp_folder = ".tex"
         filename, _ = os.path.splitext(tex_filename)
         # the corresponding PDF filename
-        pdf_filename = os.path.join(tex_temp_folder,os.path.split(filename)[-1]) + ".pdf"
+        pdf_filename = (
+            os.path.join(tex_temp_folder, os.path.split(filename)[-1]) + ".pdf"
+        )
 
         # compile TeX file
         # brew install basictex
@@ -407,14 +411,19 @@ class  StermlitStateStore(StateStore):
         os.mkdir(tex_temp_folder)
 
         result = subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode","-output-directory=.tex",tex_filename],
+            [
+                "pdflatex",
+                "-interaction=nonstopmode",
+                "-output-directory=.tex",
+                tex_filename,
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
         # check if PDF is successfully generated
         if not os.path.exists(pdf_filename):
-            error_message  = "process output:" + result.stdout
+            error_message = "process output:" + result.stdout
             raise RuntimeError(f"PDF output not found. Error message: {error_message}")
         return pdf_filename
 
@@ -422,8 +431,8 @@ class  StermlitStateStore(StateStore):
     def get_user_latex_file(cls):
         with open("user_data/user_tex.tex", "r") as file:
             return file.read()
-    
-    @classmethod       
+
+    @classmethod
     def move_pdf_to_created(cls):
         # Copy source file to destination file
         pdf_path = ".tex/user_tex.pdf"
@@ -434,29 +443,27 @@ class  StermlitStateStore(StateStore):
             os.makedirs(position_folder)
 
         index = len(os.listdir(position_folder))
-        
-        offer_path = os.path.join(position_folder,f"offer_{index}.pdf")
-        shutil.copy(pdf_path, os.path.join(position_folder,f"offer_{index}.pdf"))
+
+        offer_path = os.path.join(position_folder, f"offer_{index}.pdf")
+        shutil.copy(pdf_path, os.path.join(position_folder, f"offer_{index}.pdf"))
 
         return offer_path
 
-
     @classmethod
-    def wrap_up(cls,complete_path,messages):
+    def wrap_up(cls, complete_path, messages):
         complete_data = {
-            "message":messages,
-            "extracted_cv":cls.get_user_extract_cv_data(),
-            "completed_cv":cls.get_completed_cv_data(),
-            "position_data":cls.get_position_data(),
-            "offers":cls.get_all_position_cv_offers(),
-            "all_compliation":cls.get_presist_compliation()
+            "message": messages,
+            "extracted_cv": cls.get_user_extract_cv_data(),
+            "completed_cv": cls.get_completed_cv_data(),
+            "position_data": cls.get_position_data(),
+            "offers": cls.get_all_position_cv_offers(),
+            "all_compliation": cls.get_presist_compliation(),
         }
         with open(complete_path, "w") as file:
-            json.dump(complete_data,file)
+            json.dump(complete_data, file)
 
         shutil.rmtree("user_data")
         os.mkdir("user_data")
-
 
 
 class FileStateStore(StateStore):
@@ -475,11 +482,10 @@ class FileStateStore(StateStore):
     def get_expected_latex_format(cls):
         with open("blueprints/cv.tex", "r") as file:
             return file.read()
-    
-        
+
     @classmethod
-    def presist_compliation(cls,messages,generations,model,cache_key=None):
-        if  not cache_key:
+    def presist_compliation(cls, messages, generations, model, cache_key=None):
+        if not cache_key:
             cache_key = cls.get_cache_key()
 
         exsiting = {}
@@ -488,16 +494,15 @@ class FileStateStore(StateStore):
                 exsiting = json.load(file)
 
         exsiting[cache_key] = {
-            "messages":messages,
-            "generations":generations,
-            "model":model
+            "messages": messages,
+            "generations": generations,
+            "model": model,
         }
-    
+
         # dump
         with open("user_data/compliations.json", "w") as file:
-            json.dump(exsiting,file)
+            json.dump(exsiting, file)
 
-    
     @classmethod
     def get_presist_compliation(cls):
         with open("user_data/compliations.json", "r") as file:
@@ -505,21 +510,21 @@ class FileStateStore(StateStore):
 
     #
     @classmethod
-    def set_user_extract_cv_data(cls,user_cv_data):
+    def set_user_extract_cv_data(cls, user_cv_data):
         with open("user_data/user_extracted_cv.json", "w") as file:
             return json.dump(user_cv_data, file)
 
-    @classmethod  
+    @classmethod
     def has_user_extract_cv_data(cls):
         return os.path.exists("user_data/user_extracted_cv.json")
 
-    @classmethod 
+    @classmethod
     def get_user_extract_cv_data(cls):
         with open("user_data/user_extracted_cv.json", "r") as file:
             return json.load(file)
 
-    # 
-        
+    #
+
     @classmethod
     def set_issues_to_overcome(cls, issues_found):
         with open("user_data/issues_to_overcome.json", "w") as file:
@@ -535,32 +540,28 @@ class FileStateStore(StateStore):
             return json.load(file)
 
     @classmethod
-    def set_chain_messages(cls,id, chat_about_extracted_cv,closed=False,**kwarg):
+    def set_chain_messages(cls, id, chat_about_extracted_cv, closed=False, **kwarg):
         with open(f"user_data/chain_message_on_{id}.json", "w") as file:
-            json.dump({
-            "data":chat_about_extracted_cv,
-            "closed":closed
-        }, file)
+            json.dump({"data": chat_about_extracted_cv, "closed": closed}, file)
 
     @classmethod
-    def has_chain_messages(cls,id,closed=False,**kwrg):
+    def has_chain_messages(cls, id, closed=False, **kwrg):
         if not os.path.exists(f"user_data/chain_message_on_{id}.json"):
             return False
-        
+
         with open(f"user_data/chain_message_on_{id}.json", "r") as file:
-            return json.load(file)['closed'] == closed
+            return json.load(file)["closed"] == closed
 
     @classmethod
-    def get_chain_messages(cls,id):
+    def get_chain_messages(cls, id):
         if cls.has_chain_messages(id):
             with open(f"user_data/chain_message_on_{id}.json", "r") as file:
-                return json.load(file)['data']
+                return json.load(file)["data"]
         else:
             return []
-        
-    
+
     @classmethod
-    def set_completed_cv_data(cls,user_cv_data):
+    def set_completed_cv_data(cls, user_cv_data):
         if os.path.exists("user_data/user_completed_cv.json"):
             with open("user_data/user_completed_cv.json", "r") as file:
                 complete = json.load(file)
@@ -573,114 +574,111 @@ class FileStateStore(StateStore):
     @classmethod
     def has_completed_cv_data(cls):
         return os.path.exists("user_data/user_completed_cv.json")
-    
+
     @classmethod
     def get_completed_cv_data(cls):
         with open("user_data/user_completed_cv.json", "r") as file:
             complete = json.load(file)
-            return complete[max(complete.keys(),key=lambda x:cls.str_to_datetime(x))]
+            return complete[max(complete.keys(), key=lambda x: cls.str_to_datetime(x))]
 
     #
 
-
     @classmethod
-    def set_drill_down_communiation(cls,drill_down):
+    def set_drill_down_communiation(cls, drill_down):
         with open("user_data/user_drill_down.json", "w") as file:
             return json.dump(drill_down, file)
-        
-    # 
+
+    #
     @classmethod
-    def set_position_data(cls,user_position_data):
+    def set_position_data(cls, user_position_data):
         with open("user_data/user_position.json", "w") as file:
             return json.dump(user_position_data, file)
-        
+
     @classmethod
     def has_position_data(cls):
         return os.path.exists("user_data/user_position.json")
-    
+
     @classmethod
     def get_position_data(cls):
         with open("user_data/user_position.json", "r") as file:
             return json.load(file)
+
     #
-    @classmethod    
-    def set_position_cv_offers(cls,list_of_cvs_options):
+    @classmethod
+    def set_position_cv_offers(cls, list_of_cvs_options):
         with open(f"user_data/user_position_cv_offers.json", "w") as file:
-                json.dump(list_of_cvs_options,file)
+            json.dump(list_of_cvs_options, file)
 
     @classmethod
     def has_position_cv_offers(cls):
         return os.path.exists("user_data/user_position_cv_offers.json")
-    
+
     @classmethod
     def get_all_position_cv_offers(cls):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
             return json.load(file)
-    #
-    @classmethod    
-    def set_identified_gap_from_hiring_team(cls,gaps_to_adresss):
-        with open(f"user_data/identified_gap_from_hiring_team.json", "w") as file:
-                json.dump(gaps_to_adresss,file)
 
-    @classmethod    
+    #
+    @classmethod
+    def set_identified_gap_from_hiring_team(cls, gaps_to_adresss):
+        with open(f"user_data/identified_gap_from_hiring_team.json", "w") as file:
+            json.dump(gaps_to_adresss, file)
+
+    @classmethod
     def has_identified_gap_from_hiring_team(cls):
         return os.path.exists("user_data/identified_gap_from_hiring_team.json")
 
-    @classmethod    
+    @classmethod
     def get_identified_gap_from_hiring_team(cls):
         with open(f"user_data/identified_gap_from_hiring_team.json", "r") as file:
             return json.load(file)
 
     #
-        
-    @classmethod    
-    def set_base_optimized(cls,user_cv,gen_id):
+
+    @classmethod
+    def set_base_optimized(cls, user_cv, gen_id):
         if os.path.exists("user_data/base_optimized.json"):
-             with open(f"user_data/base_optimized.json", "r") as file:
-                 content = json.load(file)
+            with open(f"user_data/base_optimized.json", "r") as file:
+                content = json.load(file)
         else:
             content = {}
 
         content[gen_id] = user_cv
         with open(f"user_data/base_optimized.json", "w") as file:
-                json.dump(content,file)
+            json.dump(content, file)
 
-
-    @classmethod    
-    def has_optimized_cv(cls,gen_id):
+    @classmethod
+    def has_optimized_cv(cls, gen_id):
         if not os.path.exists("user_data/base_optimized.json"):
             return False
         with open(f"user_data/base_optimized.json", "r") as file:
             return gen_id in json.load(file)
 
-
-
-    @classmethod    
-    def get_base_optimized(cls,gen_id):
+    @classmethod
+    def get_base_optimized(cls, gen_id):
         with open(f"user_data/base_optimized.json", "r") as file:
             return json.load(file)[gen_id]
 
-
-    @classmethod    
-    def set_issues_to_solve_in_chat(cls,issues_to_solve,gen_id):
+    @classmethod
+    def set_issues_to_solve_in_chat(cls, issues_to_solve, gen_id):
         if os.path.exists("user_data/issues_to_solve_in_chat.json"):
-             with open(f"user_data/issues_to_solve_in_chat.json", "r") as file:
-                 content = json.load(file)
+            with open(f"user_data/issues_to_solve_in_chat.json", "r") as file:
+                content = json.load(file)
         else:
             content = {}
 
         content[gen_id] = issues_to_solve
         with open(f"user_data/issues_to_solve_in_chat.json", "w") as file:
-                json.dump(content,file)
-    
-    @classmethod    
-    def get_issues_to_solve_in_chat(cls,gen_id):
+            json.dump(content, file)
+
+    @classmethod
+    def get_issues_to_solve_in_chat(cls, gen_id):
         with open(f"user_data/issues_to_solve_in_chat.json", "r") as file:
             return json.load(file)[gen_id]
 
     #
     @classmethod
-    def set_user_latex_file(cls,user_latex):
+    def set_user_latex_file(cls, user_latex):
         user_latex = user_latex.split("```latex")[1].split("```")[0]
         with open("user_data/user_tex.tex", "w") as file:
             file.write(user_latex)
@@ -691,7 +689,9 @@ class FileStateStore(StateStore):
         tex_temp_folder = ".tex"
         filename, _ = os.path.splitext(tex_filename)
         # the corresponding PDF filename
-        pdf_filename = os.path.join(tex_temp_folder,os.path.split(filename)[-1]) + ".pdf"
+        pdf_filename = (
+            os.path.join(tex_temp_folder, os.path.split(filename)[-1]) + ".pdf"
+        )
 
         # compile TeX file
         # brew install basictex
@@ -700,14 +700,19 @@ class FileStateStore(StateStore):
         os.mkdir(tex_temp_folder)
 
         result = subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode","-output-directory=.tex",tex_filename],
+            [
+                "pdflatex",
+                "-interaction=nonstopmode",
+                "-output-directory=.tex",
+                tex_filename,
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
         # check if PDF is successfully generated
         if not os.path.exists(pdf_filename):
-            error_message  = "process output:" + result.stdout.decode()
+            error_message = "process output:" + result.stdout.decode()
             raise RuntimeError(f"PDF output not found. Error message: {error_message}")
         return pdf_filename
 
@@ -715,8 +720,8 @@ class FileStateStore(StateStore):
     def get_user_latex_file(cls):
         with open("user_data/user_tex.tex", "r") as file:
             return file.read()
-    
-    @classmethod       
+
+    @classmethod
     def move_pdf_to_created(cls):
         # Copy source file to destination file
         pdf_path = ".tex/user_tex.pdf"
@@ -727,27 +732,24 @@ class FileStateStore(StateStore):
             os.makedirs(position_folder)
 
         index = len(os.listdir(position_folder))
-        
-        offer_path = os.path.join(position_folder,f"offer_{index}.pdf")
-        shutil.copy(pdf_path, os.path.join(position_folder,f"offer_{index}.pdf"))
+
+        offer_path = os.path.join(position_folder, f"offer_{index}.pdf")
+        shutil.copy(pdf_path, os.path.join(position_folder, f"offer_{index}.pdf"))
 
         return offer_path
 
-
     @classmethod
-    def wrap_up(cls,complete_path,messages):
+    def wrap_up(cls, complete_path, messages):
         complete_data = {
-            "message":messages,
-            "extracted_cv":cls.get_user_extract_cv_data(),
-            "completed_cv":cls.get_completed_cv_data(),
-            "position_data":cls.get_position_data(),
-            "offers":cls.get_all_position_cv_offers(),
-            "all_compliation":cls.get_presist_compliation()
+            "message": messages,
+            "extracted_cv": cls.get_user_extract_cv_data(),
+            "completed_cv": cls.get_completed_cv_data(),
+            "position_data": cls.get_position_data(),
+            "offers": cls.get_all_position_cv_offers(),
+            "all_compliation": cls.get_presist_compliation(),
         }
         with open(complete_path, "w") as file:
-            json.dump(complete_data,file)
+            json.dump(complete_data, file)
 
         shutil.rmtree("user_data")
         os.mkdir("user_data")
-
-

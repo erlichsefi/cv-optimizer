@@ -1,12 +1,10 @@
 import json
 import re
-from .interface import TerminalInterface,UserInterface
-from .llm_store import experience_chatbot,get_compliation
+from .interface import TerminalInterface, UserInterface
+from .llm_store import experience_chatbot, get_compliation
 
 
-
-    
-def get_issues_need_to_be_adressed(user_interface:UserInterface):
+def get_issues_need_to_be_adressed(user_interface: UserInterface):
     user_cv = user_interface.get_user_extract_cv_data()
     prompt = f"""
     Your goal is to complete the information missing or corrupted in the user data.
@@ -29,11 +27,11 @@ def get_issues_need_to_be_adressed(user_interface:UserInterface):
     ```
     """
 
-    issues_to_adresss = get_compliation("",prompt,is_json_expected=True)
+    issues_to_adresss = get_compliation("", prompt, is_json_expected=True)
     user_interface.set_issues_to_overcome(issues_to_adresss)
 
 
-def summarize_chat_into_cv(user_interface:UserInterface,chat_id):
+def summarize_chat_into_cv(user_interface: UserInterface, chat_id):
     messages = user_interface.get_chain_messages(chat_id)
     expected = user_interface.get_cv_blueprint()
     user_cv = user_interface.get_user_extract_cv_data()
@@ -55,12 +53,11 @@ def summarize_chat_into_cv(user_interface:UserInterface,chat_id):
     {json.dumps(expected,indent=4)}
     ```
     """
-    completed_cv = get_compliation("",final_call,is_json_expected=True)
+    completed_cv = get_compliation("", final_call, is_json_expected=True)
     user_interface.set_completed_cv_data(completed_cv)
 
 
-
-def chat_to_validate_extracted_cv(user_interface:UserInterface,id):
+def chat_to_validate_extracted_cv(user_interface: UserInterface, id):
     issues_to_adresss = user_interface.get_issues_to_overcome()
     user_cv = user_interface.has_user_extract_cv_data()
     system_prompt = f"""
@@ -73,25 +70,26 @@ def chat_to_validate_extracted_cv(user_interface:UserInterface,id):
         {json.dumps(issues_to_adresss,indent=4)}
     """
 
-    experience_chatbot(system_prompt,user_interface,id,topic="validating what we got from your CV")
+    experience_chatbot(
+        system_prompt, user_interface, id, topic="validating what we got from your CV"
+    )
 
-    
 
-def chat_on_question(user_interface:UserInterface):
-    """ completed the user infomration by chat """
+def chat_on_question(user_interface: UserInterface):
+    """completed the user infomration by chat"""
     if not user_interface.has_issues_to_overcome():
-        get_issues_need_to_be_adressed(user_interface) 
+        get_issues_need_to_be_adressed(user_interface)
     #
     chat_id = "extracted_cv"
-    if not user_interface.has_chain_messages(chat_id,closed=True):
-        chat_to_validate_extracted_cv(user_interface,chat_id)
+    if not user_interface.has_chain_messages(chat_id, closed=True):
+        chat_to_validate_extracted_cv(user_interface, chat_id)
     #
-    if user_interface.has_chain_messages(chat_id,closed=True) and not user_interface.has_completed_cv_data():
-        summarize_chat_into_cv(user_interface,chat_id)
+    if (
+        user_interface.has_chain_messages(chat_id, closed=True)
+        and not user_interface.has_completed_cv_data()
+    ):
+        summarize_chat_into_cv(user_interface, chat_id)
     #
-
-
-
 
 
 # def run(user_interface:UserInterface):
@@ -100,9 +98,6 @@ def chat_on_question(user_interface:UserInterface):
 #     emended_user_cv = chat_on_question(user_cv,user_interface)
 
 #     user_interface.set_completed_cv_data(emended_user_cv)
-
-
-    
 
 
 if __name__ == "__main__":

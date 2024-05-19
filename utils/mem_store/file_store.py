@@ -2,6 +2,7 @@ import json
 import os
 from base_store import StateStore
 
+
 class FileStateStore(StateStore):
 
     @classmethod

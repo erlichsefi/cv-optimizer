@@ -1,7 +1,7 @@
-
 from abc import ABC, abstractmethod
-import os,shutil
+import os, shutil
 import subprocess
+
 
 def extract_1(filename):
     from pdfminer.high_level import extract_text
@@ -19,6 +19,7 @@ def extract_2(filename):
         for page in reader.pages:
             text += page.extract_text()
     return text
+
 
 def move_pdf_to_created(cls):
     # Copy source file to destination file
@@ -233,7 +234,7 @@ class StateStore(ABC):
     def get_all_position_cv_offers(cls):
         pass
 
-     @classmethod
+    @classmethod
     def set_user_latex_file(cls, user_latex):
         user_latex = user_latex.split("```latex")[1].split("```")[0]
         with open("user_data/user_tex.tex", "w") as file:

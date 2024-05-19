@@ -6,7 +6,6 @@ import streamlit as st
 from base_store import StateStore
 
 
-
 class StermlitStateStore(StateStore):
 
     @classmethod
@@ -146,4 +145,3 @@ class StermlitStateStore(StateStore):
     @classmethod
     def get_all_position_cv_offers(cls):
         return st.session_state["user_position_cv_offers"]
-

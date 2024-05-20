@@ -4,7 +4,7 @@ from utils.interface import (
     LLMTesting,
     SteamlitInterface,
 )
-from utils.filestore import StateStore, FileStateStore
+from utils.mem_store import StateStore, FileStateStore
 from utils.extract_cv_data import core_run as pdf_to_user_data
 from utils.complete_missing_data import chat_on_question as verify_user_data
 from utils.extract_position_data import run as position_snippet_to_position_data

@@ -3,7 +3,7 @@ from uuid import uuid4
 import json
 import streamlit as st
 from .llm_store import get_chat_compliation
-from .filestore import StateStore, FileStateStore, StermlitStateStore
+from .mem_store import StateStore, FileStateStore, StermlitStateStore
 
 
 class UserInterface(StateStore, ABC):
@@ -212,3 +212,10 @@ class SteamlitInterface(UserInterface, StermlitStateStore):
 
     def send_files(self, file_paths):
         self.send_user_message("\n".join(file_paths))
+
+
+    def start_bot_session(self, topic):
+        pass
+
+    def end_bot_session(self):
+        pass

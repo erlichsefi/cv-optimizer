@@ -1,6 +1,7 @@
 import json
 import os
-from base_store import StateStore
+import shutil
+from .base_store import StateStore
 
 
 class FileStateStore(StateStore):
@@ -61,7 +62,6 @@ class FileStateStore(StateStore):
             return json.load(file)
 
     #
-
     @classmethod
     def set_issues_to_overcome(cls, issues_found):
         with open("user_data/issues_to_overcome.json", "w") as file:

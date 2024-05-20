@@ -3,7 +3,7 @@ import os
 import shutil
 
 import streamlit as st
-from base_store import StateStore
+from .base_store import StateStore
 
 
 class StermlitStateStore(StateStore):
@@ -93,8 +93,9 @@ class StermlitStateStore(StateStore):
 
     @classmethod
     def get_chain_messages(cls, id):
-        if cls.has_chain_message_on_extracted_cv(id):
+        if cls.has_chain_messages(id):
             return st.session_state[f"chain_message_on_{id}"]["data"]
+        return []
 
     #
     @classmethod
@@ -145,3 +146,53 @@ class StermlitStateStore(StateStore):
     @classmethod
     def get_all_position_cv_offers(cls):
         return st.session_state["user_position_cv_offers"]
+    
+
+    @classmethod
+    def set_identified_gap_from_hiring_team(cls, gaps_to_adresss):
+        st.session_state['identified_gap_from_hiring_team'] = gaps_to_adresss
+
+
+    @classmethod
+    def has_identified_gap_from_hiring_team(cls):
+        return "identified_gap_from_hiring_team" in st.session_state
+
+    @classmethod
+    def get_identified_gap_from_hiring_team(cls):
+        return st.session_state['identified_gap_from_hiring_team']
+    #
+
+    @classmethod
+    def set_base_optimized(cls, user_cv, gen_id):
+        if "base_optimized" in st.session_state:
+            content = st.session_state['base_optimized']
+        else:
+            content = {}
+
+        content[gen_id] = user_cv
+        st.session_state['base_optimized'] = content
+
+    @classmethod
+    def has_optimized_cv(cls, gen_id):
+        if "base_optimized" not in st.session_state:
+            return False
+        return gen_id in st.session_state['base_optimized']
+
+    @classmethod
+    def get_base_optimized(cls, gen_id):
+        return st.session_state['base_optimized'][gen_id]
+
+    @classmethod
+    def set_issues_to_solve_in_chat(cls, issues_to_solve, gen_id):
+        if "issues_to_solve_in_chat" in st.session_state:
+            content = st.session_state['base_optimized']
+        else:
+            content = {}
+
+        content[gen_id] = issues_to_solve
+        st.session_state['issues_to_solve_in_chat'] = content
+
+    @classmethod
+    def get_issues_to_solve_in_chat(cls, gen_id):
+        return st.session_state['issues_to_solve_in_chat'][gen_id]
+

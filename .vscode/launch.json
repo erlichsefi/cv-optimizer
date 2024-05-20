@@ -64,6 +64,19 @@
             "justMyCode": false
         },
         {
+            "name": "Website Flow",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/usr/local/bin/streamlit",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": false,
+            "args": [
+                "run",
+                "website.py"
+            ]
+        },
+        {
             "name": "LLM Full Flow",
             "type": "debugpy",
             "request": "launch",

@@ -12,9 +12,8 @@ def execute(user_interface: utils.UserInterface):
                 user_interface.send_user_message("Please upload and PDF file :)")
                 pdf_path = user_interface.get_pdf_file_from_user()
                 # core logic
-                user_extracted_data = utils.pdf_to_user_data(user_interface, pdf_path)
+                utils.pdf_to_user_data(user_interface, pdf_path)
                 # saving
-                user_interface.set_user_extract_cv_data(user_extracted_data)
                 break
             except Exception as e:
                 user_interface.send_user_message("Please add valid path")

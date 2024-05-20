@@ -23,16 +23,22 @@ def upload_cv():
         st.success("CV uploaded successfully!")
         #
         #
-        st.write("Couple of question:")
-        utils.verify_user_data(st.session_state.application_session)
+        # st.write("Couple of question:")
+        # utils.verify_user_data(st.session_state.application_session)
 
         st.rerun()
 
 
 st.sidebar.title("Profile")
 # Button to show the upload popup
-if st.sidebar.button("Upload CV"):
-    upload_cv()
+
+if not st.session_state.application_session.has_user_extract_cv_data():
+    if st.sidebar.button("Upload CV"):
+        upload_cv()
+else:
+    filename = st.session_state.application_session.get_user_extract_cv_file_name()
+    if st.sidebar.button(f"Remove '{filename}'"):
+        st.session_state.application_session.unset_user_extract_cv_data()
 
 
 st.sidebar.title("Positions")

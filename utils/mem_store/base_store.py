@@ -88,7 +88,17 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def set_user_extract_cv_data(cls, user_cv_data):
+    def set_user_extract_cv_data(cls, user_cv_data, pdf_path):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def unset_user_extract_cv_data(cls):
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_user_extract_cv_file_name(cls):
         pass
 
     @classmethod

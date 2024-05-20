@@ -50,8 +50,18 @@ class StermlitStateStore(StateStore):
 
     #
     @classmethod
-    def set_user_extract_cv_data(cls, user_cv_data):
+    def set_user_extract_cv_data(cls, user_cv_data,file_name):
         st.session_state["user_extracted_cv"] = user_cv_data
+        st.session_state["file_name_uploaded"] = file_name.name
+
+    @classmethod
+    def unset_user_extract_cv_data(cls):
+        st.session_state.pop("user_extracted_cv")
+        st.session_state.pop("file_name_uploaded")
+
+    @classmethod
+    def get_user_extract_cv_file_name(cls):
+        return st.session_state["file_name_uploaded"]
 
     @classmethod
     def has_user_extract_cv_data(cls):

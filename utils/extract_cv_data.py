@@ -44,7 +44,7 @@ def core_run(user_interface, pdf_path):
         num_of_gen=2,
     )
 
-    return get_compliation(
+    user_extracted_data =  get_compliation(
         system_message="",
         user_input=f"""
                 consolidated into one:
@@ -67,6 +67,7 @@ def core_run(user_interface, pdf_path):
         top_p=0,
         is_json_expected=True,
     )
+    user_interface.set_user_extract_cv_data(user_extracted_data,pdf_path)
 
 
 if __name__ == "__main__":

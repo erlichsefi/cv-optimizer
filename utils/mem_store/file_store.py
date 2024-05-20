@@ -48,9 +48,13 @@ class FileStateStore(StateStore):
 
     #
     @classmethod
-    def set_user_extract_cv_data(cls, user_cv_data):
+    def set_user_extract_cv_data(cls, user_cv_data, pdf_path):
         with open("user_data/user_extracted_cv.json", "w") as file:
-            return json.dump(user_cv_data, file)
+            return json.dump({"data":user_cv_data,"filename":pdf_path}, file)
+
+    @classmethod
+    def unset_user_extract_cv_data(cls):
+        os.remove("user_data/user_extracted_cv.json")
 
     @classmethod
     def has_user_extract_cv_data(cls):
@@ -59,7 +63,12 @@ class FileStateStore(StateStore):
     @classmethod
     def get_user_extract_cv_data(cls):
         with open("user_data/user_extracted_cv.json", "r") as file:
-            return json.load(file)
+            return json.load(file)['data']
+        
+    @classmethod
+    def get_user_extract_cv_file_name(cls):
+        with open("user_data/user_extracted_cv.json", "r") as file:
+            return json.load(file)['filename']
 
     #
     @classmethod

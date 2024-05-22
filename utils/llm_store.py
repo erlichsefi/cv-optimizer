@@ -158,7 +158,7 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
             {"role": "assistant", "content": json.dumps(chat_message, indent=4)}
         )
 
-        user_interface.messages.append({"role": "assistant", "content": chat_message['message']})
+        user_interface.send_user_message(f"{chat_message['message']}")
 
 
     # Prompt user for input

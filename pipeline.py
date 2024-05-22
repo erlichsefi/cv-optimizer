@@ -5,7 +5,6 @@ def execute(user_interface: utils.UserInterface):
 
     # if the user already have extracted cv data
     if not user_interface.has_user_extract_cv_data():
-        user_extracted_data = None
         for _ in range(3):
             try:
                 # get user input
@@ -18,7 +17,7 @@ def execute(user_interface: utils.UserInterface):
             except Exception as e:
                 user_interface.send_user_message("Please add valid path")
 
-        if user_extracted_data:
+        if user_interface.has_user_extract_cv_data():
             user_interface.send_user_message("We got it!")
         else:
             raise ValueError("Try again")

@@ -73,7 +73,8 @@ class TerminalInterface(UserInterface, FileStateStore):
 
     @contextlib.contextmanager
     def processing(self,message):
-        pass
+        self.send_user_message(message)
+        yield
 
     def get_pdf_file_from_user(self):
         message = input("CV path: ")
@@ -191,8 +192,9 @@ class SteamlitInterface(UserInterface, StermlitStateStore):
         super(SteamlitInterface, self).__init__()
 
     def send_user_message(self, message):
-        with st.chat_message("assistant"):
-            st.markdown(message)
+        if self.messages:
+            with st.chat_message("assistant"):
+                st.markdown(message)
         self.messages.append({"role": "assistant", "content": message})
 
     @contextlib.contextmanager

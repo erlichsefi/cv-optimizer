@@ -1,5 +1,6 @@
 import streamlit as st
 import utils
+import time
 
 
 # Initialize session state to store chat history and conversations
@@ -10,13 +11,22 @@ if "conversations" not in st.session_state:
     st.session_state.show_position_upload_popup = False
     st.session_state.application_session = utils.SteamlitInterface()
 
+# @st.experimental_dialog("Complete Missing infromation")
+def complete_missing_information():
+    if not st.session_state.application_session.has_completed_cv_data():
+        utils.verify_user_data(st.session_state.application_session)
+    else:
+        st.write("We got it all")
+        time.sleep(1)
+        st.rerun()
+    
 
 @st.experimental_dialog("Setup your CV")
 def upload_cv():
     #
     pdf_path = st.session_state.application_session.get_pdf_file_from_user()
     if pdf_path is not None:
-        with st.spinner("Processing the file..."):
+        with st.session_state.application_session.processing("Processing the file..."):
             utils.pdf_to_user_data(st.session_state.application_session, pdf_path)
         # Process the uploaded file if needed
         st.session_state.show_upload_popup = False  # Close the popup after uploading
@@ -39,6 +49,8 @@ else:
     filename = st.session_state.application_session.get_user_extract_cv_file_name()
     if st.sidebar.button(f"Remove '{filename}'"):
         st.session_state.application_session.unset_user_extract_cv_data()
+    complete_missing_information()
+
 
 
 st.sidebar.title("Positions")

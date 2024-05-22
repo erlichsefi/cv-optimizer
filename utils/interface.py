@@ -4,6 +4,8 @@ import json
 import streamlit as st
 from .llm_store import get_chat_compliation
 from .mem_store import StateStore, FileStateStore, StermlitStateStore
+import contextlib
+
 
 
 class UserInterface(StateStore, ABC):
@@ -18,6 +20,11 @@ class UserInterface(StateStore, ABC):
 
     @abstractmethod
     def send_user_message(self, message):
+        pass
+
+    @abstractmethod
+    @contextlib.contextmanager
+    def processing(self,message):
         pass
 
     @abstractmethod
@@ -63,6 +70,10 @@ class TerminalInterface(UserInterface, FileStateStore):
         message = input("User: ")
         self.messages.append({"role": "user", "content": message})
         return message
+
+    @contextlib.contextmanager
+    def processing(self,message):
+        pass
 
     def get_pdf_file_from_user(self):
         message = input("CV path: ")
@@ -180,20 +191,31 @@ class SteamlitInterface(UserInterface, StermlitStateStore):
         super(SteamlitInterface, self).__init__()
 
     def send_user_message(self, message):
-        for _, msg_dict in enumerate(self.messages):
-            msg = msg_dict["content"]
-            if msg_dict["role"] == "user":
-                st.markdown(f"**You:** {msg}")
-            else:
-                st.markdown(f"**Bot:** {msg}")
-
+        with st.chat_message("assistant"):
+            st.markdown(message)
         self.messages.append({"role": "assistant", "content": message})
-        st.markdown(f"**Bot:** {message}")
+
+    @contextlib.contextmanager
+    def processing(self,message):
+        with st.spinner(message):
+            yield      
 
     def get_user_input(self):
-        message = st.text_input("User:")
-        self.messages.append({"role": "user", "content": message})
-        return message
+        # print all the messages before
+        for _, msg_dict in enumerate(self.messages):
+            with st.chat_message(msg_dict["role"]):
+                st.markdown(msg_dict["content"])
+
+        # ask for input
+        if message := st.chat_input("User:"):
+
+            self.messages.append({"role": "user", "content": message})
+
+            with st.chat_message("user"):
+                st.markdown(message)
+
+            return message
+        return None
 
     def get_pdf_file_from_user(self):
         return st.file_uploader(

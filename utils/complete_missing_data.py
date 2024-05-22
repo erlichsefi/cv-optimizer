@@ -78,7 +78,9 @@ def chat_to_validate_extracted_cv(user_interface: UserInterface, id):
 def chat_on_question(user_interface: UserInterface):
     """completed the user infomration by chat"""
     if not user_interface.has_issues_to_overcome():
-        get_issues_need_to_be_adressed(user_interface)
+
+        with user_interface.processing("Looking on what we got..."):
+            get_issues_need_to_be_adressed(user_interface)
     #
     chat_id = "extracted_cv"
     if not user_interface.has_chain_messages(chat_id, closed=True):
@@ -88,7 +90,8 @@ def chat_on_question(user_interface: UserInterface):
         user_interface.has_chain_messages(chat_id, closed=True)
         and not user_interface.has_completed_cv_data()
     ):
-        summarize_chat_into_cv(user_interface, chat_id)
+        with user_interface.processing("Wraping up..."):
+            summarize_chat_into_cv(user_interface, chat_id)
     #
 
 

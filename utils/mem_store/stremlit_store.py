@@ -133,16 +133,24 @@ class StermlitStateStore(StateStore):
 
     #
     @classmethod
-    def set_position_data(cls, user_position_data):
-        st.session_state["user_position"] = user_position_data
+    def set_position_data(cls,position_name, user_position_data):
+
+        if "user_position" not in st.session_state:
+            exiting = {}
+        else:
+            exiting = st.session_state['user_position']
+
+        exiting[position_name]= user_position_data
+        st.session_state['user_position'] = exiting
+            
 
     @classmethod
-    def has_position_data(cls):
-        return "user_position" in st.session_state
+    def has_position_data(cls,position_name=None):
+        return "user_position" in st.session_state and (not position_name or position_name in st.session_state['user_position'])
 
     @classmethod
-    def get_position_data(cls):
-        return st.session_state["user_position"]
+    def get_position_data(cls,position_name):
+        return st.session_state["user_position"][position_name]
 
     #
     @classmethod

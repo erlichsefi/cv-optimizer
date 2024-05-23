@@ -176,17 +176,17 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def set_position_data(cls, user_position_data):
+    def set_position_data(cls, position_name, user_position_data):
         pass
 
     @classmethod
     @abstractmethod
-    def has_position_data(cls):
+    def has_position_data(cls,position_name=None):
         pass
 
     @classmethod
     @abstractmethod
-    def get_position_data(cls):
+    def get_position_data(cls, position_name):
         pass
 
     @classmethod

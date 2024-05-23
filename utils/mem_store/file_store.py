@@ -136,18 +136,29 @@ class FileStateStore(StateStore):
 
     #
     @classmethod
-    def set_position_data(cls, user_position_data):
-        with open("user_data/user_position.json", "w") as file:
-            return json.dump(user_position_data, file)
+    def set_position_data(cls, position_name, user_position_data):
+        if not os.path.exists("user_data/user_position.json"):
+            exiting = {}
+        else:
+            with open("user_data/user_position.json", "r") as file:
+                exiting = json.load(file)
+            exiting[position_name] = user_position_data
+        with open("user_data/user_position.json", "e") as file:
+                exiting = json.dumps(exiting,file)
 
     @classmethod
-    def has_position_data(cls):
-        return os.path.exists("user_data/user_position.json")
+    def has_position_data(cls,position_name=None):
+        if not os.path.exists("user_data/user_position.json"):
+            return False
+        elif position_name:
+            return cls.get_position_data(position_name) != None
+        else:
+            return True
 
     @classmethod
-    def get_position_data(cls):
+    def get_position_data(cls,position_name):
         with open("user_data/user_position.json", "r") as file:
-            return json.load(file)
+            return json.load(file).get(position_name,None)
 
     #
     @classmethod

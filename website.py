@@ -3,6 +3,7 @@ import utils
 import time
 
 
+
 # Initialize session state to store chat history and conversations
 if "conversations" not in st.session_state:
     st.session_state.conversations = {}
@@ -12,6 +13,7 @@ if "conversations" not in st.session_state:
     st.session_state.application_session = utils.SteamlitInterface()
 
     
+conversation_names = list(st.session_state.conversations.keys())
 
 @st.experimental_dialog("Setup your CV")
 def upload_cv():
@@ -39,13 +41,10 @@ else:
 
     if not st.session_state.application_session.has_completed_cv_data():
         utils.verify_user_data(st.session_state.application_session)
-        
     else:
-        if not st.session_state.application_session.has_position_data():
+        if not conversation_names:
             st.write("Please upload a position data before continue")
-        else:
-            if not st.session_state.application_session.has_position_cv_offers():
-                utils.overcome_gaps(st.session_state.application_session)
+                
     #     st.rerun()
     # else:
     #     # to pdfs
@@ -55,7 +54,6 @@ else:
 
 
 st.sidebar.title("Positions")
-conversation_names = list(st.session_state.conversations.keys())
 
 
 @st.experimental_dialog("New position")
@@ -78,10 +76,8 @@ def upload_new_position():
         st.session_state.current_conversation = new_conversation_name
         st.rerun()
 
-
 if st.sidebar.button("New Position"):
     upload_new_position()
-
 
 if conversation_names:
     st.session_state.current_conversation = st.sidebar.radio(
@@ -91,12 +87,12 @@ if conversation_names:
     )
 
 # Display current conversation history
-
 if st.session_state.get("current_conversation", None) is None:
     st.write("please select a poisition")
 else:
     current_conversation = st.session_state.current_conversation
     st.title(f"{current_conversation}")
+    utils.overcome_gaps(st.session_state.application_session,position_name=current_conversation)
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []

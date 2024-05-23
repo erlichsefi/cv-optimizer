@@ -14,9 +14,10 @@ def run(user_interface: UserInterface, contents: str):
         is_json_expected=True,
     )
 
-    user_interface.set_position_data(user_extracted_data)
+    position_name = f"{user_extracted_data['job_title']} @ {user_extracted_data['company']}"
+    user_interface.set_position_data(position_name,user_extracted_data)
 
-    return f"{user_extracted_data['job_title']} @ {user_extracted_data['company']}"
+    return position_name
 
 
 if __name__ == "__main__":

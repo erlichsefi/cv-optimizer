@@ -51,8 +51,8 @@ def single_prompt_call(user_interface):
     user_interface.set_position_cv_offers(offers)
 
 
-def review_by_hiring_team(user_interface: UserInterface):
-    position_data = user_interface.get_position_data()
+def review_by_hiring_team(user_interface: UserInterface, position_name:str = None):
+    position_data = user_interface.get_position_data(position_name=position_name)
     cv_data = user_interface.get_completed_cv_data()
 
     prompt = f"""
@@ -199,11 +199,11 @@ def chat_with_agent_to_fill_gaps(user_interface: UserInterface, id, gen_id):
     )
 
 
-def chat_loop(user_interface: UserInterface):
+def chat_loop(user_interface: UserInterface,position_name:str = None):
 
     # define the gaps between the position and the CV
     if not user_interface.has_identified_gap_from_hiring_team():
-        review_by_hiring_team(user_interface)
+        review_by_hiring_team(user_interface,position_name=position_name)
     #
     # optimize what you can optimize and find what not
     gen_id = "first_call"
@@ -334,14 +334,7 @@ def multi_agents(user_interface):
 
     return result
 
-
-def run(user_interface: UserInterface):
-    #user_interface.send_user_message("Let's try find ways to overcome some gaps")
-    chat_loop(user_interface)
-    user_interface.send_user_message("Done.")
-
-
 if __name__ == "__main__":
 
     terminal_interface = TerminalInterface()
-    run(terminal_interface)
+    chat_loop(terminal_interface)

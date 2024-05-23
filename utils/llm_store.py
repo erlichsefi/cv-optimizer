@@ -2,6 +2,8 @@ import os
 import json
 from openai import OpenAI
 import retry
+from memoization import cached
+
 
 # from filestore import FileStoreState
 
@@ -37,7 +39,7 @@ def get_compliation(
     # state.presist_compliation(messages,generations,model)
     return generations
 
-
+# @cached(custom_key_maker=lambda arg,**kawrg:str(arg))
 @retry.retry(exceptions=(json.decoder.JSONDecodeError), logger=None, tries=3)
 def get_chat_compliation(
     messages,

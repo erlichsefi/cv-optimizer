@@ -4,7 +4,6 @@ from .interface import TerminalInterface, UserInterface
 
 
 def run(user_interface: UserInterface, contents: str):
-    user_interface.send_user_message("We got the position data, working on it...")
     expected_json = user_interface.get_position_blueprint()
     user_extracted_data = get_compliation(
         system_message=f"""

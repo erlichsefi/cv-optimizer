@@ -336,7 +336,7 @@ def multi_agents(user_interface):
 
 
 def run(user_interface: UserInterface):
-    user_interface.send_user_message("Let's try find ways to overcome some gaps")
+    #user_interface.send_user_message("Let's try find ways to overcome some gaps")
     chat_loop(user_interface)
     user_interface.send_user_message("Done.")
 

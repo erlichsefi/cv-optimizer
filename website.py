@@ -11,14 +11,6 @@ if "conversations" not in st.session_state:
     st.session_state.show_position_upload_popup = False
     st.session_state.application_session = utils.SteamlitInterface()
 
-# @st.experimental_dialog("Complete Missing infromation")
-def complete_missing_information():
-    if not st.session_state.application_session.has_completed_cv_data():
-        utils.verify_user_data(st.session_state.application_session)
-    else:
-        st.write("We got it all")
-        time.sleep(1)
-        st.rerun()
     
 
 @st.experimental_dialog("Setup your CV")
@@ -31,16 +23,10 @@ def upload_cv():
         # Process the uploaded file if needed
         st.session_state.show_upload_popup = False  # Close the popup after uploading
         st.success("CV uploaded successfully!")
-        #
-        #
-        # st.write("Couple of question:")
-        # utils.verify_user_data(st.session_state.application_session)
-
         st.rerun()
 
 
 st.sidebar.title("Profile")
-# Button to show the upload popup
 
 if not st.session_state.application_session.has_user_extract_cv_data():
     if st.sidebar.button("Upload CV"):
@@ -49,7 +35,22 @@ else:
     filename = st.session_state.application_session.get_user_extract_cv_file_name()
     if st.sidebar.button(f"Remove '{filename}'"):
         st.session_state.application_session.unset_user_extract_cv_data()
-    complete_missing_information()
+        st.rerun()
+
+    if not st.session_state.application_session.has_completed_cv_data():
+        utils.verify_user_data(st.session_state.application_session)
+        
+    else:
+        if not st.session_state.application_session.has_position_data():
+            st.write("Please upload a position data before continue")
+        else:
+            if not st.session_state.application_session.has_position_cv_offers():
+                utils.overcome_gaps(st.session_state.application_session)
+    #     st.rerun()
+    # else:
+    #     # to pdfs
+    #     utils.to_pdfs(st.session_state.application_session)
+
 
 
 
@@ -62,7 +63,7 @@ def upload_new_position():
     #
     contents = st.session_state.application_session.get_position_snippet_data()
     if contents is not None:
-        with st.spinner("Processing Position..."):
+        with st.session_state.application_session.processing("Processing Position..."):
             new_conversation_name = utils.position_snippet_to_position_data(
                 st.session_state.application_session, contents
             )
@@ -99,21 +100,3 @@ else:
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []
-
-    utils.overcome_gaps(st.session_state.application_session)
-
-    # When the user submits input
-    if st.button("Send"):
-        pass
-        # if user_input:
-        #     # Append user message to chat history
-        #     st.session_state.conversations[current_conversation].append(user_input)
-
-        #     # Generate response
-        #     response = get_response(user_input)
-
-        #     # Append ChatGPT's response to chat history
-        #     st.session_state.conversations[current_conversation].append(response)
-
-        #     # Clear the input box
-        #     st.experimental_rerun()

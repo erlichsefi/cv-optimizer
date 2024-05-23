@@ -12,7 +12,7 @@ class UserInterface(StateStore, ABC):
 
     def __init__(self) -> None:
         super().__init__()
-        self.messages = list()
+        self.messages_history = list()
 
     @abstractmethod
     def get_pdf_file_from_user(self):
@@ -28,7 +28,7 @@ class UserInterface(StateStore, ABC):
         pass
 
     @abstractmethod
-    def get_user_input(self):
+    def get_user_input(self,messages=None):
         pass
 
     @abstractmethod
@@ -54,7 +54,7 @@ class UserInterface(StateStore, ABC):
     def wrap_up(self, uuid):
         if not uuid:
             uuid = str(uuid4())
-        self.wrap_up(f"data_set/predicted/{uuid}.json", messages=self.messages)
+        self.wrap_up(f"data_set/predicted/{uuid}.json", messages=self.messages_history)
 
 
 class TerminalInterface(UserInterface, FileStateStore):
@@ -63,12 +63,14 @@ class TerminalInterface(UserInterface, FileStateStore):
         super(TerminalInterface, self).__init__()
 
     def send_user_message(self, message):
-        self.messages.append({"role": "assistant", "content": message})
+        self.messages_history.append({"role": "assistant", "content": message})
         print(f"Bot: {message}")
 
-    def get_user_input(self):
+    def get_user_input(self,messages=None):
+        if len(messages) == 1:
+            self.send_user_message(messages[0])
         message = input("User: ")
-        self.messages.append({"role": "user", "content": message})
+        self.messages_history.append({"role": "user", "content": message})
         return message
 
     @contextlib.contextmanager
@@ -78,7 +80,7 @@ class TerminalInterface(UserInterface, FileStateStore):
 
     def get_pdf_file_from_user(self):
         message = input("CV path: ")
-        self.messages.append({"role": "user", "file": message})
+        self.messages_history.append({"role": "user", "file": message})
         return message
 
     def on_cv_file_received(self):
@@ -96,7 +98,7 @@ class TerminalInterface(UserInterface, FileStateStore):
                 break
             contents.append(line)
         full_content = "\n".join(contents)
-        self.messages.append({"role": "user", "content": full_content})
+        self.messages_history.append({"role": "user", "content": full_content})
         return full_content
 
     def send_files(self, file_paths):
@@ -134,7 +136,7 @@ class LLMTesting(TerminalInterface, FileStateStore):
         self._start_session()
 
     def _start_session(self):
-        self.messages = []
+        self.llm_testing_messages = []
 
         guideline = "- " + "\n -".join(self.how_to_act)
         with open(self.profile_file, "r") as file:
@@ -143,7 +145,7 @@ class LLMTesting(TerminalInterface, FileStateStore):
         with open(self.poistion_file, "r") as file:
             poistion_text = file.readline()
 
-        self.messages.append(
+        self.llm_testing_messages.append(
             {
                 "role": "system",
                 "content": f"""
@@ -174,12 +176,12 @@ class LLMTesting(TerminalInterface, FileStateStore):
         print(f"Bot:{message}")
         self.current_message += f"\n {message}"
 
-    def get_user_input(self):
-        self.messages.append({"role": "user", "content": self.current_message})
+    def get_user_input(self,messages=None):
+        self.llm_testing_messages.append({"role": "user", "content": self.current_message})
 
-        response = get_chat_compliation(messages=self.messages)
+        response = get_chat_compliation(messages=self.llm_testing_messages)
 
-        self.messages.append({"role": "assistant", "content": response})
+        self.llm_testing_messages.append({"role": "assistant", "content": response})
 
         self.current_message = ""
         print(f"User Agent:{response}")
@@ -192,26 +194,28 @@ class SteamlitInterface(UserInterface, StermlitStateStore):
         super(SteamlitInterface, self).__init__()
 
     def send_user_message(self, message):
-        if self.messages:
-            with st.chat_message("assistant"):
-                st.markdown(message)
-        self.messages.append({"role": "assistant", "content": message})
+        # if self.messages_history:
+        with st.chat_message("assistant"):
+            st.markdown(message)
+        #
+        self.messages_history.append({"role": "assistant", "content": message})
 
     @contextlib.contextmanager
     def processing(self,message):
         with st.spinner(message):
             yield      
 
-    def get_user_input(self):
+    def get_user_input(self,messages=None):
         # print all the messages before
-        for _, msg_dict in enumerate(self.messages):
-            with st.chat_message(msg_dict["role"]):
-                st.markdown(msg_dict["content"])
+        if messages:
+            for _, msg_dict in enumerate(messages):
+                with st.chat_message(msg_dict["role"]):
+                    st.markdown(msg_dict["content"])
 
         # ask for input
         if message := st.chat_input("User:"):
 
-            self.messages.append({"role": "user", "content": message})
+            self.messages_history.append({"role": "user", "content": message})
 
             with st.chat_message("user"):
                 st.markdown(message)
@@ -231,7 +235,7 @@ class SteamlitInterface(UserInterface, StermlitStateStore):
         contents = st.text_input(label="Position")
         if st.button("Go"):
             full_content = "\n".join(contents)
-            self.messages.append({"role": "user", "content": full_content})
+            self.messages_history.append({"role": "user", "content": full_content})
             return full_content
 
     def send_files(self, file_paths):

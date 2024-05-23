@@ -39,7 +39,6 @@ def get_compliation(
     # state.presist_compliation(messages,generations,model)
     return generations
 
-# @cached(custom_key_maker=lambda arg,**kawrg:str(arg))
 @retry.retry(exceptions=(json.decoder.JSONDecodeError), logger=None, tries=3)
 def get_chat_compliation(
     messages,
@@ -146,10 +145,13 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
         
     }}
     ```"""
+
+    stored_messages = user_interface.get_chain_messages(id)[1:]
     messages = [
         {"role": "system", "content": system_prompt},
-    ] + user_interface.get_chain_messages(id)[1:]
+    ] + stored_messages
 
+    chat_messages =  [ {"role":"assistant","content":json.loads(mesg['content'])['message']} if mesg['role'] == 'assistant' else mesg for mesg in stored_messages] 
     if len(messages) == 1:
 
         # Request gpt-3.5-turbo for chat completion
@@ -159,13 +161,13 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
         messages.append(
             {"role": "assistant", "content": json.dumps(chat_message, indent=4)}
         )
-
-        user_interface.send_user_message(f"{chat_message['message']}")
-
+        chat_messages.append(
+            {"role": "assistant", "content": chat_message['message']}
+        )
 
     # Prompt user for input
     closed = False
-    message = user_interface.get_user_input()
+    message = user_interface.get_user_input(chat_messages)
 
     if message:
 

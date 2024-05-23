@@ -163,7 +163,7 @@ class StermlitStateStore(StateStore):
         if "user_position_cv_offers" in st.session_state:
             existing = st.session_state["user_position_cv_offers"]
 
-        existing[current_conversation] = list_of_cvs_options
+        existing[current_conversation] = list_of_cvs_options if isinstance(list_of_cvs_options,list) else [list_of_cvs_options]
         st.session_state["user_position_cv_offers"] = existing
 
     @classmethod

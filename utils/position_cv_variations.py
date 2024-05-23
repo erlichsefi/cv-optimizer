@@ -122,7 +122,7 @@ def optimize_and_wonder(user_interface: UserInterface, gen_id):
     )
 
 
-def create_n_optimzied_variation(user_interface: UserInterface, n=1, position_name:str = None):
+def create_n_optimzied_variation(user_interface: UserInterface, n=2, position_name:str = None):
     cv_data = user_interface.get_completed_cv_data()
     gaps_to_adresss = user_interface.get_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()

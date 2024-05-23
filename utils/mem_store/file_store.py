@@ -174,7 +174,7 @@ class FileStateStore(StateStore):
             with open(f"user_data/user_position_cv_offers.json", "r") as file:
                 existing = json.load(file)
 
-        existing[current_conversation] = list_of_cvs_options
+        existing[current_conversation] =  list_of_cvs_options if isinstance(list_of_cvs_options,list) else [list_of_cvs_options]
         with open(f"user_data/user_position_cv_offers.json", "w") as file:
             json.dump(existing, file)
 

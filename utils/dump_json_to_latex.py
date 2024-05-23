@@ -44,11 +44,12 @@ def json_to_pdf(user_cv_data, user_interface):
         user_input=json.dumps(user_cv_data, indent=4),
         is_json_expected=False,
     )
-    user_interface.set_user_latex_file(generations)
+    
 
     pdf_filename = None
     for _ in range(3):
         try:
+            user_interface.set_user_latex_file(generations)
             pdf_filename = user_interface.compile_user_latex()
             break
         except RuntimeError as e:
@@ -84,9 +85,8 @@ def json_to_pdf(user_cv_data, user_interface):
     return None
 
 
-def run(user_interface: UserInterface):
-    user_interface.send_user_message("Processing...")
-    cv_offers = user_interface.get_all_position_cv_offers()
+def run(user_interface: UserInterface,current_conversation:str = None):
+    cv_offers = user_interface.get_all_position_cv_offers(current_conversation)
     pdfs = []
     for offer in cv_offers:
 
@@ -94,8 +94,7 @@ def run(user_interface: UserInterface):
         if pdf:
             pdfs.append(pdf)
 
-    user_interface.send_user_message("Here are the revised CVs:")
-    user_interface.send_files(pdfs)
+    user_interface.set_pdfs_files(pdfs,current_conversation)
 
     # pdf_filename = "user_tex.pdf"
     # if pdf_filename:

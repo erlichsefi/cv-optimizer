@@ -40,7 +40,7 @@ class UserInterface(StateStore, ABC):
         self.send_user_message("We see the file, We are on it!")
 
     @abstractmethod
-    def send_files(self, file_paths):
+    def send_files(self, file_paths, current_conversation):
         pass
 
     @abstractmethod
@@ -188,7 +188,7 @@ class LLMTesting(TerminalInterface, FileStateStore):
         return response
 
 
-class SteamlitInterface(UserInterface, StermlitStateStore):
+class SteamlitInterface(UserInterface, FileStateStore):
 
     def __init__(self) -> None:
         super(SteamlitInterface, self).__init__()

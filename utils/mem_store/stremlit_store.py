@@ -149,21 +149,30 @@ class StermlitStateStore(StateStore):
         return "user_position" in st.session_state and (not position_name or position_name in st.session_state['user_position'])
 
     @classmethod
-    def get_position_data(cls,position_name):
-        return st.session_state["user_position"][position_name]
+    def get_position_data(cls,position_name=None):
+        response =  st.session_state["user_position"][position_name]
+
+        if position_name:
+            return response[position_name]
+        return response
 
     #
     @classmethod
-    def set_position_cv_offers(cls, list_of_cvs_options):
-        st.session_state["user_position_cv_offers"] = list_of_cvs_options
+    def set_position_cv_offers(cls,list_of_cvs_options,current_conversation):
+        existing = {}
+        if "user_position_cv_offers" in st.session_state:
+            existing = st.session_state["user_position_cv_offers"]
+
+        existing[current_conversation] = list_of_cvs_options
+        st.session_state["user_position_cv_offers"] = existing
 
     @classmethod
-    def has_position_cv_offers(cls):
-        return "user_position_cv_offers" in st.session_state
+    def has_position_cv_offers(cls, current_conversation):
+        return "user_position_cv_offers" in st.session_state and current_conversation in st.session_state['user_position_cv_offers']
 
     @classmethod
-    def get_all_position_cv_offers(cls):
-        return st.session_state["user_position_cv_offers"]
+    def get_all_position_cv_offers(cls,current_conversation):
+        return st.session_state["user_position_cv_offers"][current_conversation]
     
 
     @classmethod
@@ -214,3 +223,16 @@ class StermlitStateStore(StateStore):
     def get_issues_to_solve_in_chat(cls, gen_id):
         return st.session_state['issues_to_solve_in_chat'][gen_id]
 
+    def set_pdfs_files(cls, pdf, current_conversation):
+        if "pdf_paths" in st.session_state:
+            content = st.session_state['pdf_paths']
+        else:
+            content = {}
+        content[current_conversation] = pdf
+        st.session_state['pdf_paths'] = content
+
+    def has_pdfs_files(cls,current_conversation):
+        return "pdf_paths" in st.session_state and  current_conversation in st.session_state['pdf_paths']
+
+    def get_pdfs_files(cls,current_conversation):
+        return st.session_state['pdf_paths'][current_conversation]

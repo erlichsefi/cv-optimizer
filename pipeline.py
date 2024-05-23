@@ -50,3 +50,9 @@ def execute(user_interface: utils.UserInterface):
 
     # to pdfs
     utils.to_pdfs(user_interface)
+    
+    #
+    user_interface.send_user_message("Processing...")
+    pdfs = user_interface.get_pdfs_files()
+    user_interface.send_user_message("Here are the revised CVs:")
+    user_interface.send_files(pdfs)

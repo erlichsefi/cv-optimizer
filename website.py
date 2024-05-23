@@ -6,11 +6,16 @@ import time
 
 # Initialize session state to store chat history and conversations
 if "conversations" not in st.session_state:
+    st.session_state.application_session = utils.SteamlitInterface()
+
+    mem_positions = st.session_state.application_session.get_position_data()
     st.session_state.conversations = {}
-    # st.session_state.current_conversation = 'Conversation 1'
+    if mem_positions:
+        st.session_state.conversations = dict([ (k,[])for k in mem_positions.keys()])
+        st.session_state.current_conversation = list(mem_positions.keys())[0]
     st.session_state.show_upload_popup = False  # To manage the popup display
     st.session_state.show_position_upload_popup = False
-    st.session_state.application_session = utils.SteamlitInterface()
+    
 
     
 conversation_names = list(st.session_state.conversations.keys())
@@ -92,7 +97,13 @@ if st.session_state.get("current_conversation", None) is None:
 else:
     current_conversation = st.session_state.current_conversation
     st.title(f"{current_conversation}")
-    utils.overcome_gaps(st.session_state.application_session,position_name=current_conversation)
+
+    if not st.session_state.application_session.has_position_cv_offers(current_conversation):
+        utils.overcome_gaps(st.session_state.application_session,position_name=current_conversation)
+    else:
+        with st.session_state.application_session.processing("Exporting..."):
+            utils.to_pdfs(st.session_state.application_session,current_conversation=current_conversation)
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []
+        #

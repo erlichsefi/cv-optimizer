@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import streamlit as st
 import os, shutil
 import subprocess
 
@@ -53,6 +54,12 @@ class StateStore(ABC):
             with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
                 f.write(filename.getbuffer())
                 return extract_1(f.name)
+    
+    @classmethod
+    def get_upload_file_name(cls,pdf_path):
+        if isinstance(pdf_path,st.runtime.uploaded_file_manager.UploadedFile):
+            return pdf_path.name
+        return pdf_path
 
     @classmethod
     @abstractmethod
@@ -186,17 +193,17 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def get_position_data(cls, position_name):
+    def get_position_data(cls, position_name=None):
         pass
 
     @classmethod
     @abstractmethod
-    def set_position_cv_offers(cls, list_of_cvs_options):
+    def set_position_cv_offers(cls, list_of_cvs_options, current_conversation):
         pass
 
     @classmethod
     @abstractmethod
-    def has_position_cv_offers(cls):
+    def has_position_cv_offers(cls, current_conversation):
         pass
 
     @classmethod
@@ -241,12 +248,26 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def get_all_position_cv_offers(cls):
+    def get_all_position_cv_offers(cls,current_conversation):
+        pass
+    #
+    @classmethod
+    @abstractmethod
+    def set_pdfs_files(cls, pdf, current_conversation):
         pass
 
     @classmethod
+    @abstractmethod
+    def has_pdfs_files(cls,current_conversation):
+        pass
+    @classmethod
+    @abstractmethod
+    def get_pdfs_files(cls,current_conversation):
+        pass
+    
+    @classmethod
     def set_user_latex_file(cls, user_latex):
-        user_latex = user_latex.split("```latex")[1].split("```")[0]
+        user_latex = user_latex.replace("```latex","").replace("```","")
         with open("user_data/user_tex.tex", "w") as file:
             file.write(user_latex)
 
@@ -279,7 +300,7 @@ class StateStore(ABC):
 
         # check if PDF is successfully generated
         if not os.path.exists(pdf_filename):
-            error_message = "process output:" + result.stdout
+            error_message = "process output:" + result.stdout.decode()
             raise RuntimeError(f"PDF output not found. Error message: {error_message}")
         return pdf_filename
 

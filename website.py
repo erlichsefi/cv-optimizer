@@ -113,6 +113,12 @@ else:
         st.markdown("### CV to apply with:")
         pdf_viewer(cv_offers[0])
 
+        with open(cv_offers[0], "rb") as pdf_file:
+            PDFbyte = pdf_file.read()
+
+        st.download_button("Pay and Download",PDFbyte,file_name="cv.pdf",
+                    mime='application/octet-stream')
+
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []
         #

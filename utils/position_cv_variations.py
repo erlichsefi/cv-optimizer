@@ -224,8 +224,8 @@ def chat_loop(user_interface: UserInterface,position_name:str = None):
         with user_interface.processing("Applying what i've learned"):
             enrich_from_chat(user_interface, chat_id=chat_id, gen_id=gen_id)
     
-    with user_interface.processing("Creating CV options"):
-        create_n_optimzied_variation(user_interface, n=1, position_name=position_name)
+        with user_interface.processing("Creating CV options"):
+            create_n_optimzied_variation(user_interface, n=1, position_name=position_name)
 
 
 def multi_agents(user_interface):

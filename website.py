@@ -7,12 +7,14 @@ import time
 # Initialize session state to store chat history and conversations
 if "conversations" not in st.session_state:
     st.session_state.application_session = utils.SteamlitInterface()
-
-    mem_positions = st.session_state.application_session.get_position_data()
     st.session_state.conversations = {}
-    if mem_positions:
-        st.session_state.conversations = dict([ (k,[])for k in mem_positions.keys()])
-        st.session_state.current_conversation = list(mem_positions.keys())[0]
+
+    if st.session_state.application_session.has_position_data():
+        mem_positions = st.session_state.application_session.get_position_data()
+        if mem_positions:
+            st.session_state.conversations = dict([ (k,[])for k in mem_positions.keys()])
+            st.session_state.current_conversation = list(mem_positions.keys())[0]
+
     st.session_state.show_upload_popup = False  # To manage the popup display
     st.session_state.show_position_upload_popup = False
     
@@ -70,10 +72,6 @@ def upload_new_position():
             new_conversation_name = utils.position_snippet_to_position_data(
                 st.session_state.application_session, contents
             )
-        # Process the uploaded file if needed
-        st.session_state.show_position_upload_popup = (
-            False  # Close the popup after uploading
-        )
         st.success("Position uploaded successfully!")
 
         # set new poisition

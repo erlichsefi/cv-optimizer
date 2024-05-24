@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import streamlit as st
 import os, shutil
 import subprocess
+import uuid
 
 
 def extract_1(filename):
@@ -319,7 +320,7 @@ class StateStore(ABC):
         if not os.path.exists(position_folder):
             os.makedirs(position_folder)
 
-        index = len(os.listdir(position_folder))
+        index = str(uuid.uuid4())
 
         offer_path = os.path.join(position_folder, f"offer_{index}.pdf")
         shutil.copy(pdf_path, os.path.join(position_folder, f"offer_{index}.pdf"))

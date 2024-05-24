@@ -99,9 +99,9 @@ else:
     if st.session_state.application_session.has_position_cv_offers(current_conversation) and not st.session_state.application_session.has_pdfs_files(current_conversation):
         with st.session_state.application_session.processing("Exporting..."):
             utils.to_pdfs(st.session_state.application_session,current_conversation=current_conversation)
+            st.rerun()
     else:
         from streamlit_pdf_viewer import pdf_viewer
-
         pdf_viewer(st.session_state.application_session.get_pdfs_files(current_conversation)[0])
 
     if current_conversation not in st.session_state.conversations:

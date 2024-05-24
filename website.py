@@ -100,7 +100,9 @@ else:
         with st.session_state.application_session.processing("Exporting..."):
             utils.to_pdfs(st.session_state.application_session,current_conversation=current_conversation)
     else:
-        print()
+        from streamlit_pdf_viewer import pdf_viewer
+
+        pdf_viewer(st.session_state.application_session.get_pdfs_files(current_conversation)[0])
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []

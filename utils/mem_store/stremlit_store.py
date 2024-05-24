@@ -172,9 +172,12 @@ class StermlitStateStore(StateStore):
 
     @classmethod
     def get_all_position_cv_offers(cls,current_conversation):
-        return st.session_state["user_position_cv_offers"][current_conversation]
+        return list(map(lambda x:x['cv'],st.session_state["user_position_cv_offers"][current_conversation]))
     
-
+    @classmethod
+    def get_all_position_cv_cover_letters(cls,current_conversation):
+        return list(map(lambda x:x['message'],st.session_state["user_position_cv_offers"][current_conversation]))
+        
     @classmethod
     def set_identified_gap_from_hiring_team(cls, gaps_to_adresss):
         st.session_state['identified_gap_from_hiring_team'] = gaps_to_adresss

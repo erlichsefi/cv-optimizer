@@ -1,8 +1,9 @@
 import streamlit as st
 import utils
-import time
+from streamlit_pdf_viewer import pdf_viewer
 
 
+st.sidebar.image("title.png")
 
 # Initialize session state to store chat history and conversations
 if "conversations" not in st.session_state:
@@ -100,9 +101,17 @@ else:
         with st.session_state.application_session.processing("Exporting..."):
             utils.to_pdfs(st.session_state.application_session,current_conversation=current_conversation)
             st.rerun()
-    else:
-        from streamlit_pdf_viewer import pdf_viewer
-        pdf_viewer(st.session_state.application_session.get_pdfs_files(current_conversation)[0])
+            
+    if st.session_state.application_session.has_pdfs_files(current_conversation):
+        cv_offers = st.session_state.application_session.get_pdfs_files(current_conversation)
+        overletters = st.session_state.application_session.get_all_position_cv_cover_letters(current_conversation)
+
+        
+
+        st.markdown("### Message to hiring team:")
+        st.write(overletters[0])
+        st.markdown("### CV to apply with:")
+        pdf_viewer(cv_offers[0])
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []

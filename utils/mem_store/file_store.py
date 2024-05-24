@@ -188,7 +188,11 @@ class FileStateStore(StateStore):
     @classmethod
     def get_all_position_cv_offers(cls,current_conversation):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
-            return json.load(file)[current_conversation]
+            return list(map(lambda x:x['cv'],json.load(file)[current_conversation]))
+
+    def get_all_position_cv_cover_letters(cls,current_conversation):
+        with open(f"user_data/user_position_cv_offers.json", "r") as file:
+            return list(map(lambda x:x['message'],json.load(file)[current_conversation]))
 
     #
     @classmethod

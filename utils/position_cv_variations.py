@@ -141,10 +141,15 @@ def create_n_optimzied_variation(user_interface: UserInterface, n=2, position_na
 
     reponse foramt:
     ```json
-    {json.dumps(cv_blueprint,indent=4)}
+    {{
+    "cv":{json.dumps(cv_blueprint,indent=4)},
+    "message":"<a message to the hiring team>"
+    }}
     ```
     """
     variations = get_compliation("", prompt, is_json_expected=True, num_of_gen=n)
+    variations if isinstance(variations,list) else [variations]
+
     user_interface.set_position_cv_offers(variations,position_name)
 
 

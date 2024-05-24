@@ -251,6 +251,11 @@ class StateStore(ABC):
     @abstractmethod
     def get_all_position_cv_offers(cls,current_conversation):
         pass
+
+    @classmethod
+    @abstractmethod
+    def get_all_position_cv_cover_letters(cls,current_conversation):
+        pass
     #
     @classmethod
     @abstractmethod

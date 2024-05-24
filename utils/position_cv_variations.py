@@ -151,7 +151,7 @@ def create_n_optimzied_variation(user_interface: UserInterface, n=2, position_na
 def enrich_from_chat(user_interface: UserInterface, chat_id, gen_id):
     cv_blueprint = user_interface.get_cv_blueprint()
     current_cv = user_interface.get_base_optimized(gen_id)
-    messages = user_interface.get_chain_messages(chat_id, closed=True)
+    messages = user_interface.get_chain_messages(chat_id)
 
     final_call = f"""
         You've interviewd a user about his cv in means to complete the information missing or corrupted in the user data.
@@ -217,7 +217,7 @@ def chat_loop(user_interface: UserInterface,position_name:str = None):
     if not user_interface.has_chain_messages(chat_id, closed=True):
         chat_with_agent_to_fill_gaps(user_interface, chat_id, gen_id)
 
-    if not user_interface.has_completed_cv_data() and user_interface.has_chain_messages(
+    if not user_interface.has_position_cv_offers(position_name) and user_interface.has_chain_messages(
         chat_id, closed=True
     ):
         # update the global CV object

@@ -177,16 +177,17 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
         if message.lower() == "quit":
             closed = True
 
-        chat_message = get_chat_compliation(messages=messages,model=model,is_json_expected=True)
-    
-        # Add each new message to the list
-        user_interface.send_user_message(f"{chat_message['message']}")
-        messages.append(
-            {"role": "assistant", "content": json.dumps(chat_message, indent=4)}
-        )
+        if not closed:
+            chat_message = get_chat_compliation(messages=messages,model=model,is_json_expected=True)
         
-        if str(chat_message["is_all_issue_addressed"]).lower() == "true":
-            closed = True
+            # Add each new message to the list
+            user_interface.send_user_message(f"{chat_message['message']}")
+            messages.append(
+                {"role": "assistant", "content": json.dumps(chat_message, indent=4)}
+            )
+            
+            if str(chat_message["is_all_issue_addressed"]).lower() == "true":
+                closed = True
         
     # user_interface.end_bot_session()
     user_interface.set_chain_messages(id, messages, closed=closed)

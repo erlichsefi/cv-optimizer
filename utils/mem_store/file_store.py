@@ -143,7 +143,7 @@ class FileStateStore(StateStore):
         else:
             with open("user_data/user_position.json", "r") as file:
                 exiting = json.load(file)
-            exiting[position_name] = user_position_data
+        exiting[position_name] = user_position_data
         with open("user_data/user_position.json", "w") as file:
                 json.dump(exiting,file)
 

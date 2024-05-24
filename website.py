@@ -52,11 +52,6 @@ else:
         if not conversation_names:
             st.write("Please upload a position data before continue")
                 
-    #     st.rerun()
-    # else:
-    #     # to pdfs
-    #     utils.to_pdfs(st.session_state.application_session)
-
 
 
 
@@ -72,6 +67,8 @@ def upload_new_position():
             new_conversation_name = utils.position_snippet_to_position_data(
                 st.session_state.application_session, contents
             )
+
+        st.session_state.show_position_upload_popup = False
         st.success("Position uploaded successfully!")
 
         # set new poisition
@@ -98,9 +95,12 @@ else:
 
     if not st.session_state.application_session.has_position_cv_offers(current_conversation):
         utils.overcome_gaps(st.session_state.application_session,position_name=current_conversation)
-    else:
+    
+    if st.session_state.application_session.has_position_cv_offers(current_conversation) and not st.session_state.application_session.has_pdfs_files(current_conversation):
         with st.session_state.application_session.processing("Exporting..."):
             utils.to_pdfs(st.session_state.application_session,current_conversation=current_conversation)
+    else:
+        print()
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []

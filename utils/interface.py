@@ -3,7 +3,7 @@ from uuid import uuid4
 import json
 import streamlit as st
 from .llm_store import get_chat_compliation
-from .mem_store import StateStore, FileStateStore, StermlitStateStore
+from .mem_store import StateStore, FileStateStore, StermlitStateStore, FirebaseStateStore
 import contextlib
 
 
@@ -188,10 +188,11 @@ class LLMTesting(TerminalInterface, FileStateStore):
         return response
 
 
-class SteamlitInterface(UserInterface, StermlitStateStore):
+class SteamlitInterface(UserInterface, FirebaseStateStore):
 
-    def __init__(self) -> None:
-        super(SteamlitInterface, self).__init__()
+    def __init__(self,user_id=str(uuid4())) -> None:
+        #UserInterface.__init__(self)
+        FirebaseStateStore.__init__(self,user_id)
 
     def send_user_message(self, message):
         with st.chat_message("assistant"):

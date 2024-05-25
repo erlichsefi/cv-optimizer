@@ -6,15 +6,20 @@ from .base_store import StateStore
 
 
 class FirebaseStateStore(StateStore):
-    
+
     def __init__(self, user_id):
-        cred = credentials.Certificate("path/to/your/firebase/credentials.json")
-        firebase_admin.initialize_app(cred, {
-            'storageBucket': 'your-storage-bucket.appspot.com'
-        })
+        # Check if the default app is already initialized
+        if not firebase_admin._apps:
+            cred = credentials.Certificate("cv-optimization-firebase-adminsdk.json")
+            firebase_admin.initialize_app(cred, {
+                'storageBucket': 'cv-optimization.appspot.com',
+            })
+        
+        # Initialize Firestore and Storage with the default app
         self.db = firestore.client()
         self.bucket = storage.bucket()
         self.user_id = user_id
+        self.messages_history = list()
 
     def _get_document(self, collection_name):
         doc_ref = self.db.collection(collection_name).document(self.user_id)
@@ -23,26 +28,52 @@ class FirebaseStateStore(StateStore):
 
     @classmethod
     def get_cv_blueprint(cls):
-        doc_ref = cls.db.collection("blueprints").document("cv")
-        doc = doc_ref.get()
-        if doc.exists:
-            return doc.to_dict()
-        else:
-            raise FileNotFoundError("CV Blueprint not found in Firestore")
+        with open("blueprints/cv.json", "r") as file:
+            return json.load(file)
 
     @classmethod
     def get_position_blueprint(cls):
-        doc_ref = cls.db.collection("blueprints").document("position")
+        with open("blueprints/position.json", "r") as file:
+            return json.load(file)
+
+    @classmethod
+    def get_expected_latex_format(cls):
+        with open("blueprints/cv.tex", "r") as file:
+            return file.read()
+
+    @classmethod
+    def get_presist_compliation(cls):   
+        doc_ref = cls.db.collection("user_data").document("compliations")
         doc = doc_ref.get()
         if doc.exists:
             return doc.to_dict()
         else:
             raise FileNotFoundError("Position Blueprint not found in Firestore")
-
+        
     @classmethod
-    def get_expected_latex_format(cls):
-        blob = cls.bucket.blob("blueprints/cv.tex")
-        return blob.download_as_text()
+    def set_drill_down_communiation(cls):   
+        doc_ref = cls.db.collection("user_data").document("user_drill_down")
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict()
+        else:
+            raise FileNotFoundError("Position Blueprint not found in Firestore")
+        
+    @classmethod
+    def presist_compliation(cls, messages, generations, model, cache_key=None):
+        if not cache_key:
+            cache_key = cls.get_cache_key()
+        
+        data = {
+            "messages": messages,
+            "generations": generations,
+            "model": model,
+        }
+        doc_ref, _ = cls._get_document("user_data")
+        existing_data = doc_ref.get().to_dict() if doc_ref.get().exists else {}
+        existing_data[cache_key] = data
+        doc_ref.set(existing_data, merge=True)
+
 
     def persist_compilation(self, messages, generations, model, cache_key=None):
         if not cache_key:

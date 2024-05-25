@@ -51,7 +51,9 @@ else:
         utils.verify_user_data(st.session_state.application_session)
     else:
         if not conversation_names:
-            st.write("Please upload a position data before continue")
+            st.markdown("# Next Step")
+            st.markdown("Now, we know you!")
+            st.markdown("Add a position data to continue")
                 
 
 
@@ -88,9 +90,7 @@ if conversation_names:
     )
 
 # Display current conversation history
-if st.session_state.get("current_conversation", None) is None:
-    st.write("please select a poisition")
-else:
+if not st.session_state.get("current_conversation", None) is None:
     current_conversation = st.session_state.current_conversation
     st.title(f"{current_conversation}")
 

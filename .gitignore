@@ -16,4 +16,4 @@ user_csv.json
 .venv-source-github
 user_data/
 .DS_Store
-.cv-optimization-firebase-adminsdk.json
+cv-optimization-firebase-adminsdk.json

@@ -7,3 +7,4 @@ st-gsheets-connection
 google-generativeai==0.3.1
 pdfminer.six
 streamlit-pdf-viewer==0.0.12
+firebase_admin==0.14.0

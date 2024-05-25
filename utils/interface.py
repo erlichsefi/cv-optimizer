@@ -188,13 +188,12 @@ class LLMTesting(TerminalInterface, FileStateStore):
         return response
 
 
-class SteamlitInterface(UserInterface, FileStateStore):
+class SteamlitInterface(UserInterface, StermlitStateStore):
 
     def __init__(self) -> None:
         super(SteamlitInterface, self).__init__()
 
     def send_user_message(self, message):
-        # if self.messages_history:
         with st.chat_message("assistant"):
             st.markdown(message)
         #

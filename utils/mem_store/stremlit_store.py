@@ -52,7 +52,7 @@ class StermlitStateStore(StateStore):
     @classmethod
     def set_user_extract_cv_data(cls, user_cv_data,file_name):
         st.session_state["user_extracted_cv"] = user_cv_data
-        st.session_state["file_name_uploaded"] = file_name.name
+        st.session_state["file_name_uploaded"] = cls.get_upload_file_name(file_name)
 
     @classmethod
     def unset_user_extract_cv_data(cls):
@@ -103,7 +103,7 @@ class StermlitStateStore(StateStore):
 
     @classmethod
     def get_chain_messages(cls, id):
-        if cls.has_chain_messages(id):
+        if cls.has_chain_messages(id,closed=True):
             return st.session_state[f"chain_message_on_{id}"]["data"]
         return []
 
@@ -150,7 +150,7 @@ class StermlitStateStore(StateStore):
 
     @classmethod
     def get_position_data(cls,position_name=None):
-        response =  st.session_state["user_position"][position_name]
+        response =  st.session_state["user_position"]
 
         if position_name:
             return response[position_name]
@@ -235,8 +235,12 @@ class StermlitStateStore(StateStore):
         content[current_conversation] = pdf
         st.session_state['pdf_paths'] = content
 
+
+    @classmethod
     def has_pdfs_files(cls,current_conversation):
         return "pdf_paths" in st.session_state and  current_conversation in st.session_state['pdf_paths']
 
+
+    @classmethod
     def get_pdfs_files(cls,current_conversation):
         return st.session_state['pdf_paths'][current_conversation]

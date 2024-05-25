@@ -101,7 +101,7 @@ class FileStateStore(StateStore):
 
     @classmethod
     def get_chain_messages(cls, id):
-        if cls.has_chain_messages(id):
+        if cls.has_chain_messages(id,closed=True):
             with open(f"user_data/chain_message_on_{id}.json", "r") as file:
                 return json.load(file)["data"]
         else:
@@ -190,6 +190,7 @@ class FileStateStore(StateStore):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
             return list(map(lambda x:x['cv'],json.load(file)[current_conversation]))
 
+    @classmethod
     def get_all_position_cv_cover_letters(cls,current_conversation):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
             return list(map(lambda x:x['message'],json.load(file)[current_conversation]))
@@ -253,7 +254,7 @@ class FileStateStore(StateStore):
             return json.load(file)[gen_id]
 
     #
-
+    @classmethod
     def set_pdfs_files(cls, pdf, current_conversation):
         existing = {}
         if os.path.exists("user_data/pdf_paths.json"):
@@ -263,14 +264,15 @@ class FileStateStore(StateStore):
 
         with open(f"user_data/pdf_paths.json", "w") as file:
             return json.dump(existing,file)
-        
+
+    @classmethod  
     def has_pdfs_files(cls,current_conversation):
         if not os.path.exists("user_data/pdf_paths.json"):
             return False
         
         with open(f"user_data/pdf_paths.json", "r") as file:
             return current_conversation in json.load(file)
-
+    @classmethod
     def get_pdfs_files(cls,current_conversation):
         with open(f"user_data/pdf_paths.json", "r") as file:
             return json.load(file)[current_conversation]

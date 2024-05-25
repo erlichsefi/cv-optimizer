@@ -226,6 +226,7 @@ class StermlitStateStore(StateStore):
     def get_issues_to_solve_in_chat(cls, gen_id):
         return st.session_state['issues_to_solve_in_chat'][gen_id]
 
+    @classmethod
     def set_pdfs_files(cls, pdf, current_conversation):
         if "pdf_paths" in st.session_state:
             content = st.session_state['pdf_paths']

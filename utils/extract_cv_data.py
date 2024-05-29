@@ -1,4 +1,5 @@
 import json
+import openai
 from .llm_store import get_compliation
 from .interface import UserInterface, Args
 
@@ -26,48 +27,51 @@ def core_run(user_interface, pdf_path):
 
     # procrssing
     user_interface.on_cv_file_received()
-    response = get_compliation(
-        system_message=f"""
-                Extract the CV into the following format:
-                {json.dumps(expected_json,indent=4)}
+    try:
+        response = get_compliation(
+            system_message=f"""
+                    Extract the CV into the following format:
+                    {json.dumps(expected_json,indent=4)}
 
-                notice: 
-                - The input made contains redundant charcthers they to infer which to remove.
-                - unicodes are not acceptable outputs.
-                - Be sure in every value you include.
-                """,
-        model="gpt-3.5-turbo-1106",
-        temperature=0.2,
-        top_p=0,
-        user_input=extracted_text,
-        is_json_expected=True,
-        num_of_gen=2,
-    )
+                    notice: 
+                    - The input made contains redundant charcthers they to infer which to remove.
+                    - unicodes are not acceptable outputs.
+                    - Be sure in every value you include.
+                    """,
+            model="gpt-3.5-turbo-1106",
+            temperature=0.2,
+            top_p=0,
+            user_input=extracted_text,
+            is_json_expected=True,
+            num_of_gen=2,
+        )
 
-    user_extracted_data =  get_compliation(
-        system_message="",
-        user_input=f"""
-                consolidated into one:
+        user_extracted_data =  get_compliation(
+            system_message="",
+            user_input=f"""
+                    consolidated into one:
 
-                generation #1:  
-                {json.dumps(response[0],indent=4)}
+                    generation #1:  
+                    {json.dumps(response[0],indent=4)}
 
-                generation #2:  
-                {json.dumps(response[1],indent=4)}
+                    generation #2:  
+                    {json.dumps(response[1],indent=4)}
 
-                Expected format:
-                ```json
-                {json.dumps(expected_json,indent=4)}
-                ```
+                    Expected format:
+                    ```json
+                    {json.dumps(expected_json,indent=4)}
+                    ```
 
-                - don't include placeholders!
-                """,
-        model="gpt-3.5-turbo-1106",
-        temperature=0,
-        top_p=0,
-        is_json_expected=True,
-    )
-    user_interface.set_user_extract_cv_data(user_extracted_data,pdf_path)
+                    - don't include placeholders!
+                    """,
+            model="gpt-3.5-turbo-1106",
+            temperature=0,
+            top_p=0,
+            is_json_expected=True,
+        )
+        user_interface.set_user_extract_cv_data(user_extracted_data,pdf_path)
+    except openai.APITimeoutError:
+        return "Internal Error: Timeout"
 
 
 if __name__ == "__main__":

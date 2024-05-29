@@ -188,11 +188,11 @@ class LLMTesting(TerminalInterface, FileStateStore):
         return response
 
 
-class SteamlitInterface(UserInterface, StermlitStateStore):
+class SteamlitInterface(UserInterface, FileStateStore):
 
     def __init__(self,user_id=str(uuid4())) -> None:
         UserInterface.__init__(self)
-        StermlitStateStore.__init__(self)
+        FileStateStore.__init__(self)
 
     def send_user_message(self, message):
         with st.chat_message("assistant"):

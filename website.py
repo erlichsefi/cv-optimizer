@@ -20,7 +20,7 @@ if "conversations" not in st.session_state:
     st.session_state.show_position_upload_popup = False
 
     
-if not st.session_state.application_session.get_user_extract_cv_data():
+if not st.session_state.application_session.has_user_extract_cv_data():
     st.markdown("# Hi, there! :wave: ")
     st.markdown(" ### We are here to help YOU get the interview for your next position!")
     st.write("We're here to help you create the best CV the quickly as possible")
@@ -36,11 +36,14 @@ def upload_cv():
     pdf_path = st.session_state.application_session.get_pdf_file_from_user()
     if pdf_path is not None:
         with st.session_state.application_session.processing("Processing the file..."):
-            utils.pdf_to_user_data(st.session_state.application_session, pdf_path)
+            error_message = utils.pdf_to_user_data(st.session_state.application_session, pdf_path)
         # Process the uploaded file if needed
-        st.session_state.show_pdf_upload_popup = False  # Close the popup after uploading
-        st.success("CV uploaded successfully!")
-        st.rerun()
+        if  error_message:
+            st.error(error_message)
+        else:
+            st.session_state.show_pdf_upload_popup = False  # Close the popup after uploading
+            st.success("CV uploaded successfully!")
+            st.rerun()
 
 
 st.sidebar.title("Profile")
@@ -57,6 +60,10 @@ else:
 
     if not st.session_state.application_session.has_completed_cv_data():
         utils.verify_user_data(st.session_state.application_session)
+
+        # if it's the last call
+        if st.session_state.application_session.has_completed_cv_data():
+            st.rerun()
     else:
         if not conversation_names:
             st.markdown("# Now, we know you!")
@@ -109,6 +116,10 @@ if not st.session_state.get("current_conversation", None) is None:
 
     if not st.session_state.application_session.has_position_cv_offers(current_conversation):
         utils.overcome_gaps(st.session_state.application_session,position_name=current_conversation)
+
+        # if it was the last call
+        if st.session_state.application_session.has_position_cv_offers(current_conversation):
+            st.rerun()
     
     if st.session_state.application_session.has_position_cv_offers(current_conversation) and not st.session_state.application_session.has_pdfs_files(current_conversation):
         with st.session_state.application_session.processing("Exporting..."):

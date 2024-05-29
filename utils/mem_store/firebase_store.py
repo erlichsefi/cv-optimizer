@@ -153,8 +153,8 @@ class FirebaseStateStore(StateStore):
         chain_key = f"chain_message_on_{chain_id}"
         return doc.exists and chain_key in doc.to_dict() and doc.to_dict()[chain_key]["closed"] == closed
 
-    def get_chain_messages(self, chain_id):
-        if self.has_chain_messages(chain_id, closed=True):
+    def get_chain_messages(self, chain_id, closed=True):
+        if self.has_chain_messages(chain_id, closed=closed):
             _, doc = self._get_document("user_sessions")
             return doc.to_dict()[f"chain_message_on_{chain_id}"]["data"]
         return []

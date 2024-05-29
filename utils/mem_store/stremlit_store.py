@@ -102,8 +102,8 @@ class StermlitStateStore(StateStore):
         )
 
     @classmethod
-    def get_chain_messages(cls, id):
-        if cls.has_chain_messages(id,closed=True):
+    def get_chain_messages(cls, id, closed=True):
+        if cls.has_chain_messages(id,closed=closed):
             return st.session_state[f"chain_message_on_{id}"]["data"]
         return []
 

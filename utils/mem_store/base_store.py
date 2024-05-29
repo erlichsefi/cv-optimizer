@@ -146,7 +146,7 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def get_chain_messages(cls, id):
+    def get_chain_messages(cls, id, closed=True):
         pass
 
     @classmethod

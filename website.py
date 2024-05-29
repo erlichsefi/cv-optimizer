@@ -16,9 +16,16 @@ if "conversations" not in st.session_state:
             st.session_state.conversations = dict([ (k,[])for k in mem_positions.keys()])
             st.session_state.current_conversation = list(mem_positions.keys())[0]
 
-    st.session_state.show_upload_popup = False  # To manage the popup display
+    st.session_state.show_pdf_upload_popup = False  # To manage the popup display
     st.session_state.show_position_upload_popup = False
+
     
+if not st.session_state.application_session.get_user_extract_cv_data():
+    st.markdown("# Hi, there! :wave: ")
+    st.markdown(" ### We are here to help YOU get the interview for your next position!")
+    st.write("We're here to help you create the best CV the quickly as possible")
+    st.write("To start, upload your CV by clicking the 'Upload CV' on the left")
+    st.write(":point_left: :point_left:")
 
     
 conversation_names = list(st.session_state.conversations.keys())
@@ -31,7 +38,7 @@ def upload_cv():
         with st.session_state.application_session.processing("Processing the file..."):
             utils.pdf_to_user_data(st.session_state.application_session, pdf_path)
         # Process the uploaded file if needed
-        st.session_state.show_upload_popup = False  # Close the popup after uploading
+        st.session_state.show_pdf_upload_popup = False  # Close the popup after uploading
         st.success("CV uploaded successfully!")
         st.rerun()
 
@@ -39,7 +46,8 @@ def upload_cv():
 st.sidebar.title("Profile")
 
 if not st.session_state.application_session.has_user_extract_cv_data():
-    if st.sidebar.button("Upload CV"):
+    if st.sidebar.button("Upload CV") or st.session_state.show_pdf_upload_popup:
+        st.session_state.show_pdf_upload_popup = True
         upload_cv()
 else:
     filename = st.session_state.application_session.get_user_extract_cv_file_name()
@@ -51,11 +59,15 @@ else:
         utils.verify_user_data(st.session_state.application_session)
     else:
         if not conversation_names:
-            st.markdown("# Next Step")
-            st.markdown("Now, we know you!")
-            st.markdown("Add a position data to continue")
+            st.markdown("# Now, we know you!")
+            st.markdown("From here on, you only need to provide the position you are instrestd in")
+            st.write("You just need to add the position data, upload your CV by clicking the New Position' on the left")
+            st.write(":point_left: :point_left:")
                 
 
+
+# Quit twice.
+# Loader when chat it created
 
 
 st.sidebar.title("Positions")
@@ -79,7 +91,8 @@ def upload_new_position():
         st.session_state.current_conversation = new_conversation_name
         st.rerun()
 
-if st.sidebar.button("New Position"):
+if st.sidebar.button("New Position") or st.session_state.show_position_upload_popup:
+    st.session_state.show_position_upload_popup = True
     upload_new_position()
 
 if conversation_names:

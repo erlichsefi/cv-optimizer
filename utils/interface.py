@@ -188,11 +188,11 @@ class LLMTesting(TerminalInterface, FileStateStore):
         return response
 
 
-class SteamlitInterface(UserInterface, FirebaseStateStore):
+class SteamlitInterface(UserInterface, StermlitStateStore):
 
     def __init__(self,user_id=str(uuid4())) -> None:
-        #UserInterface.__init__(self)
-        FirebaseStateStore.__init__(self,user_id)
+        UserInterface.__init__(self)
+        StermlitStateStore.__init__(self)
 
     def send_user_message(self, message):
         with st.chat_message("assistant"):
@@ -232,7 +232,7 @@ class SteamlitInterface(UserInterface, FirebaseStateStore):
         pass
 
     def get_position_snippet_data(self):
-        contents = st.text_input(label="Position")
+        contents = st.text_area(label="Position",height=200)
         if st.button("Go"):
             full_content = "\n".join(contents)
             self.messages_history.append({"role": "user", "content": full_content})

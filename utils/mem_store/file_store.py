@@ -100,8 +100,8 @@ class FileStateStore(StateStore):
             return json.load(file)["closed"] == closed
 
     @classmethod
-    def get_chain_messages(cls, id):
-        if cls.has_chain_messages(id,closed=True):
+    def get_chain_messages(cls, id, closed=True):
+        if cls.has_chain_messages(id,closed=closed):
             with open(f"user_data/chain_message_on_{id}.json", "r") as file:
                 return json.load(file)["data"]
         else:

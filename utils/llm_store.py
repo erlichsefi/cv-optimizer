@@ -146,7 +146,7 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
     }}
     ```"""
 
-    stored_messages = user_interface.get_chain_messages(id)[1:]
+    stored_messages = user_interface.get_chain_messages(id,closed=False)[1:]
     messages = [
         {"role": "system", "content": system_prompt},
     ] + stored_messages

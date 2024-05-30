@@ -23,7 +23,7 @@ def extract_3(file_name):
        text = ""
        for page in pdf.pages:
            text = f"{page.extract_text()}\n{text}"
-       return text.replace("(cid:123)","")
+       return text.replace("(cid:123)","\t")
 
 
 def get_data_from_pdf(filename):

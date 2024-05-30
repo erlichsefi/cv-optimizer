@@ -1,8 +1,10 @@
 from deepeval import evaluate
-from deepeval.metrics import AnswerRelevancyMetric,ContextualPrecisionMetric
+from deepeval.metrics import AnswerRelevancyMetric
 from deepeval.test_case import LLMTestCase
 from utils.extract_cv_data import core_run
 import json
+from utils.tests import MockUserInterface
+
 
 expected_json = {
     "personal_info": {
@@ -188,8 +190,14 @@ Einstein Language Intelligence: Applied Data Scientist, Deploying language model
 def test_examples():
     answer_relevancy_metric = AnswerRelevancyMetric(threshold=0.7)
 
-    extracted_json = core_run(expected_json, extracted_text)
+    mock = MockUserInterface()
+    mock.get_cv_blueprint.return_value = expected_json
+    
+    core_run(mock, extracted_text, "MOCK_PDF")
 
+    assert mock.set_user_extract_cv_data.call_count == 1
+
+    extracted_json = mock.set_user_extract_cv_data.call_args_list[0][0][0]
     test_cases = [
         LLMTestCase(
             input=json.dumps(expected_json[key], indent=4),

@@ -7,7 +7,7 @@ import uuid
 
 
 
-def move_pdf_to_created(cls):
+def move_pdf_to_created(self):
     # Copy source file to destination file
     pdf_path = ".tex/user_tex.pdf"
 
@@ -26,231 +26,221 @@ def move_pdf_to_created(cls):
 
 class StateStore(ABC):
 
-    @classmethod
-    def get_upload_file_name(cls, pdf_path):
+    def get_upload_file_name(self, pdf_path):
         if isinstance(pdf_path, st.runtime.uploaded_file_manager.UploadedFile):
             return pdf_path.name
         return pdf_path
 
-    @classmethod
+
     @abstractmethod
-    def get_cv_blueprint(cls):
+    def get_cv_blueprint(self):
         pass
 
-    @classmethod
     @abstractmethod
-    def get_position_blueprint(cls):
+    def get_position_blueprint(self):
         pass
 
-    @classmethod
     @abstractmethod
-    def get_expected_latex_format(cls):
+    def get_expected_latex_format(self):
         pass
 
-    @classmethod
-    def get_cache_key(cls):
+
+    def get_cache_key(self):
         from datetime import datetime
 
         current_datetime = datetime.now()
         return current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
-    @classmethod
     @abstractmethod
-    def presist_compliation(cls, messages, generations, model, cache_key=None):
+    def presist_compliation(self, messages, generations, model, cache_key=None):
         pass
 
-    @classmethod
     @abstractmethod
-    def get_presist_compliation(cls):
+    def get_presist_compliation(self):
         pass
 
-    @classmethod
+
     @abstractmethod
-    def set_user_extract_cv_data(cls, user_cv_data, pdf_path):
+    def set_user_extract_cv_data(self, user_cv_data, pdf_path):
         pass
 
-    @classmethod
     @abstractmethod
-    def unset_user_extract_cv_data(cls):
+    def unset_user_extract_cv_data(self):
         pass
 
-    @classmethod
     @abstractmethod
-    def get_user_extract_cv_file_name(cls):
+    def get_user_extract_cv_file_name(self):
         pass
 
-    @classmethod
     @abstractmethod
-    def has_user_extract_cv_data(cls):
+    def has_user_extract_cv_data(self):
         pass
 
-    @classmethod
     @abstractmethod
-    def get_user_extract_cv_data(cls):
+    def get_user_extract_cv_data(self):
         pass
 
-    @classmethod
     @abstractmethod
-    def set_issues_to_overcome(cls, issues_found):
+    def set_issues_to_overcome(self, issues_found):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_issues_to_overcome(cls):
+    def has_issues_to_overcome(self):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_issues_to_overcome(cls):
+    def get_issues_to_overcome(self):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_chain_messages(cls, id, chat_about_extracted_cv):
+    def set_chain_messages(self, id, chat_about_extracted_cv):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_chain_messages(cls, id, **kwrg):
+    def has_chain_messages(self, id, **kwrg):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_chain_messages(cls, id, closed=True):
+    def get_chain_messages(self, id, closed=True):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_completed_cv_data(cls, user_cv_data):
+    def set_completed_cv_data(self, user_cv_data):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_completed_cv_data(cls):
+    def has_completed_cv_data(self):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_completed_cv_data(cls):
+    def get_completed_cv_data(self):
         pass
 
-    @classmethod
-    def get_datetime_str(cls):
+    
+    def get_datetime_str(self):
         from datetime import datetime
 
         current_datetime = datetime.now()
         return current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
 
-    @classmethod
-    def str_to_datetime(cls, date_string):
+    
+    def str_to_datetime(self, date_string):
         from datetime import datetime
 
         return datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
 
-    @classmethod
+    
     @abstractmethod
-    def set_drill_down_communiation(cls, drill_down):
+    def set_drill_down_communiation(self, drill_down):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_position_data(cls, position_name, user_position_data):
+    def set_position_data(self, position_name, user_position_data):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_position_data(cls, position_name=None):
+    def has_position_data(self, position_name=None):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_position_data(cls, position_name=None):
+    def get_position_data(self, position_name=None):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_position_cv_offers(cls, list_of_cvs_options, current_conversation):
+    def set_position_cv_offers(self, list_of_cvs_options, current_conversation):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_position_cv_offers(cls, current_conversation):
+    def has_position_cv_offers(self, current_conversation):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_identified_gap_from_hiring_team(cls):
+    def has_identified_gap_from_hiring_team(self):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_optimized_cv(cls, en_id):
+    def has_optimized_cv(self, en_id):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_identified_gap_from_hiring_team(cls, gaps_to_adresss):
+    def set_identified_gap_from_hiring_team(self, gaps_to_adresss):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_identified_gap_from_hiring_team(cls):
+    def get_identified_gap_from_hiring_team(self):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_base_optimized(cls, user_cv, gen_id):
+    def set_base_optimized(self, user_cv, gen_id):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_base_optimized(cls, gen_id):
+    def get_base_optimized(self, gen_id):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def set_issues_to_solve_in_chat(cls, issues_to_solve, gen_id):
+    def set_issues_to_solve_in_chat(self, issues_to_solve, gen_id):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_issues_to_solve_in_chat(cls, gen_id):
+    def get_issues_to_solve_in_chat(self, gen_id):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_all_position_cv_offers(cls, current_conversation):
+    def get_all_position_cv_offers(self, current_conversation):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_all_position_cv_cover_letters(cls, current_conversation):
+    def get_all_position_cv_cover_letters(self, current_conversation):
         pass
 
     #
-    @classmethod
+    
     @abstractmethod
-    def set_pdfs_files(cls, pdf, current_conversation):
+    def set_pdfs_files(self, pdf, current_conversation):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def has_pdfs_files(cls, current_conversation):
+    def has_pdfs_files(self, current_conversation):
         pass
 
-    @classmethod
+    
     @abstractmethod
-    def get_pdfs_files(cls, current_conversation):
+    def get_pdfs_files(self, current_conversation):
         pass
 
-    @classmethod
-    def set_user_latex_file(cls, user_latex):
+    
+    def set_user_latex_file(self, user_latex):
         user_latex = user_latex.replace("```latex", "").replace("```", "")
         with open("user_data/user_tex.tex", "w") as file:
             file.write(user_latex)
 
-    @classmethod
-    def compile_user_latex(cls):
+    
+    def compile_user_latex(self):
         tex_filename = "user_data/user_tex.tex"
         tex_temp_folder = ".tex"
         filename, _ = os.path.splitext(tex_filename)
@@ -282,13 +272,13 @@ class StateStore(ABC):
             raise RuntimeError(f"PDF output not found. Error message: {error_message}")
         return pdf_filename
 
-    @classmethod
-    def get_user_latex_file(cls):
+    
+    def get_user_latex_file(self):
         with open("user_data/user_tex.tex", "r") as file:
             return file.read()
 
-    @classmethod
-    def move_pdf_to_created(cls):
+    
+    def move_pdf_to_created(self):
         # Copy source file to destination file
         pdf_path = ".tex/user_tex.pdf"
 
@@ -304,7 +294,7 @@ class StateStore(ABC):
 
         return offer_path
 
-    @classmethod
+    
     @abstractmethod
-    def wrap_up(cls, complete_path, messages):
+    def wrap_up(self, complete_path, messages):
         pass

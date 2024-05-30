@@ -21,7 +21,8 @@ def dict_diff(dict1, dict2):
     return diff
 
 
-def core_run(expected_json, extracted_text):
+def core_run(user_interface:UserInterface, extracted_text, pdf_path):
+    expected_json = user_interface.get_cv_blueprint()
     response = get_compliation(
         system_message=f"""
                 Extract the CV into the following format:
@@ -40,7 +41,7 @@ def core_run(expected_json, extracted_text):
         num_of_gen=2,
     )
 
-    return get_compliation(
+    user_extracted_data = get_compliation(
         system_message="",
         user_input=f"""
                 consolidated into one:
@@ -63,18 +64,18 @@ def core_run(expected_json, extracted_text):
         top_p=0,
         is_json_expected=True,
     )
+    user_interface.set_user_extract_cv_data(user_extracted_data, pdf_path)
 
 
 
-def run(user_interface, pdf_path):
+def run(user_interface:UserInterface, pdf_path:str):
+    # inputs
     extracted_text = get_data_from_pdf(pdf_path)
-    expected_json = user_interface.get_cv_blueprint()
 
     # procrssing
     user_interface.on_cv_file_received()
     try:
-        user_extracted_data = core_run(expected_json, extracted_text)
-        user_interface.set_user_extract_cv_data(user_extracted_data, pdf_path)
+        core_run(user_interface, extracted_text, pdf_path)
     except openai.APITimeoutError:
         return "Internal Error: Timeout"
 

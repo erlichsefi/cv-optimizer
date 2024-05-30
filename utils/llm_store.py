@@ -39,6 +39,7 @@ def get_compliation(
     # state.presist_compliation(messages,generations,model)
     return generations
 
+
 @retry.retry(exceptions=(json.decoder.JSONDecodeError), logger=None, tries=3)
 def get_chat_compliation(
     messages,
@@ -129,7 +130,6 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
 
     # Create a list to store all the messages for context
 
-
     system_prompt = f"""{system_prompt} \n.
     Response format:
     ```json
@@ -146,24 +146,31 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
     }}
     ```"""
 
-    stored_messages = user_interface.get_chain_messages(id,closed=False)[1:]
+    stored_messages = user_interface.get_chain_messages(id, closed=False)[1:]
     messages = [
         {"role": "system", "content": system_prompt},
     ] + stored_messages
 
-    chat_messages =  [ {"role":"assistant","content":json.loads(mesg['content'])['message']} if mesg['role'] == 'assistant' else mesg for mesg in stored_messages] 
+    chat_messages = [
+        (
+            {"role": "assistant", "content": json.loads(mesg["content"])["message"]}
+            if mesg["role"] == "assistant"
+            else mesg
+        )
+        for mesg in stored_messages
+    ]
     if len(messages) == 1:
 
         # Request gpt-3.5-turbo for chat completion
-        chat_message = get_chat_compliation(messages=messages,model=model,is_json_expected=True)
+        chat_message = get_chat_compliation(
+            messages=messages, model=model, is_json_expected=True
+        )
 
         # Print the response and add it to the messages list
         messages.append(
             {"role": "assistant", "content": json.dumps(chat_message, indent=4)}
         )
-        chat_messages.append(
-            {"role": "assistant", "content": chat_message['message']}
-        )
+        chat_messages.append({"role": "assistant", "content": chat_message["message"]})
 
     # Prompt user for input
     closed = False
@@ -178,17 +185,19 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
             closed = True
 
         if not closed:
-            chat_message = get_chat_compliation(messages=messages,model=model,is_json_expected=True)
-        
+            chat_message = get_chat_compliation(
+                messages=messages, model=model, is_json_expected=True
+            )
+
             # Add each new message to the list
             user_interface.send_user_message(f"{chat_message['message']}")
             messages.append(
                 {"role": "assistant", "content": json.dumps(chat_message, indent=4)}
             )
-            
+
             if str(chat_message["is_all_issue_addressed"]).lower() == "true":
                 closed = True
-        
+
     # user_interface.end_bot_session()
     user_interface.set_chain_messages(id, messages, closed=closed)
 

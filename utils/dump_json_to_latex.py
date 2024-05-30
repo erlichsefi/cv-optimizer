@@ -44,7 +44,6 @@ def json_to_pdf(user_cv_data, user_interface):
         user_input=json.dumps(user_cv_data, indent=4),
         is_json_expected=False,
     )
-    
 
     pdf_filename = None
     for _ in range(3):
@@ -85,7 +84,7 @@ def json_to_pdf(user_cv_data, user_interface):
     return None
 
 
-def run(user_interface: UserInterface,current_conversation:str = None):
+def run(user_interface: UserInterface, current_conversation: str = None):
     cv_offers = user_interface.get_all_position_cv_offers(current_conversation)
     pdfs = []
     for offer in cv_offers:
@@ -94,7 +93,7 @@ def run(user_interface: UserInterface,current_conversation:str = None):
         if pdf:
             pdfs.append(pdf)
 
-    user_interface.set_pdfs_files(pdfs,current_conversation)
+    user_interface.set_pdfs_files(pdfs, current_conversation)
 
     # pdf_filename = "user_tex.pdf"
     # if pdf_filename:

@@ -5,22 +5,6 @@ import subprocess
 import uuid
 
 
-def extract_1(filename):
-    from pdfminer.high_level import extract_text
-
-    return extract_text(filename)
-
-
-def extract_2(filename):
-    # from PyPDF2 import PdfReader
-    from pypdf import PdfReader
-
-    text = ""
-    with open(filename, "rb") as f:
-        reader = PdfReader(f)
-        for page in reader.pages:
-            text += page.extract_text()
-    return text
 
 
 def move_pdf_to_created(cls):
@@ -43,22 +27,8 @@ def move_pdf_to_created(cls):
 class StateStore(ABC):
 
     @classmethod
-    def get_data_from_pdf(cls, filename):
-
-        extract_1(filename)
-
-        if isinstance(filename, str):
-            return extract_1(filename)
-        else:
-            from tempfile import NamedTemporaryFile
-
-            with NamedTemporaryFile(dir=".", suffix=".pdf") as f:
-                f.write(filename.getbuffer())
-                return extract_1(f.name)
-    
-    @classmethod
-    def get_upload_file_name(cls,pdf_path):
-        if isinstance(pdf_path,st.runtime.uploaded_file_manager.UploadedFile):
+    def get_upload_file_name(cls, pdf_path):
+        if isinstance(pdf_path, st.runtime.uploaded_file_manager.UploadedFile):
             return pdf_path.name
         return pdf_path
 
@@ -103,7 +73,7 @@ class StateStore(ABC):
     @abstractmethod
     def unset_user_extract_cv_data(cls):
         pass
-    
+
     @classmethod
     @abstractmethod
     def get_user_extract_cv_file_name(cls):
@@ -189,7 +159,7 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def has_position_data(cls,position_name=None):
+    def has_position_data(cls, position_name=None):
         pass
 
     @classmethod
@@ -249,13 +219,14 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def get_all_position_cv_offers(cls,current_conversation):
+    def get_all_position_cv_offers(cls, current_conversation):
         pass
 
     @classmethod
     @abstractmethod
-    def get_all_position_cv_cover_letters(cls,current_conversation):
+    def get_all_position_cv_cover_letters(cls, current_conversation):
         pass
+
     #
     @classmethod
     @abstractmethod
@@ -264,16 +235,17 @@ class StateStore(ABC):
 
     @classmethod
     @abstractmethod
-    def has_pdfs_files(cls,current_conversation):
+    def has_pdfs_files(cls, current_conversation):
         pass
+
     @classmethod
     @abstractmethod
-    def get_pdfs_files(cls,current_conversation):
+    def get_pdfs_files(cls, current_conversation):
         pass
-    
+
     @classmethod
     def set_user_latex_file(cls, user_latex):
-        user_latex = user_latex.replace("```latex","").replace("```","")
+        user_latex = user_latex.replace("```latex", "").replace("```", "")
         with open("user_data/user_tex.tex", "w") as file:
             file.write(user_latex)
 

@@ -45,12 +45,12 @@ def execute(user_interface: utils.UserInterface):
     # overcome gaps
     user_interface.send_user_message("Let's try find ways to overcome some gaps")
     while not user_interface.has_position_cv_offers():
-        utils.overcome_gaps(user_interface,position_name=None)
+        utils.overcome_gaps(user_interface, position_name=None)
     user_interface.send_user_message("Done.")
 
     # to pdfs
     utils.to_pdfs(user_interface)
-    
+
     #
     user_interface.send_user_message("Processing...")
     pdfs = user_interface.get_pdfs_files()

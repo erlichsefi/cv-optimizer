@@ -8,3 +8,5 @@ google-generativeai==0.3.1
 pdfminer.six
 streamlit-pdf-viewer==0.0.12
 firebase_admin==0.14.0
+pdfplumber==0.11.0
+deepeval==0.21.48

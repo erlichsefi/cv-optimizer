@@ -13,22 +13,27 @@ if "conversations" not in st.session_state:
     if st.session_state.application_session.has_position_data():
         mem_positions = st.session_state.application_session.get_position_data()
         if mem_positions:
-            st.session_state.conversations = dict([ (k,[])for k in mem_positions.keys()])
+            st.session_state.conversations = dict(
+                [(k, []) for k in mem_positions.keys()]
+            )
             st.session_state.current_conversation = list(mem_positions.keys())[0]
 
     st.session_state.show_pdf_upload_popup = False  # To manage the popup display
     st.session_state.show_position_upload_popup = False
 
-    
+
 if not st.session_state.application_session.has_user_extract_cv_data():
     st.markdown("# Hi, there! :wave: ")
-    st.markdown(" ### We are here to help YOU get the interview for your next position!")
+    st.markdown(
+        " ### We are here to help YOU get the interview for your next position!"
+    )
     st.write("We're here to help you create the best CV the quickly as possible")
     st.write("To start, upload your CV by clicking the 'Upload CV' on the left")
     st.write(":point_left: :point_left:")
 
-    
+
 conversation_names = list(st.session_state.conversations.keys())
+
 
 @st.experimental_dialog("Setup your CV")
 def upload_cv():
@@ -36,12 +41,16 @@ def upload_cv():
     pdf_path = st.session_state.application_session.get_pdf_file_from_user()
     if pdf_path is not None:
         with st.session_state.application_session.processing("Processing the file..."):
-            error_message = utils.pdf_to_user_data(st.session_state.application_session, pdf_path)
+            error_message = utils.pdf_to_user_data(
+                st.session_state.application_session, pdf_path
+            )
         # Process the uploaded file if needed
-        if  error_message:
+        if error_message:
             st.error(error_message)
         else:
-            st.session_state.show_pdf_upload_popup = False  # Close the popup after uploading
+            st.session_state.show_pdf_upload_popup = (
+                False  # Close the popup after uploading
+            )
             st.success("CV uploaded successfully!")
             st.rerun()
 
@@ -67,10 +76,13 @@ else:
     else:
         if not conversation_names:
             st.markdown("# Now, we know you!")
-            st.markdown("From here on, you only need to provide the position you are instrestd in")
-            st.write("You just need to add the position data, upload your CV by clicking the New Position' on the left")
+            st.markdown(
+                "From here on, you only need to provide the position you are instrestd in"
+            )
+            st.write(
+                "You just need to add the position data, upload your CV by clicking the New Position' on the left"
+            )
             st.write(":point_left: :point_left:")
-                
 
 
 # Quit twice.
@@ -98,6 +110,7 @@ def upload_new_position():
         st.session_state.current_conversation = new_conversation_name
         st.rerun()
 
+
 if st.sidebar.button("New Position") or st.session_state.show_position_upload_popup:
     st.session_state.show_position_upload_popup = True
     upload_new_position()
@@ -114,23 +127,38 @@ if not st.session_state.get("current_conversation", None) is None:
     current_conversation = st.session_state.current_conversation
     st.title(f"{current_conversation}")
 
-    if not st.session_state.application_session.has_position_cv_offers(current_conversation):
-        utils.overcome_gaps(st.session_state.application_session,position_name=current_conversation)
+    if not st.session_state.application_session.has_position_cv_offers(
+        current_conversation
+    ):
+        utils.overcome_gaps(
+            st.session_state.application_session, position_name=current_conversation
+        )
 
         # if it was the last call
-        if st.session_state.application_session.has_position_cv_offers(current_conversation):
+        if st.session_state.application_session.has_position_cv_offers(
+            current_conversation
+        ):
             st.rerun()
-    
-    if st.session_state.application_session.has_position_cv_offers(current_conversation) and not st.session_state.application_session.has_pdfs_files(current_conversation):
-        with st.session_state.application_session.processing("Exporting..."):
-            utils.to_pdfs(st.session_state.application_session,current_conversation=current_conversation)
-            st.rerun()
-            
-    if st.session_state.application_session.has_pdfs_files(current_conversation):
-        cv_offers = st.session_state.application_session.get_pdfs_files(current_conversation)
-        overletters = st.session_state.application_session.get_all_position_cv_cover_letters(current_conversation)
 
-        
+    if st.session_state.application_session.has_position_cv_offers(
+        current_conversation
+    ) and not st.session_state.application_session.has_pdfs_files(current_conversation):
+        with st.session_state.application_session.processing("Exporting..."):
+            utils.to_pdfs(
+                st.session_state.application_session,
+                current_conversation=current_conversation,
+            )
+            st.rerun()
+
+    if st.session_state.application_session.has_pdfs_files(current_conversation):
+        cv_offers = st.session_state.application_session.get_pdfs_files(
+            current_conversation
+        )
+        overletters = (
+            st.session_state.application_session.get_all_position_cv_cover_letters(
+                current_conversation
+            )
+        )
 
         st.markdown("### Message to hiring team:")
         st.write(overletters[0])
@@ -140,8 +168,12 @@ if not st.session_state.get("current_conversation", None) is None:
         with open(cv_offers[0], "rb") as pdf_file:
             PDFbyte = pdf_file.read()
 
-        st.download_button("Pay and Download",PDFbyte,file_name="cv.pdf",
-                    mime='application/octet-stream')
+        st.download_button(
+            "Pay and Download",
+            PDFbyte,
+            file_name="cv.pdf",
+            mime="application/octet-stream",
+        )
 
     if current_conversation not in st.session_state.conversations:
         st.session_state.conversations[current_conversation] = []

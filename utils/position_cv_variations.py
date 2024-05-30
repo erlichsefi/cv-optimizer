@@ -51,7 +51,7 @@ def single_prompt_call(user_interface):
     user_interface.set_position_cv_offers(offers)
 
 
-def review_by_hiring_team(user_interface: UserInterface, position_name:str = None):
+def review_by_hiring_team(user_interface: UserInterface, position_name: str = None):
     position_data = user_interface.get_position_data(position_name=position_name)
     cv_data = user_interface.get_completed_cv_data()
 
@@ -122,7 +122,9 @@ def optimize_and_wonder(user_interface: UserInterface, gen_id):
     )
 
 
-def create_n_optimzied_variation(user_interface: UserInterface, n=2, position_name:str = None):
+def create_n_optimzied_variation(
+    user_interface: UserInterface, n=2, position_name: str = None
+):
     cv_data = user_interface.get_completed_cv_data()
     gaps_to_adresss = user_interface.get_identified_gap_from_hiring_team()
     cv_blueprint = user_interface.get_cv_blueprint()
@@ -148,9 +150,9 @@ def create_n_optimzied_variation(user_interface: UserInterface, n=2, position_na
     ```
     """
     variations = get_compliation("", prompt, is_json_expected=True, num_of_gen=n)
-    variations if isinstance(variations,list) else [variations]
+    variations if isinstance(variations, list) else [variations]
 
-    user_interface.set_position_cv_offers(variations,position_name)
+    user_interface.set_position_cv_offers(variations, position_name)
 
 
 def enrich_from_chat(user_interface: UserInterface, chat_id, gen_id):
@@ -204,12 +206,12 @@ def chat_with_agent_to_fill_gaps(user_interface: UserInterface, id, gen_id):
     )
 
 
-def chat_loop(user_interface: UserInterface,position_name:str = None):
+def chat_loop(user_interface: UserInterface, position_name: str = None):
 
     # define the gaps between the position and the CV
     if not user_interface.has_identified_gap_from_hiring_team():
         with user_interface.processing("Finding gaps..."):
-            review_by_hiring_team(user_interface,position_name=position_name)
+            review_by_hiring_team(user_interface, position_name=position_name)
     #
     # optimize what you can optimize and find what not
     gen_id = "first_call"
@@ -222,15 +224,17 @@ def chat_loop(user_interface: UserInterface,position_name:str = None):
     if not user_interface.has_chain_messages(chat_id, closed=True):
         chat_with_agent_to_fill_gaps(user_interface, chat_id, gen_id)
 
-    if not user_interface.has_position_cv_offers(position_name) and user_interface.has_chain_messages(
-        chat_id, closed=True
-    ):
+    if not user_interface.has_position_cv_offers(
+        position_name
+    ) and user_interface.has_chain_messages(chat_id, closed=True):
         # update the global CV object
         with user_interface.processing("Applying what i've learned"):
             enrich_from_chat(user_interface, chat_id=chat_id, gen_id=gen_id)
-    
+
         with user_interface.processing("Creating CV options"):
-            create_n_optimzied_variation(user_interface, n=1, position_name=position_name)
+            create_n_optimzied_variation(
+                user_interface, n=1, position_name=position_name
+            )
 
 
 def multi_agents(user_interface):
@@ -342,6 +346,7 @@ def multi_agents(user_interface):
     autogen.runtime_logging.stop()
 
     return result
+
 
 if __name__ == "__main__":
 

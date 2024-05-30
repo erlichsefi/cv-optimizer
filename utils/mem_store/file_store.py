@@ -51,7 +51,7 @@ class FileStateStore(StateStore):
     def set_user_extract_cv_data(cls, user_cv_data, pdf_path):
         with open("user_data/user_extracted_cv.json", "w") as file:
             _pdf_path = cls.get_upload_file_name(pdf_path)
-            return json.dump({"data":user_cv_data,"filename":_pdf_path}, file)
+            return json.dump({"data": user_cv_data, "filename": _pdf_path}, file)
 
     @classmethod
     def unset_user_extract_cv_data(cls):
@@ -64,12 +64,12 @@ class FileStateStore(StateStore):
     @classmethod
     def get_user_extract_cv_data(cls):
         with open("user_data/user_extracted_cv.json", "r") as file:
-            return json.load(file)['data']
-        
+            return json.load(file)["data"]
+
     @classmethod
     def get_user_extract_cv_file_name(cls):
         with open("user_data/user_extracted_cv.json", "r") as file:
-            return json.load(file)['filename']
+            return json.load(file)["filename"]
 
     #
     @classmethod
@@ -101,7 +101,7 @@ class FileStateStore(StateStore):
 
     @classmethod
     def get_chain_messages(cls, id, closed=True):
-        if cls.has_chain_messages(id,closed=closed):
+        if cls.has_chain_messages(id, closed=closed):
             with open(f"user_data/chain_message_on_{id}.json", "r") as file:
                 return json.load(file)["data"]
         else:
@@ -145,10 +145,10 @@ class FileStateStore(StateStore):
                 exiting = json.load(file)
         exiting[position_name] = user_position_data
         with open("user_data/user_position.json", "w") as file:
-                json.dump(exiting,file)
+            json.dump(exiting, file)
 
     @classmethod
-    def has_position_data(cls,position_name=None):
+    def has_position_data(cls, position_name=None):
         if not os.path.exists("user_data/user_position.json"):
             return False
         elif position_name:
@@ -157,43 +157,48 @@ class FileStateStore(StateStore):
             return True
 
     @classmethod
-    def get_position_data(cls,position_name=None):
+    def get_position_data(cls, position_name=None):
         with open("user_data/user_position.json", "r") as file:
             response = json.load(file)
 
             if position_name:
-                return response.get(position_name,None)
+                return response.get(position_name, None)
             return response
-
 
     #
     @classmethod
-    def set_position_cv_offers(cls,list_of_cvs_options,current_conversation):
+    def set_position_cv_offers(cls, list_of_cvs_options, current_conversation):
         existing = {}
         if os.path.exists("user_data/user_position_cv_offers.json"):
             with open(f"user_data/user_position_cv_offers.json", "r") as file:
                 existing = json.load(file)
 
-        existing[current_conversation] =  list_of_cvs_options if isinstance(list_of_cvs_options,list) else [list_of_cvs_options]
+        existing[current_conversation] = (
+            list_of_cvs_options
+            if isinstance(list_of_cvs_options, list)
+            else [list_of_cvs_options]
+        )
         with open(f"user_data/user_position_cv_offers.json", "w") as file:
             json.dump(existing, file)
 
     @classmethod
-    def has_position_cv_offers(cls,current_conversation):
+    def has_position_cv_offers(cls, current_conversation):
         if not os.path.exists("user_data/user_position_cv_offers.json"):
             return False
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
             return current_conversation in json.load(file)
 
     @classmethod
-    def get_all_position_cv_offers(cls,current_conversation):
+    def get_all_position_cv_offers(cls, current_conversation):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
-            return list(map(lambda x:x['cv'],json.load(file)[current_conversation]))
+            return list(map(lambda x: x["cv"], json.load(file)[current_conversation]))
 
     @classmethod
-    def get_all_position_cv_cover_letters(cls,current_conversation):
+    def get_all_position_cv_cover_letters(cls, current_conversation):
         with open(f"user_data/user_position_cv_offers.json", "r") as file:
-            return list(map(lambda x:x['message'],json.load(file)[current_conversation]))
+            return list(
+                map(lambda x: x["message"], json.load(file)[current_conversation])
+            )
 
     #
     @classmethod
@@ -259,23 +264,25 @@ class FileStateStore(StateStore):
         existing = {}
         if os.path.exists("user_data/pdf_paths.json"):
             with open(f"user_data/pdf_paths.json", "r") as file:
-                existing =  json.load(file)
+                existing = json.load(file)
         existing[current_conversation] = pdf
 
         with open(f"user_data/pdf_paths.json", "w") as file:
-            return json.dump(existing,file)
+            return json.dump(existing, file)
 
-    @classmethod  
-    def has_pdfs_files(cls,current_conversation):
+    @classmethod
+    def has_pdfs_files(cls, current_conversation):
         if not os.path.exists("user_data/pdf_paths.json"):
             return False
-        
+
         with open(f"user_data/pdf_paths.json", "r") as file:
             return current_conversation in json.load(file)
+
     @classmethod
-    def get_pdfs_files(cls,current_conversation):
+    def get_pdfs_files(cls, current_conversation):
         with open(f"user_data/pdf_paths.json", "r") as file:
             return json.load(file)[current_conversation]
+
     #
 
     @classmethod

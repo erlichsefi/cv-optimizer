@@ -50,7 +50,7 @@ class StermlitStateStore(StateStore):
 
     #
     @classmethod
-    def set_user_extract_cv_data(cls, user_cv_data,file_name):
+    def set_user_extract_cv_data(cls, user_cv_data, file_name):
         st.session_state["user_extracted_cv"] = user_cv_data
         st.session_state["file_name_uploaded"] = cls.get_upload_file_name(file_name)
 
@@ -103,7 +103,7 @@ class StermlitStateStore(StateStore):
 
     @classmethod
     def get_chain_messages(cls, id, closed=True):
-        if cls.has_chain_messages(id,closed=closed):
+        if cls.has_chain_messages(id, closed=closed):
             return st.session_state[f"chain_message_on_{id}"]["data"]
         return []
 
@@ -133,24 +133,25 @@ class StermlitStateStore(StateStore):
 
     #
     @classmethod
-    def set_position_data(cls,position_name, user_position_data):
+    def set_position_data(cls, position_name, user_position_data):
 
         if "user_position" not in st.session_state:
             exiting = {}
         else:
-            exiting = st.session_state['user_position']
+            exiting = st.session_state["user_position"]
 
-        exiting[position_name]= user_position_data
-        st.session_state['user_position'] = exiting
-            
-
-    @classmethod
-    def has_position_data(cls,position_name=None):
-        return "user_position" in st.session_state and (not position_name or position_name in st.session_state['user_position'])
+        exiting[position_name] = user_position_data
+        st.session_state["user_position"] = exiting
 
     @classmethod
-    def get_position_data(cls,position_name=None):
-        response =  st.session_state["user_position"]
+    def has_position_data(cls, position_name=None):
+        return "user_position" in st.session_state and (
+            not position_name or position_name in st.session_state["user_position"]
+        )
+
+    @classmethod
+    def get_position_data(cls, position_name=None):
+        response = st.session_state["user_position"]
 
         if position_name:
             return response[position_name]
@@ -158,30 +159,46 @@ class StermlitStateStore(StateStore):
 
     #
     @classmethod
-    def set_position_cv_offers(cls,list_of_cvs_options,current_conversation):
+    def set_position_cv_offers(cls, list_of_cvs_options, current_conversation):
         existing = {}
         if "user_position_cv_offers" in st.session_state:
             existing = st.session_state["user_position_cv_offers"]
 
-        existing[current_conversation] = list_of_cvs_options if isinstance(list_of_cvs_options,list) else [list_of_cvs_options]
+        existing[current_conversation] = (
+            list_of_cvs_options
+            if isinstance(list_of_cvs_options, list)
+            else [list_of_cvs_options]
+        )
         st.session_state["user_position_cv_offers"] = existing
 
     @classmethod
     def has_position_cv_offers(cls, current_conversation):
-        return "user_position_cv_offers" in st.session_state and current_conversation in st.session_state['user_position_cv_offers']
+        return (
+            "user_position_cv_offers" in st.session_state
+            and current_conversation in st.session_state["user_position_cv_offers"]
+        )
 
     @classmethod
-    def get_all_position_cv_offers(cls,current_conversation):
-        return list(map(lambda x:x['cv'],st.session_state["user_position_cv_offers"][current_conversation]))
-    
+    def get_all_position_cv_offers(cls, current_conversation):
+        return list(
+            map(
+                lambda x: x["cv"],
+                st.session_state["user_position_cv_offers"][current_conversation],
+            )
+        )
+
     @classmethod
-    def get_all_position_cv_cover_letters(cls,current_conversation):
-        return list(map(lambda x:x['message'],st.session_state["user_position_cv_offers"][current_conversation]))
-        
+    def get_all_position_cv_cover_letters(cls, current_conversation):
+        return list(
+            map(
+                lambda x: x["message"],
+                st.session_state["user_position_cv_offers"][current_conversation],
+            )
+        )
+
     @classmethod
     def set_identified_gap_from_hiring_team(cls, gaps_to_adresss):
-        st.session_state['identified_gap_from_hiring_team'] = gaps_to_adresss
-
+        st.session_state["identified_gap_from_hiring_team"] = gaps_to_adresss
 
     @classmethod
     def has_identified_gap_from_hiring_team(cls):
@@ -189,58 +206,60 @@ class StermlitStateStore(StateStore):
 
     @classmethod
     def get_identified_gap_from_hiring_team(cls):
-        return st.session_state['identified_gap_from_hiring_team']
+        return st.session_state["identified_gap_from_hiring_team"]
+
     #
 
     @classmethod
     def set_base_optimized(cls, user_cv, gen_id):
         if "base_optimized" in st.session_state:
-            content = st.session_state['base_optimized']
+            content = st.session_state["base_optimized"]
         else:
             content = {}
 
         content[gen_id] = user_cv
-        st.session_state['base_optimized'] = content
+        st.session_state["base_optimized"] = content
 
     @classmethod
     def has_optimized_cv(cls, gen_id):
         if "base_optimized" not in st.session_state:
             return False
-        return gen_id in st.session_state['base_optimized']
+        return gen_id in st.session_state["base_optimized"]
 
     @classmethod
     def get_base_optimized(cls, gen_id):
-        return st.session_state['base_optimized'][gen_id]
+        return st.session_state["base_optimized"][gen_id]
 
     @classmethod
     def set_issues_to_solve_in_chat(cls, issues_to_solve, gen_id):
         if "issues_to_solve_in_chat" in st.session_state:
-            content = st.session_state['base_optimized']
+            content = st.session_state["base_optimized"]
         else:
             content = {}
 
         content[gen_id] = issues_to_solve
-        st.session_state['issues_to_solve_in_chat'] = content
+        st.session_state["issues_to_solve_in_chat"] = content
 
     @classmethod
     def get_issues_to_solve_in_chat(cls, gen_id):
-        return st.session_state['issues_to_solve_in_chat'][gen_id]
+        return st.session_state["issues_to_solve_in_chat"][gen_id]
 
     @classmethod
     def set_pdfs_files(cls, pdf, current_conversation):
         if "pdf_paths" in st.session_state:
-            content = st.session_state['pdf_paths']
+            content = st.session_state["pdf_paths"]
         else:
             content = {}
         content[current_conversation] = pdf
-        st.session_state['pdf_paths'] = content
-
-
-    @classmethod
-    def has_pdfs_files(cls,current_conversation):
-        return "pdf_paths" in st.session_state and  current_conversation in st.session_state['pdf_paths']
-
+        st.session_state["pdf_paths"] = content
 
     @classmethod
-    def get_pdfs_files(cls,current_conversation):
-        return st.session_state['pdf_paths'][current_conversation]
+    def has_pdfs_files(cls, current_conversation):
+        return (
+            "pdf_paths" in st.session_state
+            and current_conversation in st.session_state["pdf_paths"]
+        )
+
+    @classmethod
+    def get_pdfs_files(cls, current_conversation):
+        return st.session_state["pdf_paths"][current_conversation]

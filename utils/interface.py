@@ -3,9 +3,13 @@ from uuid import uuid4
 import json
 import streamlit as st
 from .llm_store import get_chat_compliation
-from .mem_store import StateStore, FileStateStore, StermlitStateStore, FirebaseStateStore
+from .mem_store import (
+    StateStore,
+    FileStateStore,
+    StermlitStateStore,
+    FirebaseStateStore,
+)
 import contextlib
-
 
 
 class UserInterface(StateStore, ABC):
@@ -24,11 +28,11 @@ class UserInterface(StateStore, ABC):
 
     @abstractmethod
     @contextlib.contextmanager
-    def processing(self,message):
+    def processing(self, message):
         pass
 
     @abstractmethod
-    def get_user_input(self,messages=None):
+    def get_user_input(self, messages=None):
         pass
 
     @abstractmethod
@@ -66,7 +70,7 @@ class TerminalInterface(UserInterface, FileStateStore):
         self.messages_history.append({"role": "assistant", "content": message})
         print(f"Bot: {message}")
 
-    def get_user_input(self,messages=None):
+    def get_user_input(self, messages=None):
         if len(messages) == 1:
             self.send_user_message(messages[0])
         message = input("User: ")
@@ -74,7 +78,7 @@ class TerminalInterface(UserInterface, FileStateStore):
         return message
 
     @contextlib.contextmanager
-    def processing(self,message):
+    def processing(self, message):
         self.send_user_message(message)
         yield
 
@@ -176,8 +180,10 @@ class LLMTesting(TerminalInterface, FileStateStore):
         print(f"Bot:{message}")
         self.current_message += f"\n {message}"
 
-    def get_user_input(self,messages=None):
-        self.llm_testing_messages.append({"role": "user", "content": self.current_message})
+    def get_user_input(self, messages=None):
+        self.llm_testing_messages.append(
+            {"role": "user", "content": self.current_message}
+        )
 
         response = get_chat_compliation(messages=self.llm_testing_messages)
 
@@ -190,7 +196,7 @@ class LLMTesting(TerminalInterface, FileStateStore):
 
 class SteamlitInterface(UserInterface, FileStateStore):
 
-    def __init__(self,user_id=str(uuid4())) -> None:
+    def __init__(self, user_id=str(uuid4())) -> None:
         UserInterface.__init__(self)
         FileStateStore.__init__(self)
 
@@ -201,11 +207,11 @@ class SteamlitInterface(UserInterface, FileStateStore):
         self.messages_history.append({"role": "assistant", "content": message})
 
     @contextlib.contextmanager
-    def processing(self,message):
+    def processing(self, message):
         with st.spinner(message):
-            yield      
+            yield
 
-    def get_user_input(self,messages=None):
+    def get_user_input(self, messages=None):
         # print all the messages before
         if messages:
             for _, msg_dict in enumerate(messages):
@@ -232,7 +238,7 @@ class SteamlitInterface(UserInterface, FileStateStore):
         pass
 
     def get_position_snippet_data(self):
-        contents = st.text_area(label="Position",height=200)
+        contents = st.text_area(label="Position", height=200)
         if st.button("Go"):
             full_content = "\n".join(contents)
             self.messages_history.append({"role": "user", "content": full_content})
@@ -240,7 +246,6 @@ class SteamlitInterface(UserInterface, FileStateStore):
 
     def send_files(self, file_paths):
         self.send_user_message("\n".join(file_paths))
-
 
     def start_bot_session(self, topic):
         pass

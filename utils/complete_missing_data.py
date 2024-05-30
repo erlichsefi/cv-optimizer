@@ -1,13 +1,15 @@
 import json
-import re
+import datetime
 from .interface import TerminalInterface, UserInterface
 from .llm_store import experience_chatbot, get_compliation
 
 
 def get_issues_need_to_be_adressed(user_interface: UserInterface):
     user_cv = user_interface.get_user_extract_cv_data()
+    cv_blueprint = user_interface.get_cv_blueprint()
     
     prompt = f"""
+    today is {datetime.datetime.now()}
     Your goal is to complete the information missing or corrupted in the user CV data.
     For all keys (included nested ones) in the user data, check:
         - is the value missing? if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
@@ -20,23 +22,23 @@ def get_issues_need_to_be_adressed(user_interface: UserInterface):
     user data:
     {json.dumps(user_cv,indent=4)}
 
-    
+    expected foramts:
+    {json.dumps(cv_blueprint,indent=4)}
     Provide all questions in the following format:
 
     ```json
     {{
-        "possible_issue":[
+        "possible_issues":[
             {{
                 "xpath":"<the xpath to the value in question",
                 "categoty":"<one of 'missing' or 'corrupted data' or 'value did not make sense given key'>",
                 "issue":"<the value from the user data that seems to be an issue>",
-                "reason":"<the reason you think the value is an issue"
-
+                "reason":"<the reason you think the value is an issue",
             }}
             // more if you have
         ],
-        "confirmed_question":[
-        // a question on the issues in 'possible_issue' that seems ok.
+        "confirmed_issues":[
+            // a description of the valid issues to resolve
         ]
     ]
     }}

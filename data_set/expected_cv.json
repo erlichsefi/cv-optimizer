@@ -5,7 +5,7 @@
         "email": "erlichsefi@gmail.com",
         "phone": "+972 524 307 093",
         "address": "TLV, Israel",
-        "is_willing_to_relocate": true,
+        "is_willing_to_relocate": "yes",
         "linkedin_link": "https://www.linkedin.com/in/erlichsefi/",
         "github_link": "github.com/erlichsefi",
         "additional_websites": [
@@ -36,7 +36,7 @@
             "company": "Salesforce",
             "location": "Tel-Aviv/Remote, Israel",
             "start_date": "Jan 2020",
-            "end_date": "Present",
+            "end_date": "Ongoing",
             "is_ongoing": true,
             "responsibilities": [
                 "Workforce Management: E2E Data Scientist (customers until back-end) Multivariate Time Series forecasting Service",
@@ -122,9 +122,18 @@
         }
     ],
     "skills": [
-        "Java",
-        "Python",
-        "AWS"
+        {
+            "name": "Java",
+            "years": "5"
+        },
+        {
+            "name": "Python",
+            "years": "7"
+        },
+        {
+            "name": "AWS",
+            "years": "2"
+        }
     ],
     "certifications": [
         "Sequences, Time Series and Prediction,DeepLearning.AI, Grade 98.06",
@@ -156,17 +165,27 @@
         }
     ],
     "languages": [
-        "Hebrew",
-        "English"
+        {
+            "language": "Hebrew",
+            "level": "Native"
+        },
+        {
+            "language": "English",
+            "level": "Fluent"
+        }
     ],
-    "summary": "Lead Applied Data Scientist with experience of over five years in the tech industry in Time Series, NLP, and Generative. Four years of experience in academic research: Two years of experience in ML and two years in algorithmic game theory research. Additionally, one year as DS Guild manager. Entrepreneur mindset.",
     "achievements": [
-        "Two kids"
+        {
+            "achievement": "Two kids",
+            "date": "2024"
+        }
     ],
     "publications": [
         {
             "title": "Negotiation Strategies for Agents with Ordinal Preferences: Theoretical Analysis and Human Study",
             "publish_date": "2024",
+            "published_venue": "Elsevier",
+            "co_authors": "Prof. Sarit Krus and Dr.Noam Hazon",
             "description": "Researched negotiation protocols using ordinal preferences, analyzing strategies for full and no-information settings. Developed equilibrium strategies and validated their effectiveness through a human study, showing that people often reach equilibrium outcomes and that equilibrium-following agents perform well.",
             "publication": "Artificial Intelligence, Elsevier",
             "link": "https://u.cs.biu.ac.il/~krauss/data/articles/AIJ-2024.pdf"
@@ -174,23 +193,28 @@
         {
             "title": "STWSN: A Novel Secure Distributed Transport Protocol for Wireless Sensor Networks",
             "publish_date": "2018",
+            "published_venue": "IJCS18",
+            "co_authors": " Dr. Amit Dvir",
             "description": "Developed STWSN, a secure transport protocol for wireless sensor networks, enhancing DTSN with security features to resist energy and reliability attacks. Conducted formal and informal security analyses, and demonstrated performance through simulations.",
-            "publication": "IJCS18",
             "link": "https://onlinelibrary.wiley.com/doi/abs/10.1002/dac.3827"
         },
         {
             "title": "Negotiation Strategies for Agents with Ordinal Preferences",
             "publish_date": "2019",
+            "published_venue": "Elsevier",
+            "co_authors": "Prof. Sarit Krus and Dr.Noam Hazon",
             "description": "Researched negotiation protocols with ordinal preferences, analyzing equilibrium strategies for full and no-information settings. Empirical studies showed humans reach equilibrium outcomes and agents perform well in negotiations.",
-            "publication": "Thesis",
             "link": "https://www.ijcai.org/proceedings/2018/0029.pdf"
         },
         {
             "title": "Heterogeneous SDN controller placement problem—The Wi-Fi and 4G LTE-U case",
             "publish_date": "2021",
+            "published_venue": "Elsevier",
+            "co_authors": "A. Zilberman at el",
             "description": "Developed a novel strategy for wireless controller placement in SDN to optimize LTE-U and Wi-Fi coexistence. Addressed throughput, link failure probability, and SouthBound interface transparency. Proposed and simulated two heuristic solutions, demonstrating fast and efficient performance.",
-            "publication": "No",
             "link": "https://www.researchgate.net/publication/353671072_Heterogeneous_SDN_controller_placement_problem-The_Wi-Fi_and_4G_LTE-U_case"
         }
-    ]
+    ],
+    "volunteer_experience": [],
+    "summary": "Lead Applied Data Scientist with experience of over five years in the tech industry in Time Series, NLP, and Generative. Four years of experience in academic research: Two years of experience in ML and two years in algorithmic game theory research. Additionally, one year as DS Guild manager. Entrepreneur mindset."
 }

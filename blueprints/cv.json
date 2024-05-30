@@ -5,11 +5,14 @@
     "email": "[Your Email Address]",
     "phone": "[Your Phone Number]",
     "address": "[Your Address]",
-    "is_willing_to_relocate": "[true,false or dont know]",
+    "is_willing_to_relocate": "['yes' or 'no' or 'dont know']",
     "willing_to_relocate": "[Is willing to relocate]",
-    "linkedin_link":"[Your LinkedIn Profile Link]",
+    "linkedin_link": "[Your LinkedIn Profile Link]",
     "github_link": "[Your GitHub Profile Link]",
-    "additional_websites": ["[Additional Website]", "[Additional Website]"]
+    "additional_websites": [
+      "[Additional Website]",
+      "[Additional Website]"
+    ]
   },
   "education": [
     {
@@ -34,45 +37,68 @@
       "title": "[Job Title]",
       "company": "[Company Name]",
       "location": "[City, Country]",
-      "start_date": "[Start Date]",
-      "end_date": "[End Date or 'Ongoing']",
+      "start_date": "[Start Month and Year]",
+      "end_date": "[End Month and Year or 'Ongoing']",
       "is_ongoing": "[False or True]",
-      "responsibilities": ["[Responsibility]", "[Responsibility]"],
-      "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"]
+      "responsibilities": [
+        "[Responsibility]",
+        "[Responsibility]"
+      ],
+      "keywords": [
+        "[Extracted Keyword]",
+        "[Extracted Keyword]"
+      ]
     },
     {
       "title": "[Job Title]",
       "company": "[Company Name]",
       "location": "[City, Country]",
-      "start_date": "[Start Date]",
-      "end_date": "[End Date or 'Ongoing']",
+      "start_date": "[Start Month and Year]",
+      "end_date": "[End Month and Year or 'Ongoing']",
       "is_ongoing": "[False or True]",
-      "responsibilities": ["[Responsibility]", "[Responsibility]"],
-      "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"]
+      "responsibilities": [
+        "[Responsibility]",
+        "[Responsibility]"
+      ],
+      "keywords": [
+        "[Extracted Keyword]",
+        "[Extracted Keyword]"
+      ]
     }
   ],
   "skills": [
     {
       "name": "[Skill]",
-      "level": "[Years]"
+      "years": "[Integer in Years]"
     },
     {
       "name": "[Skill]",
-      "level": "[Years]"
+      "years": "[Integer in Years]"
     }
   ],
-  "certifications": ["[Certification Name]", "[Certification Name]"],
+  "certifications": [
+    "[Certification Name]",
+    "[Certification Name]"
+  ],
   "projects": [
     {
       "title": "[Project Title]",
       "description": "[Project Description]",
-      "technologies": ["[Technology Used]", "[Technology Used]", "[Technology Used]"],
+      "technologies": [
+        "[Technology Used]",
+        "[Technology Used]",
+        "[Technology Used]"
+      ],
       "github_link": "[GitHub Repository Link]"
     },
     {
       "title": "[Project Title]",
       "description": "[Project Description]",
-      "technologies": ["[Technology Used]", "[Technology Used]", "[Technology Used]"],
+      "technologies": [
+        "[Technology Used]",
+        "[Technology Used]",
+        "[Technology Used]"
+      ],
       "github_link": "[GitHub Repository Link]"
     }
   ],
@@ -105,18 +131,16 @@
       "title": "[Publication Title]",
       "publish_date": "[Publication Date]",
       "published_venue": "[Published Venue if published]",
-      "co_authors": "[ Co-Authors]",
+      "co_authors": "[Co-Authors]",
       "description": "[Publication Description]",
-      "publication": "[Where Published]",
       "link": "[Publication Link]"
     },
     {
       "title": "[Publication Title]",
       "publish_date": "[Publication Date]",
       "published_venue": "[Published Venue if published]",
-      "co_authors": "[ Co-Authors]",
+      "co_authors": "[Co-Authors]",
       "description": "[Publication Description]",
-      "publication": "[Where Published]",
       "link": "[Publication Link]"
     }
   ],

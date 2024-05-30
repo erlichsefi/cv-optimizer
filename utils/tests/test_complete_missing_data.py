@@ -10,26 +10,32 @@ from utils.tests import MockUserInterface
 def get_perfect_cv():
     with open("data_set/expected_cv.json","r") as file:
         return json.load(file)
+    
+def get_cv_blueprint():
+    with open("blueprints/cv.json","r") as file:
+        return json.load(file)
 
 
     
 def recursive_set(json_obj,value):
     if isinstance(json_obj, dict):
         if not json_obj:
-            return
+            return False
         key = random.choice(list(json_obj.keys()))
         if isinstance(json_obj[key], (dict, list)):
-            recursive_set(json_obj[key],value)
+            return recursive_set(json_obj[key],value)
         else:
-            json_obj[key] = value
+            json_obj[key] = json_obj[key] + value
+            return True
     elif isinstance(json_obj, list):
         if not json_obj:
-            return
+            return False
         index = random.randint(0, len(json_obj) - 1)
         if isinstance(json_obj[index], (dict, list)):
-            recursive_set(json_obj[index],value)
+            return recursive_set(json_obj[index],value)
         else:
-            json_obj[index] = value
+            json_obj[index] = json_obj[key] + value
+            return True
 
 def test_perfect_cv():
     mock = MockUserInterface()
@@ -40,7 +46,7 @@ def test_perfect_cv():
     assert mock.set_issues_to_overcome.call_count == 1
 
     extracted_json = mock.set_issues_to_overcome.call_args_list[0][0][0]
-    assert len(extracted_json['confirmed_question']) <= 1, json.dumps(extracted_json)
+    assert len(extracted_json['confirmed_issues']) <= 1, json.dumps(extracted_json)
 
 
 def test_perfect_cv_missing():
@@ -54,10 +60,12 @@ def test_perfect_cv_missing():
 
     mock = MockUserInterface()
     mock.get_user_extract_cv_data.return_value = prefect_cv
+    mock.get_cv_blueprint.return_value = get_cv_blueprint()
+
     
     get_issues_need_to_be_adressed(mock)
 
     assert mock.set_issues_to_overcome.call_count == 1
 
     extracted_json = mock.set_issues_to_overcome.call_args_list[0][0][0]
-    assert len(extracted_json['confirmed_question']) <= 1, json.dumps(extracted_json)
+    assert len(extracted_json['confirmed_issues']) <= 1, json.dumps(extracted_json)

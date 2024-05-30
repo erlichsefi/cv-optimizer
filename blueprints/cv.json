@@ -5,15 +5,10 @@
     "email": "[Your Email Address]",
     "phone": "[Your Phone Number]",
     "address": "[Your Address]",
+    "is_willing_to_relocate": "[true,false or dont know]",
     "willing_to_relocate": "[Is willing to relocate]",
-    "linkedin": {
-      "link": "[Your LinkedIn Profile Link]",
-      "username": "[Your LinkedIn Username]"
-    },
-    "github": {
-      "link": "[Your GitHub Profile Link]",
-      "username": "[Your GitHub Username]"
-    },
+    "linkedin_link":"[Your LinkedIn Profile Link]",
+    "github_link": "[Your GitHub Profile Link]",
     "additional_websites": ["[Additional Website]", "[Additional Website]"]
   },
   "education": [
@@ -23,7 +18,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade or GPA]"
+      "grade": "[Grade (decimal) or GPA]"
     },
     {
       "degree": "[Degree Type]",
@@ -31,7 +26,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade or GPA]"
+      "grade": "[Grade (decimal) or GPA]"
     }
   ],
   "experience": [
@@ -41,6 +36,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "end_date": "[End Date or 'Ongoing']",
+      "is_ongoing": "[False or True]",
       "responsibilities": ["[Responsibility]", "[Responsibility]"],
       "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"]
     },
@@ -50,6 +46,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "end_date": "[End Date or 'Ongoing']",
+      "is_ongoing": "[False or True]",
       "responsibilities": ["[Responsibility]", "[Responsibility]"],
       "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"]
     }
@@ -130,6 +127,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "end_date": "[End Date or 'Ongoing']",
+      "is_ongoing": "[False or True]",
       "description": "[Description of Volunteer Work]"
     },
     {
@@ -138,6 +136,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "end_date": "[End Date or 'Ongoing']",
+      "is_ongoing": "[False or True]",
       "description": "[Description of Volunteer Work]"
     }
   ],

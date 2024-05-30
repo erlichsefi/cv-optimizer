@@ -4,34 +4,27 @@
         "lastname": "Erlich",
         "email": "erlichsefi@gmail.com",
         "phone": "+972 524 307 093",
-        "address": "TLV, Israel - willing to relocate",
-        "linkedin": {
-            "link": "https://www.linkedin.com/in/erlichsefi/",
-            "username": [
-                "erlichsefi"
-            ]
-        },
-        "github": {
-            "link": "github.com/erlichse01",
-            "username": [
-                "erlichsefi"
-            ]
-        },
-        "additional_websites": []
+        "address": "TLV, Israel",
+        "is_willing_to_relocate": true,
+        "linkedin_link": "https://www.linkedin.com/in/erlichsefi/",
+        "github_link": "github.com/erlichsefi",
+        "additional_websites": [
+            "https://scholar.google.co.il/citations?user=8O-ZpuwAAAAJ&hl=iw"
+        ]
     },
     "education": [
         {
             "degree": "M.Sc Computer Science",
             "institution": "Ariel University",
-            "location": "Ariel",
+            "location": "Ariel, Israel",
             "start_date": "2016",
             "graduation_date": "2018",
-            "grade": "93"
+            "grade": "93.0"
         },
         {
             "degree": "B.Sc Mathematics and Computer Science",
             "institution": "Ariel University",
-            "location": "Ariel",
+            "location": "Ariel, Israel",
             "start_date": "2013",
             "graduation_date": "2016",
             "grade": "92.7"
@@ -41,9 +34,10 @@
         {
             "title": "Lead Data Scientist",
             "company": "Salesforce",
-            "location": "Tel-Aviv/Remote",
+            "location": "Tel-Aviv/Remote, Israel",
             "start_date": "Jan 2020",
             "end_date": "Present",
+            "is_ongoing": true,
             "responsibilities": [
                 "Workforce Management: E2E Data Scientist (customers until back-end) Multivariate Time Series forecasting Service",
                 "Development for an E2E dockerized pipeline for Model Deployment and Serving",
@@ -51,7 +45,6 @@
                 "Developing the first generative GA Salesforce application",
                 "Natual language to SOQL (Salesforce SQL)",
                 "Natual language to segmenation"
-
             ],
             "keywords": [
                 "Mongo",
@@ -61,21 +54,22 @@
                 "Pandas",
                 "Numpy",
                 "Git",
-                "Tensorflow", 
-                "Keras", 
-                "Torch", 
+                "Tensorflow",
+                "Keras",
+                "Torch",
                 "Huggingface",
-                "LLM", 
-                "Embedding", 
+                "LLM",
+                "Embedding",
                 "Autonomous agents"
             ]
         },
         {
             "title": "Data Scientist",
             "company": "ClickSoftware (Acquired by Salesforce)",
-            "location": "Petah Tikva",
+            "location": "Petah Tikva, Israel",
             "start_date": "Feb 2019",
             "end_date": "Jan 2020",
+            "is_ongoing": false,
             "responsibilities": [
                 "Working on Multivariate Time Series forecasting in a Multi-tenant environment",
                 "Development of an e2e dockerized pipeline (periodic training, data processing, and serving)"
@@ -93,21 +87,27 @@
         {
             "title": "AI Researcher",
             "company": "Ariel University",
-            "location": "Ariel",
+            "location": "Ariel, Israel",
             "start_date": "Nov 2016",
             "end_date": "Oct 2018",
+            "is_ongoing": false,
             "responsibilities": [
                 "Machine learning for football match violence prediction",
                 "Classification and enrichment of encrypted traffic Using Machine Learning algorithms"
             ],
-            "keywords": ["Numpy","Pandas","Sklearn"]
+            "keywords": [
+                "Numpy",
+                "Pandas",
+                "Sklearn"
+            ]
         },
         {
             "title": "Research Assistant",
             "company": "Ariel University",
-            "location": "Ariel",
+            "location": "Ariel, Israel",
             "start_date": "Oct 2014",
             "end_date": "Jul 2016",
+            "is_ongoing": false,
             "responsibilities": [
                 "Researching Malware network behavior using Wireshark and Python",
                 "Design and development of a centered intrusion detection system in Java and Python"
@@ -131,18 +131,29 @@
         "Applied Machine Learning in Python,University of Michigan, Grade 84.78"
     ],
     "projects": [
-          {
+        {
             "title": "Israel Supermarket Scraper",
             "description": "Clients to download the data published by the supermarkets.",
-            "technologies": ["Playwrite", "WebScraping", "OpenSource","Github Actions"],
+            "technologies": [
+                "Playwrite",
+                "WebScraping",
+                "OpenSource",
+                "Github Actions"
+            ],
             "github_link": "https://github.com/erlichsefi/israeli-supermarket-scarpers"
-          },
-          {
+        },
+        {
             "title": "AIWebAssist",
             "description": "Chrome extension to control the broswer using LLM",
-            "technologies": ["Javascript", "Chrome", "Selenim", "LLM", "RAG"],
+            "technologies": [
+                "Javascript",
+                "Chrome",
+                "Selenim",
+                "LLM",
+                "RAG"
+            ],
             "github_link": "https://github.com/AIWebAssist"
-          }
+        }
     ],
     "languages": [
         "Hebrew",
@@ -156,28 +167,28 @@
         {
             "title": "Negotiation Strategies for Agents with Ordinal Preferences: Theoretical Analysis and Human Study",
             "publish_date": "2024",
-            "description": "",
+            "description": "Researched negotiation protocols using ordinal preferences, analyzing strategies for full and no-information settings. Developed equilibrium strategies and validated their effectiveness through a human study, showing that people often reach equilibrium outcomes and that equilibrium-following agents perform well.",
             "publication": "Artificial Intelligence, Elsevier",
             "link": "https://u.cs.biu.ac.il/~krauss/data/articles/AIJ-2024.pdf"
         },
         {
             "title": "STWSN: A Novel Secure Distributed Transport Protocol for Wireless Sensor Networks",
             "publish_date": "2018",
-            "description": "Dr. Amit Dvir",
+            "description": "Developed STWSN, a secure transport protocol for wireless sensor networks, enhancing DTSN with security features to resist energy and reliability attacks. Conducted formal and informal security analyses, and demonstrated performance through simulations.",
             "publication": "IJCS18",
             "link": "https://onlinelibrary.wiley.com/doi/abs/10.1002/dac.3827"
         },
         {
             "title": "Negotiation Strategies for Agents with Ordinal Preferences",
             "publish_date": "2019",
-            "description": "Supervision of Prof. Sarit Krus and Dr. Noam Hazon",
+            "description": "Researched negotiation protocols with ordinal preferences, analyzing equilibrium strategies for full and no-information settings. Empirical studies showed humans reach equilibrium outcomes and agents perform well in negotiations.",
             "publication": "Thesis",
             "link": "https://www.ijcai.org/proceedings/2018/0029.pdf"
         },
         {
             "title": "Heterogeneous SDN controller placement problem—The Wi-Fi and 4G LTE-U case",
             "publish_date": "2021",
-            "description": "",
+            "description": "Developed a novel strategy for wireless controller placement in SDN to optimize LTE-U and Wi-Fi coexistence. Addressed throughput, link failure probability, and SouthBound interface transparency. Proposed and simulated two heuristic solutions, demonstrating fast and efficient performance.",
             "publication": "No",
             "link": "https://www.researchgate.net/publication/353671072_Heterogeneous_SDN_controller_placement_problem-The_Wi-Fi_and_4G_LTE-U_case"
         }

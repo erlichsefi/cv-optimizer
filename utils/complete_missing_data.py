@@ -6,12 +6,16 @@ from .llm_store import experience_chatbot, get_compliation
 
 def get_issues_need_to_be_adressed(user_interface: UserInterface):
     user_cv = user_interface.get_user_extract_cv_data()
+    
     prompt = f"""
-    Your goal is to complete the information missing or corrupted in the user data.
-    For all values (included nested ones) in the user data:
+    Your goal is to complete the information missing or corrupted in the user CV data.
+    For all keys (included nested ones) in the user data, check:
         - is the value missing? if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
         - is the value corrupted? is the data there is correpted? if it corrupted provide a question that will verfiy the true value.
-        - is the value make sense given the key? if not, verify it with the user. 
+        - is the value make sense given the key name? if not, verify it with the user. 
+
+    But:
+    - don't ask question 'to ensure the accuracy'
 
     user data:
     {json.dumps(user_cv,indent=4)}
@@ -20,10 +24,22 @@ def get_issues_need_to_be_adressed(user_interface: UserInterface):
     Provide all questions in the following format:
 
     ```json
-    [
-    "<the question to the user>",
-    // more if you have
+    {{
+        "possible_issue":[
+            {{
+                "xpath":"<the xpath to the value in question",
+                "categoty":"<one of 'missing' or 'corrupted data' or 'value did not make sense given key'>",
+                "issue":"<the value from the user data that seems to be an issue>",
+                "reason":"<the reason you think the value is an issue"
+
+            }}
+            // more if you have
+        ],
+        "confirmed_question":[
+        // a question on the issues in 'possible_issue' that seems ok.
+        ]
     ]
+    }}
     ```
     """
 

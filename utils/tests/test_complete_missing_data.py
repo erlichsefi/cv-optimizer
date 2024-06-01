@@ -40,7 +40,8 @@ def recursive_set(json_obj,value,path):
 def test_perfect_cv():
     mock = MockUserInterface()
     mock.get_user_extract_cv_data.return_value = get_perfect_cv()
-    
+    mock.get_cv_blueprint.return_value = get_cv_blueprint()
+
     get_issues_need_to_be_adressed(mock)
 
     assert mock.set_issues_to_overcome.call_count == 1

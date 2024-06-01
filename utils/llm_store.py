@@ -66,14 +66,12 @@ def get_chat_compliation(
     if is_json_expected:
         if num_of_gen == 1:
             return json.loads(
-                stream.choices[0]
-                .message.content.replace("```json", "")
-                .replace("```", "")
+                stream.choices[0].message.content.replace("```json", "").replace("```", "").replace("\'","").replace("\n","")
             )
         else:
             return [
                 json.loads(
-                    choice.message.content.replace("```json", "").replace("```", "")
+                    choice.message.content.replace("```json", "").replace("```", "").replace("\'","").replace("\n","")
                 )
                 for choice in stream.choices
             ]

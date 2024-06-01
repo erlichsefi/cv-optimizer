@@ -17,25 +17,25 @@ def get_cv_blueprint():
 
 
     
-def recursive_set(json_obj,value):
+def recursive_set(json_obj,value,path):
     if isinstance(json_obj, dict):
         if not json_obj:
             return False
         key = random.choice(list(json_obj.keys()))
         if isinstance(json_obj[key], (dict, list)):
-            return recursive_set(json_obj[key],value)
+            return recursive_set(json_obj[key],value,f"{path}/{key}")
         else:
             json_obj[key] = json_obj[key] + value
-            return True
+            return f"{path}/{key}"
     elif isinstance(json_obj, list):
         if not json_obj:
             return False
         index = random.randint(0, len(json_obj) - 1)
         if isinstance(json_obj[index], (dict, list)):
-            return recursive_set(json_obj[index],value)
+            return recursive_set(json_obj[index],value,f"{path}[{index}]")
         else:
             json_obj[index] = json_obj[key] + value
-            return True
+            return f"{path}[{index}]"
 
 def test_perfect_cv():
     mock = MockUserInterface()
@@ -53,7 +53,7 @@ def test_perfect_cv_missing():
     prefect_cv = get_perfect_cv()
     number_of_mimes = int(random.random()*10)
 
-    recursive_set(prefect_cv,"asdasd")
+    xpath = recursive_set(prefect_cv,"asdasd","")
     # for _ in range(number_of_mimes):
     #     for section in prefect_cv:x
         
@@ -62,7 +62,7 @@ def test_perfect_cv_missing():
     mock.get_user_extract_cv_data.return_value = prefect_cv
     mock.get_cv_blueprint.return_value = get_cv_blueprint()
 
-    
+    # test function
     get_issues_need_to_be_adressed(mock)
 
     assert mock.set_issues_to_overcome.call_count == 1

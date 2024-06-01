@@ -9,43 +9,56 @@ def get_issues_need_to_be_adressed(user_interface: UserInterface):
     cv_blueprint = user_interface.get_cv_blueprint()
     
     prompt = f"""
-    today is {datetime.datetime.now()}
-    Your goal is to complete the information missing or corrupted in the user CV data.
+    Today is {datetime.datetime.now()}
+    Your goal is to ensure the validaty of the information in the user CV data.
+    - Numbers are represented as strings.
+    - Booleans are represented as strings. 
+
     For all keys (included nested ones) in the user data, check:
-        - is the value missing? if it missing provide a question addressed to the user from which you can learn what the correct value to place there.
-        - is the value corrupted? is the data there is correpted? if it corrupted provide a question that will verfiy the true value.
-        - is the value make sense given the key name? if not, verify it with the user. 
+        - is the value missing? 
+        - is the value don't make sense given the surrounding atrributes?
+        - is the value make sense given the key name? 
 
     But:
-    - don't ask question 'to ensure the accuracy'
+    - Don't ask question 'to ensure the accuracy'
 
-    user data:
+
+    User CV data:
     {json.dumps(user_cv,indent=4)}
 
-    expected foramts:
+    Expected foramts:
     {json.dumps(cv_blueprint,indent=4)}
-    Provide all questions in the following format:
+
+    Provide all questions in the following valid json format:
 
     ```json
     {{
         "possible_issues":[
             {{
                 "xpath":"<the xpath to the value in question",
-                "categoty":"<one of 'missing' or 'corrupted data' or 'value did not make sense given key'>",
-                "issue":"<the value from the user data that seems to be an issue>",
-                "reason":"<the reason you think the value is an issue",
+                "current_value":"<the value from the user data that seems to be an issue>",
+                "expected_value":"<the value you've expected to see>",
+                "categoty":"<one of 'missing' or 'corrupted data' or 'typing issue' or 'out of context'>",
+                "reason":"<the reason you think the value is an issue>",
+                "question":"<question to the user>"
             }}
             // more if you have
         ],
         "confirmed_issues":[
-            // a description of the valid issues to resolve
+        {{
+            "checklist_item":"<one of the issues in 'possible_issues' if it valid>"
+        }}
+        // more if you have
         ]
     ]
     }}
     ```
     """
 
-    issues_to_adresss = get_compliation("", prompt, is_json_expected=True)
+    issues_to_adresss = get_compliation("", prompt,
+                                        model="gpt-3.5-turbo-1106",
+                                        is_json_expected=True,
+                                        temperature=0.1)
     user_interface.set_issues_to_overcome(issues_to_adresss)
 
 

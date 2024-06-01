@@ -5,8 +5,7 @@
     "email": "[Your Email Address]",
     "phone": "[Your Phone Number]",
     "address": "[Your Address]",
-    "is_willing_to_relocate": "['yes' or 'no' or 'dont know']",
-    "willing_to_relocate": "[Is willing to relocate]",
+    "is_willing_to_relocate": "[yes/no/dont know]",
     "linkedin_link": "[Your LinkedIn Profile Link]",
     "github_link": "[Your GitHub Profile Link]",
     "additional_websites": [
@@ -21,7 +20,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade (decimal) or GPA]"
+      "grade": "[Grade (with decimal point) or GPA]"
     },
     {
       "degree": "[Degree Type]",
@@ -29,7 +28,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Date]",
       "graduation_date": "[Graduation Date]",
-      "grade": "[Grade (decimal) or GPA]"
+      "grade": "[Grade (with decimal point) or GPA]"
     }
   ],
   "experience": [
@@ -39,7 +38,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Month and Year]",
       "end_date": "[End Month and Year or 'Ongoing']",
-      "is_ongoing": "[False or True]",
+      "is_ongoing": "[False/True]",
       "responsibilities": [
         "[Responsibility]",
         "[Responsibility]"
@@ -55,7 +54,7 @@
       "location": "[City, Country]",
       "start_date": "[Start Month and Year]",
       "end_date": "[End Month and Year or 'Ongoing']",
-      "is_ongoing": "[False or True]",
+      "is_ongoing": "[False/True]",
       "responsibilities": [
         "[Responsibility]",
         "[Responsibility]"

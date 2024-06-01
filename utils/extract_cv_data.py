@@ -1,7 +1,7 @@
 import json
 import openai
 from .llm_store import get_compliation
-from .interface import UserInterface, Args
+from .interface import UserInterface, TerminalInterface
 from .pdf_util import get_data_from_pdf
 
 def dict_diff(dict1, dict2):
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     collection = list()
     for _ in range(3):
 
-        response = core_run(Args(), "data_set/Curriculum_Vitae_Jan24.pdf")
+        response = run(TerminalInterface(), "data_set/Curriculum_Vitae_Jan24.pdf")
 
         collection.append(response)
 

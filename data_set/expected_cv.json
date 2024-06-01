@@ -34,20 +34,17 @@
         {
             "title": "Lead Data Scientist",
             "company": "Salesforce",
-            "location": "Tel-Aviv/Remote, Israel",
+            "location": "Tel-Aviv/Remote",
             "start_date": "Jan 2020",
-            "end_date": "Ongoing",
-            "is_ongoing": true,
+            "end_date": "Present",
+            "is_ongoing": "True",
             "responsibilities": [
                 "Workforce Management: E2E Data Scientist (customers until back-end) Multivariate Time Series forecasting Service",
-                "Development for an E2E dockerized pipeline for Model Deployment and Serving",
-                "Deploying language models in production using tensorflow",
-                "Developing the first generative GA Salesforce application",
-                "Natual language to SOQL (Salesforce SQL)",
-                "Natual language to segmenation"
+                "Development for an E2E dockerized pipeline for Model Deployment and Serving"
             ],
             "keywords": [
-                "Mongo",
+                "Time Series forecasting",
+                "Multivariate Time Series",
                 "Docker",
                 "Python",
                 "Sklearn",
@@ -66,10 +63,10 @@
         {
             "title": "Data Scientist",
             "company": "ClickSoftware (Acquired by Salesforce)",
-            "location": "Petah Tikva, Israel",
+            "location": "Petah Tikva",
             "start_date": "Feb 2019",
             "end_date": "Jan 2020",
-            "is_ongoing": false,
+            "is_ongoing": "False",
             "responsibilities": [
                 "Working on Multivariate Time Series forecasting in a Multi-tenant environment",
                 "Development of an e2e dockerized pipeline (periodic training, data processing, and serving)"
@@ -87,48 +84,30 @@
         {
             "title": "AI Researcher",
             "company": "Ariel University",
-            "location": "Ariel, Israel",
+            "location": "Ariel",
             "start_date": "Nov 2016",
             "end_date": "Oct 2018",
-            "is_ongoing": false,
+            "is_ongoing": "False",
             "responsibilities": [
                 "Machine learning for football match violence prediction",
                 "Classification and enrichment of encrypted traffic Using Machine Learning algorithms"
             ],
             "keywords": [
-                "Numpy",
-                "Pandas",
-                "Sklearn"
-            ]
-        },
-        {
-            "title": "Research Assistant",
-            "company": "Ariel University",
-            "location": "Ariel, Israel",
-            "start_date": "Oct 2014",
-            "end_date": "Jul 2016",
-            "is_ongoing": false,
-            "responsibilities": [
-                "Researching Malware network behavior using Wireshark and Python",
-                "Design and development of a centered intrusion detection system in Java and Python"
-            ],
-            "keywords": [
-                "Wireshark",
-                "Python",
-                "Java",
-                "Multiparty Computation",
-                "Cybersecurity"
+                "Machine Learning",
+                "Football match violence prediction",
+                "Encrypted traffic",
+                "Machine Learning algorithms"
             ]
         }
     ],
     "skills": [
         {
             "name": "Java",
-            "years": "5"
+            "years": "3"
         },
         {
             "name": "Python",
-            "years": "7"
+            "years": "5"
         },
         {
             "name": "AWS",
@@ -171,13 +150,13 @@
         },
         {
             "language": "English",
-            "level": "Fluent"
+            "level": "High level"
         }
     ],
     "achievements": [
         {
-            "achievement": "Two kids",
-            "date": "2024"
+            "achievement": "Twice Dean Honor, Magna Cum Laude",
+            "date": "2013-2016"
         }
     ],
     "publications": [
@@ -216,5 +195,6 @@
         }
     ],
     "volunteer_experience": [],
-    "summary": "Lead Applied Data Scientist with experience of over five years in the tech industry in Time Series, NLP, and Generative. Four years of experience in academic research: Two years of experience in ML and two years in algorithmic game theory research. Additionally, one year as DS Guild manager. Entrepreneur mindset."
+    "hobbies": [],
+    "summary": "Lead Applied Data Scientist with experience in Time Series, NLP, and Generative. Four years of experience in academic research: Two years of experience in ML and two years in algorithmic game theory research. Additionally, one year as DS Guild manager. Entrepreneur mindset."
 }

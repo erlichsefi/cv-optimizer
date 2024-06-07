@@ -8,51 +8,60 @@ def get_issues_need_to_be_adressed(user_interface: UserInterface):
     user_cv = user_interface.get_user_extract_cv_data()
     cv_blueprint = user_interface.get_cv_blueprint()
     
-    prompt = f"""
-    Today is {datetime.datetime.now()}
-    Your goal is to ensure the validity of the information in the user's CV data.
-    - Numbers are represented as strings.
-    - Booleans are represented as strings. 
+    all_issues = []
+    for section in user_cv.keys():
+        prompt = f"""
+        Today is {datetime.datetime.now()}
+        Your goal is to ensure the validity of the information in the user's CV data.
+        - Numbers are represented as strings.
+        - Booleans are represented as strings. 
 
-    For all keys (including nested ones) in the user data, check:
-        - Is the value missing?
-        - Does the value make sense given the surrounding attributes?
-        - Does the value make sense given the key name?
+        For all keys (including nested ones) in the user data, check:
+            - Is the value missing?
+            - Does the value make sense given the surrounding attributes?
+            - Does the value make sense given the key name?
 
-    But:
-    - Don't ask questions 'to ensure the accuracy.'
+        But:
+        - Don't ask questions 'to ensure the accuracy.'
 
 
-    User CV data:
-    {json.dumps(user_cv,indent=4)}
+        User CV data:
+        {json.dumps(user_cv[section],indent=4)}
 
-    CV expected stracture:
-    {json.dumps(cv_blueprint,indent=4)}
+        CV expected stracture:
+        {json.dumps(cv_blueprint[section],indent=4)}
 
-    Provide all questions in the following valid json format:
+        Provide all questions in the following valid json format:
 
-    ```json
-    {{
-        "possible_issues":[
-            {{
-                "xpath": "<the xpath to the value in question>",
-                "current_value": "<the value from the user data that seems to be an issue>",
-                "expected_value": "<the value you've expected to see>",
-                "category": "<one of 'missing', 'corrupted data', 'typing issue', or 'out of context'>",
-                "reason": "<elaborate why 'current_value' doesn't meet your 'expected_value'>",
-                "question": "<question to the user>"
-            }}
-            // more if you have
-        ],
-    ]
-    }}
-    ```
-    """
+        ```json
+        {{
+            "possible_issues":[
+                {{
+                    "xpath": "<the xpath to the value in question>",
+                    "current_value": "<the value from the user data that seems to be an issue>",
+                    "expected_value": "<the value you've expected to see>",
+                    "category": "<one of 'missing', 'corrupted_data', 'typing_issue', or 'value_out_of_context'>",
+                    "reason": "<elaborate why 'current_value' doesn't meet your 'expected_value'>",
+                    "question": "<a action item to an llm to resolve this isse>"
+                }}
+                // more if you have
+            ],
+        ]
+        }}
+        ```
+        """
 
-    issues_to_adresss = get_compliation("", prompt,
-                                        model="gpt-3.5-turbo-1106",
-                                        is_json_expected=True,
-                                        temperature=0.1)
+        issues_to_adresss = get_compliation("", prompt,
+                                            model="gpt-3.5-turbo-1106",
+                                            is_json_expected=True,
+                                            temperature=0.1)
+        all_issues.append(issues_to_adresss)
+
+    f = []
+    for iss in all_issues:
+        for i in iss["possible_issues"]:
+            if i['category'] != "typing_issue" and i['current_value'] != i['expected_value']:
+                f.append(i)
     user_interface.set_issues_to_overcome(issues_to_adresss)
 
 

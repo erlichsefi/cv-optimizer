@@ -5,7 +5,7 @@
     "email": "[Your Email Address]",
     "phone": "[Your Phone Number]",
     "address": "[Your Address]",
-    "is_willing_to_relocate": "[yes/no/dont know]",
+    "is_willing_to_relocate": "[False/True]",
     "linkedin_link": "[Your LinkedIn Profile Link]",
     "github_link": "[Your GitHub Profile Link]",
     "additional_websites": [

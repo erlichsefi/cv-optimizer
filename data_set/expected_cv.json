@@ -5,7 +5,7 @@
         "email": "erlichsefi@gmail.com",
         "phone": "+972 524 307 093",
         "address": "TLV, Israel",
-        "is_willing_to_relocate": "yes",
+        "is_willing_to_relocate": "True",
         "linkedin_link": "https://www.linkedin.com/in/erlichsefi/",
         "github_link": "github.com/erlichsefi",
         "additional_websites": [

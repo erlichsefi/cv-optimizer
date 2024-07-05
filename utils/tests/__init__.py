@@ -4,8 +4,10 @@ import inspect
 
 
 class MockUserInterface(TerminalInterface):
-     def __init__(self):
-        #super().__init__()
+    def __init__(self):
+        # super().__init__()
         # Dynamically mock all methods of TerminalInterface
-        for name, method in inspect.getmembers(TerminalInterface, predicate=inspect.isfunction):
+        for name, method in inspect.getmembers(
+            TerminalInterface, predicate=inspect.isfunction
+        ):
             setattr(self, name, Mock(name=name))

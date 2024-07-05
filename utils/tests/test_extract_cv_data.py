@@ -192,7 +192,7 @@ def test_examples():
 
     mock = MockUserInterface()
     mock.get_cv_blueprint.return_value = expected_json
-    
+
     core_run(mock, extracted_text, "MOCK_PDF")
 
     assert mock.set_user_extract_cv_data.call_count == 1

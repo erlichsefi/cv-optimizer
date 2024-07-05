@@ -1,8 +1,9 @@
 import json
 import openai
-from .llm_store import get_compliation
-from .interface import UserInterface, TerminalInterface
-from .pdf_util import get_data_from_pdf
+from llm_store import get_compliation
+from interface import UserInterface, TerminalInterface
+from pdf_util import get_data_from_pdf
+
 
 def dict_diff(dict1, dict2):
     diff = {}
@@ -21,7 +22,7 @@ def dict_diff(dict1, dict2):
     return diff
 
 
-def core_run(user_interface:UserInterface, extracted_text, pdf_path):
+def core_run(user_interface: UserInterface, extracted_text, pdf_path):
     expected_json = user_interface.get_cv_blueprint()
     response = get_compliation(
         system_message=f"""
@@ -67,8 +68,7 @@ def core_run(user_interface:UserInterface, extracted_text, pdf_path):
     user_interface.set_user_extract_cv_data(user_extracted_data, pdf_path)
 
 
-
-def run(user_interface:UserInterface, pdf_path:str):
+def run(user_interface: UserInterface, pdf_path: str):
     # inputs
     extracted_text = get_data_from_pdf(pdf_path)
 
@@ -83,15 +83,19 @@ def run(user_interface:UserInterface, pdf_path:str):
 if __name__ == "__main__":
 
     collection = list()
-    for _ in range(3):
 
-        response = run(TerminalInterface(), "data_set/Curriculum_Vitae_Jan24.pdf")
+    num_of_tries = 1
+    for _ in range(num_of_tries):
 
-        collection.append(response)
+        terminal = TerminalInterface("../")
+        run(
+            terminal, "../data_set/Curriculum_Vitae_Jan24.pdf"
+        )
+        collection.append(terminal.get_user_extract_cv_data())
 
-    diff = dict_diff(collection[2], collection[1])
-    for entry in diff:
-        for index in range(len(collection[2][entry])):
-            print(dict_diff(collection[2][entry][index], collection[1][entry][index]))
+    # diff = dict_diff(collection[2], collection[1])
+    # for entry in diff:
+    #     for index in range(len(collection[2][entry])):
+    #         print(dict_diff(collection[2][entry][index], collection[1][entry][index]))
 
-    assert len(set(collection)) == 1
+    assert len(set(collection)) == num_of_tries

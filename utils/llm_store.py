@@ -2,13 +2,48 @@ import os
 import json
 from openai import OpenAI
 import retry
-from memoization import cached
+import requests
+import uuid
 
 
-# from filestore import FileStoreState
+class OAI:
+    def __init__(self, api_key=None) -> None:
+
+        if api_key is None:
+            api_key = os.environ.get("OPENAI_API_KEY",None)
+
+        if api_key is None:
+            raise ValueError("please provide OAI key")
+        
+        self.api_key = api_key
+
+    def get_compliation(self, model, messages, temperature, top_p, num_of_gen):
+        client = OpenAI(api_key=self.api_key)
+        stream = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            stream=False,
+            temperature=temperature,
+            top_p=top_p,
+            n=num_of_gen,
+        )
+        return [response.message.content for response in stream.choices]
 
 
-# state = FileStoreState()
+class ollama:
+
+    def get_compliation(self, model, messages, temperature, top_p, num_of_gen):
+        return requests.post(
+            "http://host.docker.internal:11434/api/generate",
+            data={
+                "model": "mistral",
+                "prompt": "\n\n".join(map(lambda x: json.dumps(x), messages)),
+                "stream": False,
+            },
+        )
+
+
+PROVIDER = OAI()
 
 
 def get_compliation(
@@ -36,7 +71,6 @@ def get_compliation(
         top_p=top_p,
     )
 
-    # state.presist_compliation(messages,generations,model)
     return generations
 
 
@@ -53,33 +87,38 @@ def get_chat_compliation(
     if not api_key:
         api_key = os.environ["OPENAI_API_KEY"]
 
-    client = OpenAI(api_key=api_key)
-    stream = client.chat.completions.create(
+    responses = PROVIDER.get_compliation(
         model=model,
         messages=messages,
-        stream=False,
         temperature=temperature,
         top_p=top_p,
-        n=num_of_gen,
+        num_of_gen=num_of_gen,
     )
 
     if is_json_expected:
         if num_of_gen == 1:
             return json.loads(
-                stream.choices[0].message.content.replace("```json", "").replace("```", "").replace("\'","").replace("\n","")
+                responses[0]
+                .replace("```json", "")
+                .replace("```", "")
+                .replace("'", "")
+                .replace("\n", "")
             )
         else:
             return [
                 json.loads(
-                    choice.message.content.replace("```json", "").replace("```", "").replace("\'","").replace("\n","")
+                    choice.replace("```json", "")
+                    .replace("```", "")
+                    .replace("'", "")
+                    .replace("\n", "")
                 )
-                for choice in stream.choices
+                for choice in responses
             ]
 
     if num_of_gen == 1:
-        return stream.choices[0].message.content
+        return responses[0]
     else:
-        return [choice.message.content for choice in stream.choices]
+        return responses
 
 
 def have_a_look(image_path, prompt, api_key, model="gpt-4-vision-preview"):
@@ -201,7 +240,7 @@ def experience_chatbot(system_prompt, user_interface, id, topic, model="gpt-3.5-
 
 
 if __name__ == "__main__":
-    from .interface import TerminalInterface
+    from interface import TerminalInterface
 
     experience_test = (
         {
@@ -225,4 +264,6 @@ if __name__ == "__main__":
     only one question at a time.
     """
     terminal_interface = TerminalInterface()
-    experience_chatbot(system_prompt, terminal_interface, topic="TEST TOPIC")
+    experience_chatbot(
+        system_prompt, terminal_interface, str(uuid.uuid4()), topic="TEST TOPIC"
+    )

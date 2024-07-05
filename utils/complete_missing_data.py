@@ -1,28 +1,18 @@
 import json
 import datetime
-from .interface import TerminalInterface, UserInterface
-from .llm_store import experience_chatbot, get_compliation
+from interface import TerminalInterface, UserInterface
+from llm_store import experience_chatbot, get_compliation
 
 
 def get_issues_need_to_be_adressed(user_interface: UserInterface):
     user_cv = user_interface.get_user_extract_cv_data()
     cv_blueprint = user_interface.get_cv_blueprint()
-    
+
     all_issues = []
     for section in user_cv.keys():
         prompt = f"""
         Today is {datetime.datetime.now()}
-        Your goal is to ensure the validity of the information in the user's CV data.
-        - Numbers are represented as strings.
-        - Booleans are represented as strings. 
-
-        For all keys (including nested ones) in the user data, check:
-            - Is the value missing?
-            - Does the value make sense given the surrounding attributes?
-            - Does the value make sense given the key name?
-
-        But:
-        - Don't ask questions 'to ensure the accuracy.'
+        Your goal is to fill all the missing information from the the CV.
 
 
         User CV data:
@@ -51,16 +41,22 @@ def get_issues_need_to_be_adressed(user_interface: UserInterface):
         ```
         """
 
-        issues_to_adresss = get_compliation("", prompt,
-                                            model="gpt-3.5-turbo-1106",
-                                            is_json_expected=True,
-                                            temperature=0.1)
+        issues_to_adresss = get_compliation(
+            "",
+            prompt,
+            model="gpt-3.5-turbo-1106",
+            is_json_expected=True,
+            temperature=0.1,
+        )
         all_issues.append(issues_to_adresss)
 
     f = []
     for iss in all_issues:
         for i in iss["possible_issues"]:
-            if i['category'] != "typing_issue" and i['current_value'] != i['expected_value']:
+            if (
+                i["category"] != "typing_issue"
+                and i["current_value"] != i["expected_value"]
+            ):
                 f.append(i)
     user_interface.set_issues_to_overcome(issues_to_adresss)
 
@@ -109,6 +105,11 @@ def chat_to_validate_extracted_cv(user_interface: UserInterface, id):
     )
 
 
+# def find_syhtex_issues(user_interface):
+#     user_cv = user_interface.get_user_extract_cv_data()
+#     list_of_errors = get_errors(user_cv)
+
+
 def chat_on_question(user_interface: UserInterface):
     """completed the user infomration by chat"""
     if not user_interface.has_issues_to_overcome():
@@ -138,5 +139,5 @@ def chat_on_question(user_interface: UserInterface):
 
 
 if __name__ == "__main__":
-    terminal_interface = TerminalInterface()
+    terminal_interface = TerminalInterface("../")
     chat_on_question(terminal_interface)

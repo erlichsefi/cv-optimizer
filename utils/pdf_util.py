@@ -1,4 +1,3 @@
-
 def extract_1(filename):
     from pdfminer.high_level import extract_text
 
@@ -16,14 +15,15 @@ def extract_2(filename):
             text += page.extract_text()
     return text
 
+
 def extract_3(file_name):
     import pdfplumber
 
     with pdfplumber.open(file_name) as pdf:
-       text = ""
-       for page in pdf.pages:
-           text = f"{page.extract_text()}\n{text}"
-       return text.replace("(cid:123)","\t")
+        text = ""
+        for page in pdf.pages:
+            text = f"{page.extract_text()}\n{text}"
+        return text.replace("(cid:123)", "\t")
 
 
 def get_data_from_pdf(filename):

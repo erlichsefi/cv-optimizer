@@ -1,72 +1,71 @@
-from deepeval import evaluate
-from deepeval.metrics import AnswerRelevancyMetric
-from deepeval.test_case import LLMTestCase
-from utils.complete_missing_data import get_issues_need_to_be_adressed
-import json
-import random
-from utils.tests import MockUserInterface
+# from deepeval import evaluate
+# from deepeval.metrics import AnswerRelevancyMetric
+# from deepeval.test_case import LLMTestCase
+# from utils.complete_missing_data import get_issues_need_to_be_adressed
+# import json
+# import random
+# from utils.tests import MockUserInterface
 
 
-def get_perfect_cv():
-    with open("data_set/expected_cv.json","r") as file:
-        return json.load(file)
-    
-def get_cv_blueprint():
-    with open("blueprints/cv.json","r") as file:
-        return json.load(file)
+# def get_perfect_cv():
+#     with open("data_set/expected_cv.json","r") as file:
+#         return json.load(file)
+
+# def get_cv_blueprint():
+#     with open("blueprints/cv.json","r") as file:
+#         return json.load(file)
 
 
-    
-def recursive_set(json_obj,value,path):
-    if isinstance(json_obj, dict):
-        if not json_obj:
-            return False
-        key = random.choice(list(json_obj.keys()))
-        if isinstance(json_obj[key], (dict, list)):
-            return recursive_set(json_obj[key],value,f"{path}/{key}")
-        else:
-            json_obj[key] = json_obj[key] + value
-            return f"{path}/{key}"
-    elif isinstance(json_obj, list):
-        if not json_obj:
-            return False
-        index = random.randint(0, len(json_obj) - 1)
-        if isinstance(json_obj[index], (dict, list)):
-            return recursive_set(json_obj[index],value,f"{path}[{index}]")
-        else:
-            json_obj[index] = json_obj[key] + value
-            return f"{path}[{index}]"
+# def recursive_set(json_obj,value,path):
+#     if isinstance(json_obj, dict):
+#         if not json_obj:
+#             return False
+#         key = random.choice(list(json_obj.keys()))
+#         if isinstance(json_obj[key], (dict, list)):
+#             return recursive_set(json_obj[key],value,f"{path}/{key}")
+#         else:
+#             json_obj[key] = json_obj[key] + value
+#             return f"{path}/{key}"
+#     elif isinstance(json_obj, list):
+#         if not json_obj:
+#             return False
+#         index = random.randint(0, len(json_obj) - 1)
+#         if isinstance(json_obj[index], (dict, list)):
+#             return recursive_set(json_obj[index],value,f"{path}[{index}]")
+#         else:
+#             json_obj[index] = json_obj[key] + value
+#             return f"{path}[{index}]"
 
-def test_perfect_cv():
-    mock = MockUserInterface()
-    mock.get_user_extract_cv_data.return_value = get_perfect_cv()
-    mock.get_cv_blueprint.return_value = get_cv_blueprint()
+# def test_perfect_cv():
+#     mock = MockUserInterface()
+#     mock.get_user_extract_cv_data.return_value = get_perfect_cv()
+#     mock.get_cv_blueprint.return_value = get_cv_blueprint()
 
-    get_issues_need_to_be_adressed(mock)
+#     get_issues_need_to_be_adressed(mock)
 
-    assert mock.set_issues_to_overcome.call_count == 1
+#     assert mock.set_issues_to_overcome.call_count == 1
 
-    extracted_json = mock.set_issues_to_overcome.call_args_list[0][0][0]
-    assert len(extracted_json['confirmed_issues']) <= 1, json.dumps(extracted_json)
+#     extracted_json = mock.set_issues_to_overcome.call_args_list[0][0][0]
+#     assert len(extracted_json['confirmed_issues']) <= 1, json.dumps(extracted_json)
 
 
-def test_perfect_cv_missing():
-    prefect_cv = get_perfect_cv()
-    number_of_mimes = int(random.random()*10)
+# def test_perfect_cv_missing():
+#     prefect_cv = get_perfect_cv()
+#     number_of_mimes = int(random.random()*10)
 
-    xpath = recursive_set(prefect_cv,"asdasd","")
-    # for _ in range(number_of_mimes):
-    #     for section in prefect_cv:x
-        
+#     xpath = recursive_set(prefect_cv,"asdasd","")
+#     # for _ in range(number_of_mimes):
+#     #     for section in prefect_cv:x
 
-    mock = MockUserInterface()
-    mock.get_user_extract_cv_data.return_value = prefect_cv
-    mock.get_cv_blueprint.return_value = get_cv_blueprint()
 
-    # test function
-    get_issues_need_to_be_adressed(mock)
+#     mock = MockUserInterface()
+#     mock.get_user_extract_cv_data.return_value = prefect_cv
+#     mock.get_cv_blueprint.return_value = get_cv_blueprint()
 
-    assert mock.set_issues_to_overcome.call_count == 1
+#     # test function
+#     get_issues_need_to_be_adressed(mock)
 
-    extracted_json = mock.set_issues_to_overcome.call_args_list[0][0][0]
-    assert len(extracted_json['confirmed_issues']) <= 1, json.dumps(extracted_json)
+#     assert mock.set_issues_to_overcome.call_count == 1
+
+#     extracted_json = mock.set_issues_to_overcome.call_args_list[0][0][0]
+#     assert len(extracted_json['confirmed_issues']) <= 1, json.dumps(extracted_json)

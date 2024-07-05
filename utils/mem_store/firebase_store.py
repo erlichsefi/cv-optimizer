@@ -30,21 +30,6 @@ class FirebaseStateStore(StateStore):
         return doc_ref, doc
 
     @classmethod
-    def get_cv_blueprint(cls):
-        with open("blueprints/cv.json", "r") as file:
-            return json.load(file)
-
-    @classmethod
-    def get_position_blueprint(cls):
-        with open("blueprints/position.json", "r") as file:
-            return json.load(file)
-
-    @classmethod
-    def get_expected_latex_format(cls):
-        with open("blueprints/cv.tex", "r") as file:
-            return file.read()
-
-    @classmethod
     def get_presist_compliation(cls):
         doc_ref = cls.db.collection("user_data").document("compliations")
         doc = doc_ref.get()

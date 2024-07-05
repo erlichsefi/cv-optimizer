@@ -8,17 +8,20 @@
             "name": "1) User Pdf to JSON",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/extract_cv_data.py",
+            "program": "extract_cv_data.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}/utils",
         },
         {
             "name": "2) Complete user data",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/complete_missing_data.py",
+            "program": "complete_missing_data.py",
             "console": "integratedTerminal",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}/utils",
+
         },
         {
             "name": "3) Drill Down",

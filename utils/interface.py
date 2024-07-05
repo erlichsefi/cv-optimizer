@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from uuid import uuid4
 import json
 import streamlit as st
-from .llm_store import get_chat_compliation
-from .mem_store import (
+from llm_store import get_chat_compliation
+from mem_store import (
     StateStore,
     FileStateStore,
     StermlitStateStore,
@@ -14,8 +14,8 @@ import contextlib
 
 class UserInterface(StateStore, ABC):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, resources_dir) -> None:
+        super().__init__(resources_dir)
         self.messages_history = list()
 
     @abstractmethod
@@ -63,8 +63,8 @@ class UserInterface(StateStore, ABC):
 
 class TerminalInterface(UserInterface, FileStateStore):
 
-    def __init__(self) -> None:
-        super(TerminalInterface, self).__init__()
+    def __init__(self, resources_dir) -> None:
+        super(TerminalInterface, self).__init__(resources_dir)
 
     def send_user_message(self, message):
         self.messages_history.append({"role": "assistant", "content": message})

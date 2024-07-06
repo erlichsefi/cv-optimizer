@@ -3,7 +3,7 @@ from uuid import uuid4
 import json
 import streamlit as st
 from .llm_store import get_chat_compliation
-from .mem_store import (
+from .memory_store import (
     StateStore,
     FileStateStore,
     StermlitStateStore,

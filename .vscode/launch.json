@@ -8,26 +8,24 @@
             "name": "1) User Pdf to JSON",
             "type": "debugpy",
             "request": "launch",
-            "program": "extract_cv_data.py",
+            "module": "utils.extract_cv_data",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
-            "cwd": "${workspaceFolder}/utils",
         },
         {
             "name": "2) Complete user data",
             "type": "debugpy",
             "request": "launch",
-            "program": "complete_missing_data.py",
+            "module": "utils.complete_missing_data",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
-            "cwd": "${workspaceFolder}/utils",
 
         },
         {
             "name": "3) Drill Down",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/drill_down.py",
+            "module": "utils.drill_down",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env"
         },
@@ -35,7 +33,7 @@
             "name": "4) a. Position to JSON",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/extract_position_data.py",
+            "module": "utils.extract_position_data",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env"
         },
@@ -43,7 +41,7 @@
             "name": "4) b. Create CV variations",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/position_cv_variations.py",
+            "module": "utils.position_cv_variations",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": false
@@ -52,7 +50,7 @@
             "name": "5) c. Dump all to Latex",
             "type": "debugpy",
             "request": "launch",
-            "program": "utils/dump_json_to_latex.py",
+            "module": "utils.dump_json_to_latex",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": false

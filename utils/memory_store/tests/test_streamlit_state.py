@@ -1,11 +1,15 @@
-from utils.mem_store.file_store import FileStateStore
+from utils.memory_store.stremlit_store import StermlitStateStore
 from test_cases import make_test_case
 import json
 import os
 import tempfile
+from unittest.mock import patch, MagicMock
+import streamlit as st
 
 
-class FileSetup:
+class StreamlitSetup:
+
+    mock_session_state = {"A": "a"}
 
     def setUp(self):
         # Create a temporary directory
@@ -26,11 +30,14 @@ class FileSetup:
         with open("blueprints/cv.tex", "w") as file:
             file.write("latex format")
 
+        self.session_state_patch = patch(
+            "streamlit.session_state", new_callable=lambda: self.mock_session_state
+        )
+        self.mock_session_state = self.session_state_patch.start()
+
     def tearDown(self):
-        # Change back to the original working directory and clean up
-        os.chdir(self.original_cwd)
-        self.test_dir.cleanup()
+        self.session_state_patch.stop()
 
 
-class FileStateStoreTestCase(make_test_case(FileStateStore, FileSetup())):
+class FileStateStoreTestCase(make_test_case(StermlitStateStore, StreamlitSetup())):
     pass

@@ -1,4 +1,4 @@
-from ..memory_store.models.cv import model_from_json
+from utils.models.cv import model_from_json
 import json
 
 

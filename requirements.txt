@@ -15,3 +15,4 @@ retry==0.9.2
 firebase_admin==6.0.0
 email-validator==2.2.0
 langchain==0.2.6
+deepeval==0.21.64

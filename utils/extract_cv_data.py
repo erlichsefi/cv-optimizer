@@ -87,8 +87,8 @@ if __name__ == "__main__":
     num_of_tries = 1
     for _ in range(num_of_tries):
 
-        terminal = TerminalInterface("../")
-        run(terminal, "../data_set/Curriculum_Vitae_Jan24.pdf")
+        terminal = TerminalInterface()
+        run(terminal, "data_set/Curriculum_Vitae_Jan24.pdf")
         collection.append(terminal.get_user_extract_cv_data())
 
     # diff = dict_diff(collection[2], collection[1])

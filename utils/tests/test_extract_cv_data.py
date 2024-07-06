@@ -4,150 +4,8 @@ from deepeval.test_case import LLMTestCase
 from utils.extract_cv_data import core_run
 import json
 from utils.tests import MockUserInterface
+from utils import CurriculumVitae
 
-
-expected_json = {
-    "personal_info": {
-        "firstname": "[Your First Name]",
-        "lastname": "[Your Last Name]",
-        "email": "[Your Email Address]",
-        "phone": "[Your Phone Number]",
-        "address": "[Your Address]",
-        "willing_to_relocate": "[Is willing to relocate]",
-        "linkedin": {
-            "link": "[Your LinkedIn Profile Link]",
-            "username": "[Your LinkedIn Username]",
-        },
-        "github": {
-            "link": "[Your GitHub Profile Link]",
-            "username": "[Your GitHub Username]",
-        },
-        "additional_websites": ["[Additional Website]", "[Additional Website]"],
-    },
-    "education": [
-        {
-            "degree": "[Degree Type]",
-            "institution": "[University or College Name]",
-            "location": "[City, Country]",
-            "start_date": "[Start Date]",
-            "graduation_date": "[Graduation Date]",
-            "grade": "[Grade or GPA]",
-        },
-        {
-            "degree": "[Degree Type]",
-            "institution": "[University or College Name]",
-            "location": "[City, Country]",
-            "start_date": "[Start Date]",
-            "graduation_date": "[Graduation Date]",
-            "grade": "[Grade or GPA]",
-        },
-    ],
-    "experience": [
-        {
-            "title": "[Job Title]",
-            "company": "[Company Name]",
-            "location": "[City, Country]",
-            "start_date": "[Start Date]",
-            "end_date": "[End Date or 'Ongoing']",
-            "responsibilities": ["[Responsibility]", "[Responsibility]"],
-            "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"],
-        },
-        {
-            "title": "[Job Title]",
-            "company": "[Company Name]",
-            "location": "[City, Country]",
-            "start_date": "[Start Date]",
-            "end_date": "[End Date or 'Ongoing']",
-            "responsibilities": ["[Responsibility]", "[Responsibility]"],
-            "keywords": ["[Extracted Keyword]", "[Extracted Keyword]"],
-        },
-    ],
-    "skills": [
-        {"name": "[Skill]", "level": "[Years]"},
-        {"name": "[Skill]", "level": "[Years]"},
-    ],
-    "certifications": ["[Certification Name]", "[Certification Name]"],
-    "projects": [
-        {
-            "title": "[Project Title]",
-            "description": "[Project Description]",
-            "technologies": [
-                "[Technology Used]",
-                "[Technology Used]",
-                "[Technology Used]",
-            ],
-            "github_link": "[GitHub Repository Link]",
-        },
-        {
-            "title": "[Project Title]",
-            "description": "[Project Description]",
-            "technologies": [
-                "[Technology Used]",
-                "[Technology Used]",
-                "[Technology Used]",
-            ],
-            "github_link": "[GitHub Repository Link]",
-        },
-    ],
-    "languages": [
-        {
-            "language": "[Language]",
-            "level": "[Level of Proficiency (e.g., Native, Fluent, Intermediate, Basic)]",
-        },
-        {
-            "language": "[Language]",
-            "level": "[Level of Proficiency (e.g., Native, Fluent, Intermediate, Basic)]",
-        },
-        {
-            "language": "[Language]",
-            "level": "[Level of Proficiency (e.g., Native, Fluent, Intermediate, Basic)]",
-        },
-    ],
-    "achievements": [
-        {"achievement": "[Achievement Description]", "date": "[Date of Achievement]"},
-        {"achievement": "[Achievement Description]", "date": "[Date of Achievement]"},
-    ],
-    "publications": [
-        {
-            "title": "[Publication Title]",
-            "publish_date": "[Publication Date]",
-            "published_venue": "[Published Venue if published]",
-            "co_authors": "[ Co-Authors]",
-            "description": "[Publication Description]",
-            "publication": "[Where Published]",
-            "link": "[Publication Link]",
-        },
-        {
-            "title": "[Publication Title]",
-            "publish_date": "[Publication Date]",
-            "published_venue": "[Published Venue if published]",
-            "co_authors": "[ Co-Authors]",
-            "description": "[Publication Description]",
-            "publication": "[Where Published]",
-            "link": "[Publication Link]",
-        },
-    ],
-    "volunteer_experience": [
-        {
-            "organization": "[Organization Name]",
-            "role": "[Volunteer Role]",
-            "location": "[City, Country]",
-            "start_date": "[Start Date]",
-            "end_date": "[End Date or 'Ongoing']",
-            "description": "[Description of Volunteer Work]",
-        },
-        {
-            "organization": "[Organization Name]",
-            "role": "[Volunteer Role]",
-            "location": "[City, Country]",
-            "start_date": "[Start Date]",
-            "end_date": "[End Date or 'Ongoing']",
-            "description": "[Description of Volunteer Work]",
-        },
-    ],
-    "hobbies": ["[Hobby]", "[Hobby]", "[Hobby]"],
-    "summary": "[Summary of Yourself]",
-}
 
 extracted_text = """Sefi Erlich
 TLV, Israel - willing to relocate H +972 524 307 093 B erlichsefi@gmail.com Curriculum Vitae Í github.com/erlichsefi
@@ -187,25 +45,28 @@ Einstein Language Intelligence: Applied Data Scientist, Deploying language model
 { "Heterogeneous SDN controller placement problem—The Wi-Fi and 4G LTE-U case" A. Zilberman at el."""
 
 
-def test_examples():
+def test_extraction_quality():
     answer_relevancy_metric = AnswerRelevancyMetric(threshold=0.7)
 
     mock = MockUserInterface()
-    mock.get_cv_blueprint.return_value = expected_json
+    mock.get_cv_blueprint.return_value = CurriculumVitae.templete_for_prompt()
+
 
     core_run(mock, extracted_text, "MOCK_PDF")
 
     assert mock.set_user_extract_cv_data.call_count == 1
 
-    extracted_json = mock.set_user_extract_cv_data.call_args_list[0][0][0]
+    predicted_json = mock.set_user_extract_cv_data.call_args_list[0][0][0]
+    extracted_json = CurriculumVitae.templete_for_prompt()
+
     test_cases = [
         LLMTestCase(
-            input=json.dumps(expected_json[key], indent=4),
+            input=json.dumps(extracted_json[key], indent=4),
             # Replace this with the actual output from your LLM application
-            actual_output=json.dumps(extracted_json[key], indent=4),
+            actual_output=json.dumps(predicted_json[key], indent=4),
             retrieval_context=[extracted_text],
         )
-        for key in extracted_json
+        for key in predicted_json
     ]
 
     evaluate(test_cases, [answer_relevancy_metric])

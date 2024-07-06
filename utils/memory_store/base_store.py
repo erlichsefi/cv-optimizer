@@ -4,7 +4,7 @@ import os, shutil
 import subprocess
 import uuid
 import json
-from utils.models import cv
+from utils.models import CurriculumVitae
 
 
 def move_pdf_to_created(position_folder):
@@ -35,7 +35,7 @@ class StateStore(ABC):
         return os.path.join(self.blueprint_dir, file_name)
 
     def get_cv_blueprint(self):
-        return cv.get_templete_for_prompt()
+        return CurriculumVitae.templete_for_prompt()
 
     def get_position_blueprint(self):
         with open(self._blueprint_path_to("position.json"), "r") as file:

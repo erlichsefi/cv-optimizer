@@ -41,6 +41,7 @@ class Experience(BaseModel):
     title: str = Field(..., description="Job Title")
     company: str = Field(..., description="Company Name")
     location: Address = Field(..., description="City, Country")
+    is_remote_allowed : Optional[bool] = Field(..., description="Your city")
     start_date: PastDate = Field(..., description="Start Date")
     end_date: Union[PastDate, FutureDate] = Field(
         ..., description="End Month and Year or 'Ongoing'"
@@ -80,7 +81,7 @@ class Achievement(BaseModel):
 
 class Publication(BaseModel):
     title: str = Field(..., description="Publication Title")
-    publish_date: PastDate = Field(..., description="Publication Date")
+    publish_year: int = Field(..., description="Publication Date")
     published_venue: str = Field(..., description="Published Venue if published")
     co_authors: str = Field(..., description="Co-Authors")
     description: str = Field(..., description="Publication Description")
@@ -126,11 +127,11 @@ class CurriculumVitae(BaseModel):
 
     @classmethod
     def templete_for_prompt(cls):
-        pydantic_parser = PydanticOutputParser(pydantic_object=CV)
+        pydantic_parser = PydanticOutputParser(pydantic_object=cls)
         return pydantic_parser.get_format_instructions()
 
 
     @classmethod
     def from_llm_response(cls,answer):
-        pydantic_parser = PydanticOutputParser(pydantic_object=CV)
+        pydantic_parser = PydanticOutputParser(pydantic_object=cls)
         return pydantic_parser.parse(answer)

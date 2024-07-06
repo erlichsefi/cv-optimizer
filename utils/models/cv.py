@@ -1,6 +1,7 @@
 from typing import List, Optional, Union
 from pydantic import BaseModel, EmailStr, HttpUrl, PastDate, FutureDate, Field
 from pydantic import BaseModel, ValidationError
+from langchain.output_parsers import PydanticOutputParser
 
 
 class Address(BaseModel):
@@ -102,7 +103,7 @@ class VolunteerExperience(BaseModel):
     description: str = Field(..., description="Description of Volunteer Work")
 
 
-class CV(BaseModel):
+class CurriculumVitae(BaseModel):
     personal_info: PersonalInfo
     education: List[Education]
     experience: List[Experience]
@@ -116,23 +117,20 @@ class CV(BaseModel):
     hobbies: List[str] = Field(..., description="Hobby")
     summary: str = Field(..., description="Summary of Yourself")
 
+    @classmethod
+    def from_json(cls,cv_json):
+        try:
+            return cls(**cv_json)
+        except ValidationError as e:
+            print(e)
 
-def model_from_json(cv_json):
-    try:
-        return CV(**cv_json)
-    except ValidationError as e:
-        print(e)
-
-
-def get_templete_for_prompt():
-    from langchain.output_parsers import PydanticOutputParser
-
-    pydantic_parser = PydanticOutputParser(pydantic_object=CV)
-    return pydantic_parser.get_format_instructions()
+    @classmethod
+    def templete_for_prompt(cls):
+        pydantic_parser = PydanticOutputParser(pydantic_object=CV)
+        return pydantic_parser.get_format_instructions()
 
 
-def parser_llm_response(answer):
-    from langchain.output_parsers import PydanticOutputParser
-
-    pydantic_parser = PydanticOutputParser(pydantic_object=CV)
-    return pydantic_parser.parse(answer)
+    @classmethod
+    def from_llm_response(cls,answer):
+        pydantic_parser = PydanticOutputParser(pydantic_object=CV)
+        return pydantic_parser.parse(answer)

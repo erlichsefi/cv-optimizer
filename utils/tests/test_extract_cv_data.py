@@ -56,7 +56,7 @@ def test_extraction_quality():
 
     assert mock.set_user_extract_cv_data.call_count == 1
 
-    predicted_json = mock.set_user_extract_cv_data.call_args_list[0][0][0]
+    predicted_json = CurriculumVitae.from_json(mock.set_user_extract_cv_data.call_args_list[0][0][0])
     extracted_json = CurriculumVitae.templete_for_prompt()
 
     test_cases = [

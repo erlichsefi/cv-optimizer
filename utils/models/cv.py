@@ -126,6 +126,15 @@ class CurriculumVitae(BaseModel):
             print(e)
 
     @classmethod
+    def collect_parsing_errors(cls,cv_json):
+        try:
+            cls(**cv_json)
+            return []
+        except ValidationError as e:
+            return e.errors()
+
+
+    @classmethod
     def templete_for_prompt(cls):
         pydantic_parser = PydanticOutputParser(pydantic_object=cls)
         return pydantic_parser.get_format_instructions()

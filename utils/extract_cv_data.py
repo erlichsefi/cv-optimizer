@@ -3,7 +3,7 @@ import openai
 from .llm_store import get_compliation
 from .interface import UserInterface, TerminalInterface
 from .pdf_util import get_data_from_pdf
-
+from .models import CurriculumVitae
 
 def dict_diff(dict1, dict2):
     diff = {}
@@ -24,7 +24,7 @@ def dict_diff(dict1, dict2):
 
 def core_run(user_interface: UserInterface, extracted_text, pdf_path):
     expected_json = user_interface.get_cv_blueprint()
-    response = get_compliation(
+    user_extracted_data = get_compliation(
         system_message=f"""
                 Extract the CV into the following format:
                 {json.dumps(expected_json,indent=4)}
@@ -39,32 +39,39 @@ def core_run(user_interface: UserInterface, extracted_text, pdf_path):
         top_p=0,
         user_input=extracted_text,
         is_json_expected=True,
-        num_of_gen=2,
+        num_of_gen=1,
     )
 
-    user_extracted_data = get_compliation(
-        system_message="",
-        user_input=f"""
-                consolidated into one:
+    errors = CurriculumVitae.collect_parsing_errors(user_extracted_data)
 
-                generation #1:  
-                {json.dumps(response[0],indent=4)}
+    if errors:
 
-                generation #2:  
-                {json.dumps(response[1],indent=4)}
+        user_extracted_data = get_compliation(
+            system_message="",
+            user_input=f"""
+                    This is the user pdf content:
+                    {extracted_text}
 
-                Expected format:
-                ```json
-                {json.dumps(expected_json,indent=4)}
-                ```
+                    You've extracted the following data:
+                    {json.dumps(user_extracted_data,indent=4)}
 
-                - don't include placeholders!
-                """,
-        model="gpt-3.5-turbo-1106",
-        temperature=0,
-        top_p=0,
-        is_json_expected=True,
-    )
+                    Fix the folllwing errors:  
+                    {errors}
+
+                    Expected format:
+                    ```json
+                    {json.dumps(expected_json,indent=4)}
+                    ```
+
+                    - don't include placeholders!
+                    """,
+            model="gpt-3.5-turbo-1106",
+            temperature=0,
+            top_p=0,
+            is_json_expected=True,
+        )
+    
+    user_extracted_data = CurriculumVitae.from_json(user_extracted_data)
     user_interface.set_user_extract_cv_data(user_extracted_data, pdf_path)
 
 

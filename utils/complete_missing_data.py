@@ -1,7 +1,7 @@
 import json
 import datetime
-from interface import TerminalInterface, UserInterface
-from llm_store import experience_chatbot, get_compliation
+from .interface import TerminalInterface, UserInterface
+from .llm_store import experience_chatbot, get_compliation
 
 
 def get_issues_need_to_be_adressed(user_interface: UserInterface):

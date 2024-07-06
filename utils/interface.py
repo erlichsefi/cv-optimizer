@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from uuid import uuid4
 import json
 import streamlit as st
-from llm_store import get_chat_compliation
-from mem_store import (
+from .llm_store import get_chat_compliation
+from .mem_store import (
     StateStore,
     FileStateStore,
     StermlitStateStore,
@@ -63,7 +63,7 @@ class UserInterface(StateStore, ABC):
 
 class TerminalInterface(UserInterface, FileStateStore):
 
-    def __init__(self, resources_dir) -> None:
+    def __init__(self, resources_dir="") -> None:
         super(TerminalInterface, self).__init__(resources_dir)
 
     def send_user_message(self, message):

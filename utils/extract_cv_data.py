@@ -1,8 +1,8 @@
 import json
 import openai
-from llm_store import get_compliation
-from interface import UserInterface, TerminalInterface
-from pdf_util import get_data_from_pdf
+from .llm_store import get_compliation
+from .interface import UserInterface, TerminalInterface
+from .pdf_util import get_data_from_pdf
 
 
 def dict_diff(dict1, dict2):

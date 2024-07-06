@@ -4,7 +4,7 @@ import os, shutil
 import subprocess
 import uuid
 import json
-import cv
+from utils.mem_store.models import cv
 
 
 def move_pdf_to_created(position_folder):

@@ -10,11 +10,11 @@ class OAI:
     def __init__(self, api_key=None) -> None:
 
         if api_key is None:
-            api_key = os.environ.get("OPENAI_API_KEY",None)
+            api_key = os.environ.get("OPENAI_API_KEY", None)
 
         if api_key is None:
             raise ValueError("please provide OAI key")
-        
+
         self.api_key = api_key
 
     def get_compliation(self, model, messages, temperature, top_p, num_of_gen):

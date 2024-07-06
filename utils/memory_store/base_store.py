@@ -29,11 +29,11 @@ class StateStore(ABC):
         self.resources_dir = resources_dir
         self.user_tex_path = os.path.join(resources_dir, "user_data/user_tex.tex")
         self.positions_dir_cv = os.path.join(resources_dir, "user_data/position_cv")
-        self.blueprint_dir = os.path.join(resources_dir,"blueprints")
+        self.blueprint_dir = os.path.join(resources_dir, "blueprints")
 
     def _blueprint_path_to(self, file_name):
         return os.path.join(self.blueprint_dir, file_name)
-    
+
     def get_cv_blueprint(self):
         return cv.get_templete_for_prompt()
 
@@ -44,7 +44,7 @@ class StateStore(ABC):
     def get_expected_latex_format(self):
         with open(self._blueprint_path_to("cv.tex"), "r") as file:
             return file.read()
-        
+
     def get_upload_file_name(self, pdf_path):
         if isinstance(pdf_path, st.runtime.uploaded_file_manager.UploadedFile):
             return pdf_path.name
